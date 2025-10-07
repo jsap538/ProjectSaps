@@ -49,8 +49,8 @@ export default function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="group flex items-center gap-3 text-porcelain transition-colors duration-sap hover:text-titanium">
-            <BrandMark className="h-7 w-7 text-titanium" />
-            <span className="text-xl font-medium tracking-wide1">SAPS</span>
+            <BrandMark className="h-8 w-8 text-titanium" />
+            <span className="text-2xl font-semibold tracking-wide1">SAPS</span>
           </Link>
 
           {/* Desktop Navigation */}

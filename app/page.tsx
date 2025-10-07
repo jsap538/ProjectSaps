@@ -47,7 +47,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-ink via-graphite to-ink opacity-70" />
         <div className="relative z-10 mx-auto max-w-7xl px-6 py-24">
           <div className="max-w-2xl">
-            <BrandMark className="h-10 w-10 text-titanium mb-6" />
+            <BrandMark className="h-12 w-12 text-titanium mb-6" />
             <div className="mb-8 text-sm font-medium text-nickel tracking-wider uppercase">
               Premium Collection
             </div>
