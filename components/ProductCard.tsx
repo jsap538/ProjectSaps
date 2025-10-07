@@ -133,24 +133,24 @@ export default function ProductCard({ item }: ProductCardProps) {
       </Link>
       
       {/* Action Buttons */}
-      <div className="p-4 pt-0 space-y-2">
+      <div className="p-4 pt-0 flex gap-2">
         <button
           onClick={handleCartToggle}
           disabled={isAdding || isCartItemLoading(item._id)}
-          className={`w-full rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-sap disabled:cursor-not-allowed ${
+          className={`flex-1 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-sap disabled:cursor-not-allowed ${
             isInCart 
               ? 'bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:border-red-500/40' 
               : 'bg-titanium/10 border border-titanium/20 text-titanium hover:bg-titanium/20 hover:border-titanium/40 disabled:opacity-50'
           }`}
         >
           {isInCart 
-            ? (isAdding || isCartItemLoading(item._id) ? 'Removing...' : 'Remove from Cart')
+            ? (isAdding || isCartItemLoading(item._id) ? 'Removing...' : 'Remove')
             : (isAdding || isCartItemLoading(item._id) ? 'Adding...' : 'Add to Cart')
           }
         </button>
         
-        <Link href={`/items/${item._id}`}>
-          <button className="w-full rounded-xl bg-porcelain text-ink px-4 py-2.5 text-sm font-semibold transition-transform duration-sap hover:-translate-y-px shadow-subtle">
+        <Link href={`/items/${item._id}`} className="flex-1">
+          <button className="w-full rounded-xl bg-porcelain text-ink px-3 py-2.5 text-sm font-semibold transition-transform duration-sap hover:-translate-y-px shadow-subtle">
             Buy Now
           </button>
         </Link>
