@@ -165,7 +165,7 @@ export default function SearchableDropdown({
           )}
 
           {/* Options List */}
-          <div className="max-h-48 overflow-y-auto">
+          <div className="max-h-72 overflow-y-auto">
             {filteredOptions.length === 0 ? (
               <div className="p-3 text-center text-nickel text-sm">
                 No {label.toLowerCase()} found
