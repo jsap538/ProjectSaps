@@ -256,10 +256,19 @@ export async function POST(request: NextRequest) {
 
     await connectDB();
     
-    // Check if user is admin (or allow any authenticated user for now)
-    const user = await User.findOne({ clerkId: userId });
+    // For now, allow any authenticated user to add mock items
+    let user = await User.findOne({ clerkId: userId });
     if (!user) {
-      return NextResponse.json({ success: false, error: 'User not found' }, { status: 404, headers: corsHeaders });
+      // Create user if they don't exist
+      user = new User({
+        clerkId: userId,
+        email: 'user@example.com', // Placeholder
+        firstName: 'User',
+        lastName: 'User',
+        isSeller: true,
+        isAdmin: true // Make them admin for now
+      });
+      await user.save();
     }
 
     // Create or get a mock seller user

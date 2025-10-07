@@ -58,7 +58,10 @@ function main() {
 
   console.log(`🚀 Running script: ${scriptPath}`);
   
-  const child = spawn('node', [scriptPath], {
+  // Pass all arguments after the script path to the child process
+  const args = [scriptPath, ...process.argv.slice(3)];
+  
+  const child = spawn('node', args, {
     env,
     stdio: 'inherit',
     cwd: process.cwd()
