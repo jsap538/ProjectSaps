@@ -79,7 +79,7 @@ export default function Home() {
             
             {/* Large Logo */}
             <div className="hidden lg:flex items-center justify-end">
-              <BrandMark className="h-100 w-100 text-titanium/20" />
+              <BrandMark className="text-titanium/20" style={{ width: '400px', height: '400px' }} />
             </div>
           </div>
         </div>
