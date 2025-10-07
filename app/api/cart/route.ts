@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if item is already in cart
-    const existingCartItem = user.cart.find(cartItem => cartItem.itemId === itemId);
+    const existingCartItem = user.cart.find((cartItem: ICartItem) => cartItem.itemId === itemId);
     
     if (existingCartItem) {
       // Update quantity
@@ -133,7 +133,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Remove item from cart
-    user.cart = user.cart.filter(cartItem => cartItem.itemId !== itemId);
+    user.cart = user.cart.filter((cartItem: ICartItem) => cartItem.itemId !== itemId);
     await user.save();
 
     return NextResponse.json({
