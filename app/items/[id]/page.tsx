@@ -71,27 +71,27 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
   const total = ((item.price_cents + item.shipping_cents) / 100).toFixed(2);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#1a1d24]">
+    <div className="min-h-screen bg-ink">
       <div className="mx-auto max-w-7xl px-6 py-10">
         {/* Breadcrumb */}
-        <nav className="mb-8 text-sm text-gray-600 dark:text-gray-400">
-          <Link href="/" className="transition hover:text-primary">
+        <nav className="mb-8 text-sm text-nickel">
+          <Link href="/" className="sap-link transition-colors duration-sap hover:text-porcelain">
             Home
           </Link>
           <span className="mx-2">/</span>
-          <Link href="/browse" className="transition hover:text-primary">
+          <Link href="/browse" className="sap-link transition-colors duration-sap hover:text-porcelain">
             Browse
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-dark dark:text-white">{item.title}</span>
+          <span className="text-porcelain">{item.title}</span>
         </nav>
 
         <div className="grid gap-8 lg:grid-cols-2">
           {/* Images */}
           <div className="space-y-4">
-            <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-gray-100 ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-800">
+            <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-onyx ring-1 ring-porcelain/10">
               <Image
-                src={item.images?.[0] || 'https://placehold.co/800x800/1a2742/33CC66?text=No+Image'}
+                src={item.images?.[0] || 'https://placehold.co/800x800/0B0C0E/F5F6F7?text=No+Image'}
                 alt={item.title}
                 fill
                 className="object-cover"
@@ -104,7 +104,7 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
                 {item.images.slice(1).map((img: string, idx: number) => (
                   <div
                     key={idx}
-                    className="relative aspect-square cursor-pointer overflow-hidden rounded-xl bg-gray-100 ring-1 ring-gray-200 transition hover:ring-2 hover:ring-primary dark:bg-gray-900 dark:ring-gray-800"
+                    className="relative aspect-square cursor-pointer overflow-hidden rounded-xl bg-onyx ring-1 ring-porcelain/10 transition hover:ring-2 hover:ring-titanium"
                   >
                     <Image
                       src={img}
@@ -122,19 +122,19 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
           {/* Details */}
           <div>
             <div className="mb-8">
-              <div className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">{item.brand}</div>
-              <h1 className="mb-6 text-3xl font-bold text-dark md:text-4xl dark:text-white">
+              <div className="mb-2 text-sm font-medium text-nickel">{item.brand}</div>
+              <h1 className="mb-6 text-3xl font-bold text-porcelain md:text-4xl text-display">
                 {item.title}
               </h1>
               <div className="flex items-baseline gap-3">
-                <span className="text-4xl font-bold text-primary">
+                <span className="text-4xl font-bold text-titanium">
                   ${price}
                 </span>
-                <span className="text-sm text-gray-600 dark:text-gray-400">
+                <span className="text-sm text-nickel">
                   + ${shipping} shipping
                 </span>
               </div>
-              <div className="mt-2 flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+              <div className="mt-2 flex items-center gap-4 text-sm text-nickel">
                 <span>{item.views} views</span>
                 <span>•</span>
                 <span>{item.condition}</span>
@@ -142,40 +142,40 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
             </div>
 
             {/* Specifications */}
-            <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-[#1f2329]">
-              <h2 className="mb-5 text-lg font-semibold text-dark dark:text-white">
+            <div className="mb-6 rounded-2xl border border-porcelain/10 bg-graphite/60 p-6 shadow-subtle">
+              <h2 className="mb-5 text-lg font-semibold text-porcelain">
                 Specifications
               </h2>
               <dl className="space-y-4">
-                <div className="flex justify-between border-b border-gray-100 pb-3 dark:border-gray-800">
-                  <dt className="text-sm text-gray-600 dark:text-gray-400">Condition</dt>
-                  <dd className="text-sm font-medium text-dark dark:text-white">
+                <div className="flex justify-between border-b border-porcelain/10 pb-3">
+                  <dt className="text-sm text-nickel">Condition</dt>
+                  <dd className="text-sm font-medium text-porcelain">
                     {item.condition}
                   </dd>
                 </div>
-                <div className="flex justify-between border-b border-gray-100 pb-3 dark:border-gray-800">
-                  <dt className="text-sm text-gray-600 dark:text-gray-400">Material</dt>
-                  <dd className="text-sm font-medium text-dark dark:text-white">
+                <div className="flex justify-between border-b border-porcelain/10 pb-3">
+                  <dt className="text-sm text-nickel">Material</dt>
+                  <dd className="text-sm font-medium text-porcelain">
                     {item.material}
                   </dd>
                 </div>
-                <div className="flex justify-between border-b border-gray-100 pb-3 dark:border-gray-800">
-                  <dt className="text-sm text-gray-600 dark:text-gray-400">Color</dt>
-                  <dd className="text-sm font-medium text-dark dark:text-white">
+                <div className="flex justify-between border-b border-porcelain/10 pb-3">
+                  <dt className="text-sm text-nickel">Color</dt>
+                  <dd className="text-sm font-medium text-porcelain">
                     {item.color}
                   </dd>
                 </div>
                 {item.width_cm && (
-                  <div className="flex justify-between border-b border-gray-100 pb-3 dark:border-gray-800">
-                    <dt className="text-sm text-gray-600 dark:text-gray-400">Width</dt>
-                    <dd className="text-sm font-medium text-dark dark:text-white">
+                  <div className="flex justify-between border-b border-porcelain/10 pb-3">
+                    <dt className="text-sm text-nickel">Width</dt>
+                    <dd className="text-sm font-medium text-porcelain">
                       {item.width_cm} cm
                     </dd>
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <dt className="text-sm text-gray-600 dark:text-gray-400">Location</dt>
-                  <dd className="text-sm font-medium text-dark dark:text-white">
+                  <dt className="text-sm text-nickel">Location</dt>
+                  <dd className="text-sm font-medium text-porcelain">
                     {item.location}
                   </dd>
                 </div>
@@ -183,26 +183,26 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
             </div>
 
             {/* Seller Info */}
-            <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-[#1f2329]">
-              <h2 className="mb-5 text-lg font-semibold text-dark dark:text-white">Seller</h2>
+            <div className="mb-8 rounded-2xl border border-porcelain/10 bg-graphite/60 p-6 shadow-subtle">
+              <h2 className="mb-5 text-lg font-semibold text-porcelain">Seller</h2>
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="font-medium text-dark dark:text-white">
+                  <div className="font-medium text-porcelain">
                      {(item.sellerId as any)?.firstName || 'Unknown'} {(item.sellerId as any)?.lastName || 'Seller'}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                  <div className="text-sm text-nickel">
                     {(item.sellerId as any)?.totalSales || 0} sales
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
                   <svg
-                    className="h-5 w-5 text-primary"
+                    className="h-5 w-5 text-titanium"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
-                  <span className="font-semibold text-dark dark:text-white">
+                  <span className="font-semibold text-porcelain">
                      {((item.sellerId as any)?.rating || 0).toFixed(1)}
                   </span>
                 </div>
@@ -211,18 +211,18 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
 
             {/* CTA Buttons */}
             <div className="space-y-4">
-              <button className="w-full rounded-xl bg-primary px-6 py-4 text-base font-semibold text-white shadow-lg shadow-primary/30 transition hover:bg-primary-dark hover:shadow-xl hover:shadow-primary/40 hover:scale-[1.02]">
+              <button className="w-full rounded-xl bg-porcelain text-ink px-6 py-4 text-base font-semibold shadow-soft transition-transform duration-sap hover:-translate-y-px hover:shadow-soft">
                 Buy Now - ${total}
               </button>
-              <button className="w-full rounded-xl border-2 border-gray-300 px-6 py-4 text-base font-semibold text-dark transition hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-gray-700 dark:text-white dark:hover:border-primary">
+              <button className="w-full rounded-xl border-2 border-porcelain/20 px-6 py-4 text-base font-semibold text-porcelain transition-colors duration-sap hover:border-titanium hover:bg-titanium/5 hover:text-titanium">
                 Make an Offer
               </button>
             </div>
 
             {/* Trust Badges */}
-            <div className="mt-8 flex items-center justify-center gap-6 text-xs text-gray-500 dark:text-gray-500">
+            <div className="mt-8 flex items-center justify-center gap-6 text-xs text-nickel">
               <div className="flex items-center gap-1.5">
-                <svg className="h-4 w-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="h-4 w-4 text-titanium" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fillRule="evenodd"
                     d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -232,14 +232,14 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
                 <span>Buyer Protection</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <svg className="h-4 w-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="h-4 w-4 text-titanium" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
                   <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
                 </svg>
                 <span>Fast Shipping</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <svg className="h-4 w-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="h-4 w-4 text-titanium" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fillRule="evenodd"
                     d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
@@ -254,8 +254,8 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
 
         {/* Description */}
         <div className="mt-16">
-          <h2 className="mb-6 text-2xl font-bold text-dark dark:text-white">Description</h2>
-          <p className="leading-relaxed text-gray-700 dark:text-gray-300">{item.description}</p>
+          <h2 className="mb-6 text-2xl font-bold text-porcelain text-display">Description</h2>
+          <p className="leading-relaxed text-nickel text-body">{item.description}</p>
         </div>
       </div>
     </div>
