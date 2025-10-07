@@ -134,6 +134,14 @@ export default function Footer() {
                   Privacy Policy
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/disclaimer"
+                  className="sap-link text-sm text-nickel transition-colors duration-sap hover:text-porcelain"
+                >
+                  Terms & Disclaimers
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
@@ -141,7 +149,10 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-16 border-t border-porcelain/10 pt-8 text-center">
           <p className="text-sm text-nickel">
-            © {new Date().getFullYear()} SAPS. All rights reserved.
+            © {new Date().getFullYear()} SAPS. All rights reserved.{" "}
+            <Link href="/disclaimer" className="text-titanium hover:text-porcelain transition-colors duration-sap">
+              Terms & Disclaimers
+            </Link>
           </p>
         </div>
       </div>
