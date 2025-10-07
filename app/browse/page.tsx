@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import ProductCard from "@/components/ProductCard";
+import EnhancedFilters from "@/components/EnhancedFilters";
 import type { IItem, ItemFilters } from "@/types";
 
 // Mock data (fallback)
@@ -73,24 +74,38 @@ const categories = ["All", "Tie", "Belt", "Cufflinks", "Pocket Square"];
 const conditions = ["All", "New", "Like New", "Good", "Fair"];
 const colors = ["All", "Navy", "Black", "Red", "Green", "Silver"];
 
+interface FilterState {
+  brands: string[];
+  colors: string[];
+  materials: string[];
+  sizes: string[];
+  conditions: string[];
+  categories: string[];
+  priceRange: { min: number; max: number };
+  sortBy: string;
+}
+
 export default function BrowsePage() {
   const [items, setItems] = useState<IItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedBrand, setSelectedBrand] = useState("All Brands");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedCondition, setSelectedCondition] = useState("All");
-  const [selectedColor, setSelectedColor] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const [sortBy, setSortBy] = useState("newest");
   const [totalItems, setTotalItems] = useState(0);
+  const [filters, setFilters] = useState<FilterState>({
+    brands: [],
+    colors: [],
+    materials: [],
+    sizes: [],
+    conditions: [],
+    categories: [],
+    priceRange: { min: 0, max: Infinity },
+    sortBy: 'Newest First'
+  });
 
   useEffect(() => {
     fetchItems();
-  }, [selectedBrand, selectedCategory, selectedCondition, selectedColor, searchQuery, minPrice, maxPrice, sortBy]);
+  }, [filters, searchQuery]);
 
   const fetchItems = async () => {
     try {
@@ -100,30 +115,45 @@ export default function BrowsePage() {
       const params = new URLSearchParams();
       
       // Add filters
-      if (selectedBrand !== "All Brands") {
-        params.append('brand', selectedBrand);
+      if (filters.brands.length > 0) {
+        filters.brands.forEach(brand => params.append('brands', brand));
       }
-      if (selectedCategory !== "All") {
-        params.append('category', selectedCategory.toLowerCase());
+      if (filters.categories.length > 0) {
+        filters.categories.forEach(category => params.append('categories', category.toLowerCase()));
       }
-      if (selectedCondition !== "All") {
-        params.append('condition', selectedCondition);
+      if (filters.conditions.length > 0) {
+        filters.conditions.forEach(condition => params.append('conditions', condition));
       }
-      if (selectedColor !== "All") {
-        params.append('color', selectedColor.toLowerCase());
+      if (filters.colors.length > 0) {
+        filters.colors.forEach(color => params.append('colors', color.toLowerCase()));
+      }
+      if (filters.materials.length > 0) {
+        filters.materials.forEach(material => params.append('materials', material));
+      }
+      if (filters.sizes.length > 0) {
+        filters.sizes.forEach(size => params.append('sizes', size));
       }
       if (searchQuery.trim()) {
         params.append('search', searchQuery.trim());
       }
-      if (minPrice) {
-        params.append('minPrice', minPrice);
+      if (filters.priceRange.min > 0) {
+        params.append('minPrice', (filters.priceRange.min / 100).toString());
       }
-      if (maxPrice) {
-        params.append('maxPrice', maxPrice);
+      if (filters.priceRange.max < Infinity) {
+        params.append('maxPrice', (filters.priceRange.max / 100).toString());
       }
       
       // Add sorting
-      params.append('sortBy', sortBy);
+      const sortMapping: { [key: string]: string } = {
+        'Newest First': 'newest',
+        'Oldest First': 'oldest',
+        'Price: Low to High': 'price_low',
+        'Price: High to Low': 'price_high',
+        'Most Popular': 'popular',
+        'Best Deals': 'deals',
+        'Recently Updated': 'updated'
+      };
+      params.append('sortBy', sortMapping[filters.sortBy] || 'newest');
       params.append('sortOrder', 'desc');
 
       const response = await fetch(`/api/items?${params.toString()}`);
@@ -142,13 +172,25 @@ export default function BrowsePage() {
       setError(err instanceof Error ? err.message : 'An error occurred');
       // Fallback to mock data with client-side filtering
       const filteredMockItems = mockItems.filter((item) => {
-        if (selectedBrand !== "All Brands" && item.brand !== selectedBrand) return false;
-        if (selectedCategory !== "All" && item.category !== selectedCategory.toLowerCase()) return false;
-        if (selectedCondition !== "All" && item.condition !== selectedCondition) return false;
-        if (selectedColor !== "All" && item.color !== selectedColor.toLowerCase()) return false;
+        // Brand filter
+        if (filters.brands.length > 0 && !filters.brands.includes(item.brand)) return false;
+        
+        // Category filter
+        if (filters.categories.length > 0 && !filters.categories.includes(item.category)) return false;
+        
+        // Condition filter
+        if (filters.conditions.length > 0 && !filters.conditions.includes(item.condition)) return false;
+        
+        // Color filter
+        if (filters.colors.length > 0 && !filters.colors.includes(item.color)) return false;
+        
+        // Search query
         if (searchQuery.trim() && !item.title.toLowerCase().includes(searchQuery.toLowerCase()) && !item.brand.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-        if (minPrice && item.price_cents < parseInt(minPrice) * 100) return false;
-        if (maxPrice && item.price_cents > parseInt(maxPrice) * 100) return false;
+        
+        // Price range
+        if (filters.priceRange.min > 0 && item.price_cents < filters.priceRange.min) return false;
+        if (filters.priceRange.max < Infinity && item.price_cents > filters.priceRange.max) return false;
+        
         return true;
       });
       setItems(filteredMockItems.map(item => ({ 
@@ -173,15 +215,8 @@ export default function BrowsePage() {
     }
   };
 
-  const clearAllFilters = () => {
-    setSelectedBrand("All Brands");
-    setSelectedCategory("All");
-    setSelectedCondition("All");
-    setSelectedColor("All");
-    setSearchQuery("");
-    setMinPrice("");
-    setMaxPrice("");
-    setSortBy("newest");
+  const handleFiltersChange = (newFilters: FilterState) => {
+    setFilters(newFilters);
   };
 
   return (
@@ -227,8 +262,8 @@ export default function BrowsePage() {
             </label>
             <select
               id="sort"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              value={filters.sortBy}
+              onChange={(e) => setFilters(prev => ({ ...prev, sortBy: e.target.value }))}
               className="rounded-xl border border-porcelain/20 bg-graphite/60 px-4 py-3 text-sm text-porcelain transition-all duration-sap focus:border-titanium focus:outline-none focus:ring-2 focus:ring-titanium/20"
             >
               <option value="newest" className="bg-graphite text-porcelain">Newest First</option>
@@ -241,7 +276,7 @@ export default function BrowsePage() {
 
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Filters Sidebar */}
-          <aside className="lg:w-64">
+          <aside className="lg:w-80">
             <div className="sticky top-24 bg-graphite/60 border border-porcelain/10 shadow-soft p-6 rounded-xl">
               <div className="mb-6 flex items-center justify-between lg:block">
                 <h2 className="text-lg font-medium text-porcelain">Filters</h2>
@@ -265,138 +300,8 @@ export default function BrowsePage() {
                 </button>
               </div>
 
-              <div className={`space-y-6 ${showFilters ? "block" : "hidden lg:block"}`}>
-                {/* Category Filter */}
-                <div>
-                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-nickel">
-                    Category
-                  </h3>
-                  <div className="space-y-2">
-                    {categories.map((category) => (
-                      <label key={category} className="flex cursor-pointer items-center">
-                        <input
-                          type="radio"
-                          name="category"
-                          checked={selectedCategory === category}
-                          onChange={() => setSelectedCategory(category)}
-                          className="h-4 w-4 text-titanium accent-titanium"
-                        />
-                        <span className="ml-3 text-sm text-porcelain/90">
-                          {category}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Brand Filter */}
-                <div>
-                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-nickel">
-                    Brand
-                  </h3>
-                  <select
-                    value={selectedBrand}
-                    onChange={(e) => setSelectedBrand(e.target.value)}
-                    className="w-full rounded-xl border border-porcelain/20 bg-graphite/60 px-3 py-2 text-sm text-porcelain focus:border-titanium focus:outline-none focus:ring-2 focus:ring-titanium/20"
-                  >
-                    {brands.map((brand) => (
-                      <option key={brand} value={brand} className="bg-graphite text-porcelain">
-                        {brand}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Condition Filter */}
-                <div>
-                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-nickel">
-                    Condition
-                  </h3>
-                  <div className="space-y-2">
-                    {conditions.map((condition) => (
-                      <label key={condition} className="flex cursor-pointer items-center">
-                        <input
-                          type="radio"
-                          name="condition"
-                          checked={selectedCondition === condition}
-                          onChange={() => setSelectedCondition(condition)}
-                          className="h-4 w-4 text-titanium accent-titanium"
-                        />
-                        <span className="ml-3 text-sm text-porcelain/90">
-                          {condition}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Color Filter */}
-                <div>
-                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-nickel">
-                    Color
-                  </h3>
-                  <div className="space-y-2">
-                    {colors.map((color) => (
-                      <label key={color} className="flex cursor-pointer items-center">
-                        <input
-                          type="radio"
-                          name="color"
-                          checked={selectedColor === color}
-                          onChange={() => setSelectedColor(color)}
-                          className="h-4 w-4 text-titanium accent-titanium"
-                        />
-                        <span className="ml-3 text-sm text-porcelain/90">
-                          {color}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Price Range Filter */}
-                <div>
-                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-nickel">
-                    Price Range
-                  </h3>
-                  <div className="space-y-3">
-                    <div>
-                      <label htmlFor="minPrice" className="block text-xs text-nickel mb-1">
-                        Min Price ($)
-                      </label>
-                      <input
-                        type="number"
-                        id="minPrice"
-                        value={minPrice}
-                        onChange={(e) => setMinPrice(e.target.value)}
-                        placeholder="0"
-                        min="0"
-                        className="w-full rounded-xl border border-porcelain/20 bg-graphite/60 px-3 py-2 text-sm text-porcelain placeholder-nickel focus:border-titanium focus:outline-none focus:ring-2 focus:ring-titanium/20"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="maxPrice" className="block text-xs text-nickel mb-1">
-                        Max Price ($)
-                      </label>
-                      <input
-                        type="number"
-                        id="maxPrice"
-                        value={maxPrice}
-                        onChange={(e) => setMaxPrice(e.target.value)}
-                        placeholder="No limit"
-                        min="0"
-                        className="w-full rounded-xl border border-porcelain/20 bg-graphite/60 px-3 py-2 text-sm text-porcelain placeholder-nickel focus:border-titanium focus:outline-none focus:ring-2 focus:ring-titanium/20"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Clear Filters */}
-                <button
-                  onClick={clearAllFilters}
-                  className="w-full rounded-xl border border-porcelain/20 px-4 py-2.5 text-sm font-medium text-porcelain/90 transition-colors duration-sap hover:bg-porcelain/5 hover:text-porcelain"
-                >
-                  Clear All Filters
-                </button>
+              <div className={`${showFilters ? "block" : "hidden lg:block"}`}>
+                <EnhancedFilters onFiltersChange={handleFiltersChange} />
               </div>
             </div>
           </aside>
