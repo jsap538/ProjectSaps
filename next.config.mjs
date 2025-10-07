@@ -58,12 +58,14 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
     optimizePackageImports: ['@clerk/nextjs', 'mongoose'],
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
+  },
+
+  // Turbopack configuration (moved from experimental)
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
       },
     },
   },
@@ -71,7 +73,6 @@ const nextConfig = {
   // Production optimizations
   poweredByHeader: false,
   reactStrictMode: true,
-  swcMinify: true,
 };
 
 export default nextConfig;

@@ -7,7 +7,7 @@ import { isValidObjectId, corsHeaders } from '@/lib/security';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const { userId } = auth();
   
@@ -18,7 +18,8 @@ export async function POST(
   await connectDB();
   
   try {
-    const { id } = params;
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
 
     if (!isValidObjectId(id)) {
       return NextResponse.json({ success: false, error: 'Invalid Item ID' }, { status: 400, headers: corsHeaders });
