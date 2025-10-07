@@ -20,11 +20,13 @@ const UserSchema = new Schema<IUser>({
     type: String,
     required: true,
     unique: true,
+    index: true,
   },
   email: {
     type: String,
     required: true,
     unique: true,
+    index: true,
   },
   firstName: {
     type: String,
@@ -59,9 +61,7 @@ const UserSchema = new Schema<IUser>({
   timestamps: true,
 });
 
-// Create indexes for better performance
-UserSchema.index({ clerkId: 1 });
-UserSchema.index({ email: 1 });
+// Indexes are now defined in the schema fields above
 
 const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
 
