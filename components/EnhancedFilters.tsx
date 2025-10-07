@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SearchableDropdown from './SearchableDropdown';
 import { BRANDS, COLORS, MATERIALS, SIZES, CONDITIONS, CATEGORIES, PRICE_RANGES, SORT_OPTIONS } from '@/data/filterData';
 
@@ -17,11 +17,12 @@ interface FilterState {
 
 interface EnhancedFiltersProps {
   onFiltersChange: (filters: FilterState) => void;
+  initialFilters?: FilterState;
   className?: string;
 }
 
-export default function EnhancedFilters({ onFiltersChange, className = "" }: EnhancedFiltersProps) {
-  const [filters, setFilters] = useState<FilterState>({
+export default function EnhancedFilters({ onFiltersChange, initialFilters, className = "" }: EnhancedFiltersProps) {
+  const [filters, setFilters] = useState<FilterState>(initialFilters || {
     brands: [],
     colors: [],
     materials: [],
@@ -31,6 +32,12 @@ export default function EnhancedFilters({ onFiltersChange, className = "" }: Enh
     priceRange: { min: 0, max: Infinity },
     sortBy: 'Newest First'
   });
+
+  useEffect(() => {
+    if (initialFilters) {
+      setFilters(initialFilters);
+    }
+  }, [initialFilters]);
 
   const updateFilter = (key: keyof FilterState, value: any) => {
     const newFilters = { ...filters, [key]: value };

@@ -92,7 +92,17 @@ export default function BrowsePage() {
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [totalItems, setTotalItems] = useState(0);
-  const [filters, setFilters] = useState<FilterState>({
+  const [appliedFilters, setAppliedFilters] = useState<FilterState>({
+    brands: [],
+    colors: [],
+    materials: [],
+    sizes: [],
+    conditions: [],
+    categories: [],
+    priceRange: { min: 0, max: Infinity },
+    sortBy: 'Newest First'
+  });
+  const [tempFilters, setTempFilters] = useState<FilterState>({
     brands: [],
     colors: [],
     materials: [],
@@ -105,7 +115,7 @@ export default function BrowsePage() {
 
   useEffect(() => {
     fetchItems();
-  }, [filters, searchQuery]);
+  }, [appliedFilters, searchQuery]);
 
   const fetchItems = async () => {
     try {
@@ -115,32 +125,32 @@ export default function BrowsePage() {
       const params = new URLSearchParams();
       
       // Add filters
-      if (filters.brands.length > 0) {
-        filters.brands.forEach(brand => params.append('brands', brand));
+      if (appliedFilters.brands.length > 0) {
+        appliedFilters.brands.forEach(brand => params.append('brands', brand));
       }
-      if (filters.categories.length > 0) {
-        filters.categories.forEach(category => params.append('categories', category.toLowerCase()));
+      if (appliedFilters.categories.length > 0) {
+        appliedFilters.categories.forEach(category => params.append('categories', category.toLowerCase()));
       }
-      if (filters.conditions.length > 0) {
-        filters.conditions.forEach(condition => params.append('conditions', condition));
+      if (appliedFilters.conditions.length > 0) {
+        appliedFilters.conditions.forEach(condition => params.append('conditions', condition));
       }
-      if (filters.colors.length > 0) {
-        filters.colors.forEach(color => params.append('colors', color.toLowerCase()));
+      if (appliedFilters.colors.length > 0) {
+        appliedFilters.colors.forEach(color => params.append('colors', color.toLowerCase()));
       }
-      if (filters.materials.length > 0) {
-        filters.materials.forEach(material => params.append('materials', material));
+      if (appliedFilters.materials.length > 0) {
+        appliedFilters.materials.forEach(material => params.append('materials', material));
       }
-      if (filters.sizes.length > 0) {
-        filters.sizes.forEach(size => params.append('sizes', size));
+      if (appliedFilters.sizes.length > 0) {
+        appliedFilters.sizes.forEach(size => params.append('sizes', size));
       }
       if (searchQuery.trim()) {
         params.append('search', searchQuery.trim());
       }
-      if (filters.priceRange.min > 0) {
-        params.append('minPrice', (filters.priceRange.min / 100).toString());
+      if (appliedFilters.priceRange.min > 0) {
+        params.append('minPrice', (appliedFilters.priceRange.min / 100).toString());
       }
-      if (filters.priceRange.max < Infinity) {
-        params.append('maxPrice', (filters.priceRange.max / 100).toString());
+      if (appliedFilters.priceRange.max < Infinity) {
+        params.append('maxPrice', (appliedFilters.priceRange.max / 100).toString());
       }
       
       // Add sorting
@@ -153,7 +163,7 @@ export default function BrowsePage() {
         'Best Deals': 'deals',
         'Recently Updated': 'updated'
       };
-      params.append('sortBy', sortMapping[filters.sortBy] || 'newest');
+      params.append('sortBy', sortMapping[appliedFilters.sortBy] || 'newest');
       params.append('sortOrder', 'desc');
 
       const response = await fetch(`/api/items?${params.toString()}`);
@@ -173,23 +183,23 @@ export default function BrowsePage() {
       // Fallback to mock data with client-side filtering
       const filteredMockItems = mockItems.filter((item) => {
         // Brand filter
-        if (filters.brands.length > 0 && !filters.brands.includes(item.brand)) return false;
+        if (appliedFilters.brands.length > 0 && !appliedFilters.brands.includes(item.brand)) return false;
         
         // Category filter
-        if (filters.categories.length > 0 && !filters.categories.includes(item.category)) return false;
+        if (appliedFilters.categories.length > 0 && !appliedFilters.categories.includes(item.category)) return false;
         
         // Condition filter
-        if (filters.conditions.length > 0 && !filters.conditions.includes(item.condition)) return false;
+        if (appliedFilters.conditions.length > 0 && !appliedFilters.conditions.includes(item.condition)) return false;
         
         // Color filter
-        if (filters.colors.length > 0 && !filters.colors.includes(item.color)) return false;
+        if (appliedFilters.colors.length > 0 && !appliedFilters.colors.includes(item.color)) return false;
         
         // Search query
         if (searchQuery.trim() && !item.title.toLowerCase().includes(searchQuery.toLowerCase()) && !item.brand.toLowerCase().includes(searchQuery.toLowerCase())) return false;
         
         // Price range
-        if (filters.priceRange.min > 0 && item.price_cents < filters.priceRange.min) return false;
-        if (filters.priceRange.max < Infinity && item.price_cents > filters.priceRange.max) return false;
+        if (appliedFilters.priceRange.min > 0 && item.price_cents < appliedFilters.priceRange.min) return false;
+        if (appliedFilters.priceRange.max < Infinity && item.price_cents > appliedFilters.priceRange.max) return false;
         
         return true;
       });
@@ -216,7 +226,26 @@ export default function BrowsePage() {
   };
 
   const handleFiltersChange = (newFilters: FilterState) => {
-    setFilters(newFilters);
+    setTempFilters(newFilters);
+  };
+
+  const applyFilters = () => {
+    setAppliedFilters(tempFilters);
+  };
+
+  const clearFilters = () => {
+    const clearedFilters: FilterState = {
+      brands: [],
+      colors: [],
+      materials: [],
+      sizes: [],
+      conditions: [],
+      categories: [],
+      priceRange: { min: 0, max: Infinity },
+      sortBy: 'Newest First'
+    };
+    setTempFilters(clearedFilters);
+    setAppliedFilters(clearedFilters);
   };
 
   return (
@@ -262,8 +291,8 @@ export default function BrowsePage() {
             </label>
             <select
               id="sort"
-              value={filters.sortBy}
-              onChange={(e) => setFilters(prev => ({ ...prev, sortBy: e.target.value }))}
+              value={tempFilters.sortBy}
+              onChange={(e) => setTempFilters(prev => ({ ...prev, sortBy: e.target.value }))}
               className="rounded-xl border border-porcelain/20 bg-graphite/60 px-4 py-3 text-sm text-porcelain transition-all duration-sap focus:border-titanium focus:outline-none focus:ring-2 focus:ring-titanium/20"
             >
               <option value="newest" className="bg-graphite text-porcelain">Newest First</option>
@@ -301,7 +330,20 @@ export default function BrowsePage() {
               </div>
 
               <div className={`p-6 ${showFilters ? "block" : "hidden lg:block"}`}>
-                <EnhancedFilters onFiltersChange={handleFiltersChange} />
+                <EnhancedFilters 
+                  onFiltersChange={handleFiltersChange} 
+                  initialFilters={tempFilters}
+                />
+                
+                {/* Apply Filters Button */}
+                <div className="mt-6 pt-6 border-t border-porcelain/10">
+                  <button
+                    onClick={applyFilters}
+                    className="w-full rounded-xl bg-titanium/20 border border-titanium/30 text-titanium px-4 py-3 font-medium transition-all duration-sap hover:bg-titanium/30 hover:border-titanium/50"
+                  >
+                    Apply Filters
+                  </button>
+                </div>
               </div>
             </div>
           </aside>
