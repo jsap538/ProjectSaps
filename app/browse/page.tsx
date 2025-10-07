@@ -277,13 +277,13 @@ export default function BrowsePage() {
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Filters Sidebar */}
           <aside className="lg:w-80">
-            <div className="sticky top-24 bg-graphite/60 border border-porcelain/10 shadow-soft p-6 rounded-xl">
-              <div className="mb-6 flex items-center justify-between lg:block">
-                <h2 className="text-lg font-medium text-porcelain">Filters</h2>
+            <div className="sticky top-24 bg-graphite/60 border border-porcelain/10 shadow-soft rounded-xl overflow-hidden">
+              <div className="lg:hidden p-4 border-b border-porcelain/10">
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className="text-nickel lg:hidden"
+                  className="flex items-center justify-between w-full text-nickel hover:text-porcelain transition-colors duration-sap"
                 >
+                  <span className="text-lg font-medium">Filters</span>
                   <svg
                     className={`h-5 w-5 transition duration-sap ${showFilters ? "rotate-180" : ""}`}
                     fill="none"
