@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import ProductCard from "@/components/ProductCard";
-import EnhancedFilters from "@/components/EnhancedFilters";
+import CondensedFilters from "@/components/CondensedFilters";
 import type { IItem, ItemFilters } from "@/types";
 
 // Mock data (fallback)
@@ -274,33 +274,12 @@ export default function BrowsePage() {
           </div>
         </div>
 
-        {/* Horizontal Filters */}
-        <div className="mb-12">
-          <div className="bg-graphite/60 border border-porcelain/10 shadow-soft p-6 rounded-xl">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-lg font-medium text-porcelain">Filters</h2>
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className="text-nickel lg:hidden"
-              >
-                <svg
-                  className={`h-5 w-5 transition duration-sap ${showFilters ? "rotate-180" : ""}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.75}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            <div className={`${showFilters ? "block" : "hidden lg:block"}`}>
-              <EnhancedFilters onFiltersChange={handleFiltersChange} />
+        {/* Condensed Filter Bar */}
+        <div className="mb-8">
+          <div className="bg-graphite/60 border border-porcelain/10 shadow-soft rounded-xl overflow-hidden">
+            <div className="flex flex-wrap items-center gap-2 p-4">
+              <span className="text-sm font-medium text-nickel mr-2">Filters:</span>
+              <CondensedFilters filters={filters} onFiltersChange={handleFiltersChange} />
             </div>
           </div>
         </div>
