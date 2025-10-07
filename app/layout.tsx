@@ -21,7 +21,7 @@ export default function RootLayout({
       signUpFallbackRedirectUrl="/"
     >
              <html lang="en" suppressHydrationWarning>
-               <body className="antialiased bg-black text-white" suppressHydrationWarning>
+               <body className="antialiased bg-white text-gray-900" suppressHydrationWarning>
           <ThemeProvider>
             <Navbar />
             <main className="min-h-screen">{children}</main>
