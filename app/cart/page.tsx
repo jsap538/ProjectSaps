@@ -9,18 +9,9 @@ import { PrimaryButton, GhostButton } from "@/components/Buttons";
 import BrandMark from "@/components/BrandMark";
 
 export default function CartPage() {
-  const { cart, cartCount, isLoading, removeFromCart, updateQuantity, getTotalPrice, clearCart } = useCart();
+  const { cart, cartCount, isLoading, removeFromCart, getTotalPrice, clearCart } = useCart();
   const { isSignedIn } = useUser();
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
-
-  const handleUpdateQuantity = async (itemId: string, newQuantity: number) => {
-    setIsUpdating(itemId);
-    try {
-      await updateQuantity(itemId, newQuantity);
-    } finally {
-      setIsUpdating(null);
-    }
-  };
 
   const handleRemoveItem = async (itemId: string) => {
     setIsUpdating(itemId);
@@ -161,39 +152,16 @@ export default function CartPage() {
                         </div>
                       </div>
 
-                      {/* Quantity Controls */}
-                      <div className="mt-4 flex items-center gap-4">
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => handleUpdateQuantity(cartItem.itemId, cartItem.quantity - 1)}
-                            disabled={isUpdating === cartItem.itemId || cartItem.quantity <= 1}
-                            className="rounded-lg border border-porcelain/20 bg-graphite/60 p-2 text-porcelain transition-colors duration-sap hover:bg-porcelain/10 disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                            </svg>
-                          </button>
-                          
-                          <span className="w-8 text-center text-porcelain font-medium">
-                            {cartItem.quantity}
-                          </span>
-                          
-                          <button
-                            onClick={() => handleUpdateQuantity(cartItem.itemId, cartItem.quantity + 1)}
-                            disabled={isUpdating === cartItem.itemId}
-                            className="rounded-lg border border-porcelain/20 bg-graphite/60 p-2 text-porcelain transition-colors duration-sap hover:bg-porcelain/10 disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
-                          </button>
-                        </div>
-
+                      {/* Remove Button */}
+                      <div className="mt-4 flex justify-end">
                         <button
                           onClick={() => handleRemoveItem(cartItem.itemId)}
                           disabled={isUpdating === cartItem.itemId}
-                          className="ml-auto text-red-400 hover:text-red-300 transition-colors duration-sap disabled:opacity-50"
+                          className="text-red-400 hover:text-red-300 transition-colors duration-sap disabled:opacity-50 flex items-center gap-2"
                         >
+                          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
                           Remove
                         </button>
                       </div>

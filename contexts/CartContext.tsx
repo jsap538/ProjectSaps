@@ -112,6 +112,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (data.success) {
         await fetchCart(); // Refresh cart
       } else {
+        console.error('Failed to remove item:', data.error);
         alert(data.error || 'Failed to remove item from cart');
       }
     } catch (error) {

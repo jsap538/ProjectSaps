@@ -79,8 +79,8 @@ export default function ProductCard({ item }: ProductCardProps) {
         </div>
       </Link>
       
-      {/* Add to Cart Button */}
-      <div className="p-4 pt-0">
+      {/* Action Buttons */}
+      <div className="p-4 pt-0 space-y-2">
         <button
           onClick={handleAddToCart}
           disabled={isAdding || isLoading}
@@ -88,6 +88,12 @@ export default function ProductCard({ item }: ProductCardProps) {
         >
           {isAdding ? 'Adding...' : 'Add to Cart'}
         </button>
+        
+        <Link href={`/items/${item._id}`}>
+          <button className="w-full rounded-xl bg-porcelain text-ink px-4 py-2.5 text-sm font-semibold transition-transform duration-sap hover:-translate-y-px shadow-subtle">
+            Buy Now
+          </button>
+        </Link>
       </div>
     </motion.article>
   );
