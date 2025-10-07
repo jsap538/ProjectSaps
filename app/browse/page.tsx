@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import ProductCard from "@/components/ProductCard";
-import CondensedFilters from "@/components/CondensedFilters";
+import EnhancedFilters from "@/components/EnhancedFilters";
 import type { IItem, ItemFilters } from "@/types";
 
 // Mock data (fallback)
@@ -236,7 +236,7 @@ export default function BrowsePage() {
         </div>
 
         {/* Search and Sort Bar */}
-        <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           {/* Search Bar */}
           <div className="flex-1 max-w-lg">
             <div className="relative group">
@@ -274,18 +274,40 @@ export default function BrowsePage() {
           </div>
         </div>
 
-        {/* Condensed Filter Bar */}
-        <div className="mb-8">
-          <div className="bg-graphite/60 border border-porcelain/10 shadow-soft rounded-xl overflow-hidden">
-            <div className="flex flex-wrap items-center gap-2 p-4">
-              <span className="text-sm font-medium text-nickel mr-2">Filters:</span>
-              <CondensedFilters filters={filters} onFiltersChange={handleFiltersChange} />
-            </div>
-          </div>
-        </div>
+        <div className="flex flex-col gap-8 lg:flex-row">
+          {/* Filters Sidebar */}
+          <aside className="lg:w-80">
+            <div className="sticky top-24 bg-graphite/60 border border-porcelain/10 shadow-soft p-6 rounded-xl">
+              <div className="mb-6 flex items-center justify-between lg:block">
+                <h2 className="text-lg font-medium text-porcelain">Filters</h2>
+                <button
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="text-nickel lg:hidden"
+                >
+                  <svg
+                    className={`h-5 w-5 transition duration-sap ${showFilters ? "rotate-180" : ""}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.75}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+              </div>
 
-        {/* Listings Grid */}
-        <div className="w-full">
+              <div className={`${showFilters ? "block" : "hidden lg:block"}`}>
+                <EnhancedFilters onFiltersChange={handleFiltersChange} />
+              </div>
+            </div>
+          </aside>
+
+          {/* Listings Grid */}
+          <div className="flex-1">
             {loading ? (
               <div className="grid grid-cols-2 gap-6 md:grid-cols-3">
                 {[...Array(6)].map((_, i) => (
@@ -324,6 +346,7 @@ export default function BrowsePage() {
                 </p>
               </div>
             )}
+          </div>
         </div>
       </div>
     </div>
