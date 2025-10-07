@@ -116,25 +116,76 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
 
       {/* Price Range */}
       <div>
-        <label className="block text-sm font-medium text-porcelain mb-2">
+        <label className="block text-sm font-medium text-porcelain mb-3">
           Price Range
         </label>
-        <div className="space-y-2">
-          {PRICE_RANGES.map(range => (
-            <label key={range.label} className="flex items-center space-x-2">
+        
+        {/* Price Input Boxes */}
+        <div className="flex items-center gap-3 mb-4">
+          <div className="flex-1">
+            <label className="block text-xs text-nickel mb-1">From</label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-nickel">$</span>
               <input
-                type="radio"
-                name="priceRange"
-                checked={
-                  filters.priceRange.min === range.min &&
-                  filters.priceRange.max === range.max
-                }
-                onChange={() => handlePriceRangeChange({ min: range.min, max: range.max })}
-                className="text-titanium focus:ring-titanium/20"
+                type="number"
+                value={filters.priceRange.min === 0 ? '' : Math.floor(filters.priceRange.min / 100)}
+                onChange={(e) => {
+                  const value = e.target.value === '' ? 0 : parseInt(e.target.value) * 100;
+                  handlePriceRangeChange({ 
+                    min: value, 
+                    max: filters.priceRange.max 
+                  });
+                }}
+                placeholder="10"
+                className="w-full pl-8 pr-3 py-2 rounded-lg border border-porcelain/20 bg-ink text-porcelain placeholder-nickel focus:border-titanium focus:outline-none focus:ring-1 focus:ring-titanium/20 text-sm"
               />
-              <span className="text-sm text-nickel">{range.label}</span>
-            </label>
-          ))}
+            </div>
+          </div>
+          
+          <div className="flex-1">
+            <label className="block text-xs text-nickel mb-1">To</label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-nickel">$</span>
+              <input
+                type="number"
+                value={filters.priceRange.max === Infinity ? '' : Math.floor(filters.priceRange.max / 100)}
+                onChange={(e) => {
+                  const value = e.target.value === '' ? Infinity : parseInt(e.target.value) * 100;
+                  handlePriceRangeChange({ 
+                    min: filters.priceRange.min, 
+                    max: value 
+                  });
+                }}
+                placeholder="50"
+                className="w-full pl-8 pr-3 py-2 rounded-lg border border-porcelain/20 bg-ink text-porcelain placeholder-nickel focus:border-titanium focus:outline-none focus:ring-1 focus:ring-titanium/20 text-sm"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Price Ranges */}
+        <div className="space-y-2">
+          <div className="text-xs text-nickel mb-2">Quick Select:</div>
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              { label: '<$10', min: 0, max: 1000 },
+              { label: '$10-$50', min: 1000, max: 5000 },
+              { label: '$50-$250', min: 5000, max: 25000 },
+              { label: '>$250', min: 25000, max: Infinity }
+            ].map(range => (
+              <button
+                key={range.label}
+                onClick={() => handlePriceRangeChange({ min: range.min, max: range.max })}
+                className={`px-3 py-2 rounded-lg text-xs font-medium transition-colors duration-sap ${
+                  filters.priceRange.min === range.min && filters.priceRange.max === range.max
+                    ? 'bg-titanium/20 text-titanium border border-titanium/30'
+                    : 'bg-graphite/60 text-nickel border border-porcelain/20 hover:bg-graphite/80 hover:text-porcelain'
+                }`}
+              >
+                {range.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
