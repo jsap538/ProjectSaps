@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import connectDB from '@/lib/mongodb';
-import User from '@/models/User';
+import User, { ICartItem } from '@/models/User';
 import Item from '@/models/Item';
 
 // GET /api/cart - Get user's cart
@@ -22,7 +22,7 @@ export async function GET() {
 
     // Get full item details for cart items
     const cartItems = await Promise.all(
-      user.cart.map(async (cartItem) => {
+      user.cart.map(async (cartItem: ICartItem) => {
         const item = await Item.findById(cartItem.itemId);
         return {
           ...cartItem.toObject(),
