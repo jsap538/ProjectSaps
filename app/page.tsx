@@ -48,7 +48,6 @@ export default function Home() {
         <div className="relative z-10 mx-auto max-w-7xl px-6 py-24">
           <div className="flex items-center justify-between">
             <div className="max-w-2xl">
-              <BrandMark className="h-12 w-12 text-titanium mb-6" />
               <div className="mb-8 text-sm font-medium text-nickel tracking-wider uppercase">
                 Premium Collection
               </div>
@@ -80,7 +79,7 @@ export default function Home() {
             
             {/* Large Logo */}
             <div className="hidden lg:flex items-center justify-center">
-              <BrandMark className="h-32 w-32 text-titanium/20" />
+              <BrandMark className="h-48 w-48 text-titanium/20" />
             </div>
           </div>
         </div>
