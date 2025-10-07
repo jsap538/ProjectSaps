@@ -127,7 +127,7 @@ export default function CartPage() {
                 console.log('Rendering cart item:', cartItem); // Debug log
                 return (
                 <div
-                  key={cartItem._doc?.itemId || cartItem.itemId}
+                  key={cartItem.itemId}
                   className="rounded-2xl border border-porcelain/10 bg-graphite/60 p-6 shadow-subtle"
                 >
                   <div className="flex gap-6">
@@ -166,8 +166,8 @@ export default function CartPage() {
                       {/* Remove Button */}
                       <div className="mt-4 flex justify-end">
                         <button
-                          onClick={() => handleRemoveItem(cartItem._doc?.itemId || cartItem.itemId)}
-                          disabled={isUpdating === (cartItem._doc?.itemId || cartItem.itemId)}
+                          onClick={() => handleRemoveItem(cartItem.itemId)}
+                          disabled={isUpdating === cartItem.itemId}
                           className="text-red-400 hover:text-red-300 transition-colors duration-sap disabled:opacity-50 flex items-center gap-2"
                         >
                           <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

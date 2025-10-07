@@ -7,11 +7,6 @@ interface CartItem {
   itemId: string;
   quantity: number;
   addedAt: string;
-  _doc?: {
-    itemId: string;
-    quantity: number;
-    addedAt: string;
-  };
   item?: {
     _id: string;
     title: string;

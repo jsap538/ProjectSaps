@@ -29,7 +29,7 @@ export async function GET() {
           quantity: cartItem.quantity,
           addedAt: cartItem.addedAt,
           item: item ? {
-            _id: item._id,
+            _id: item._id.toString(),
             title: item.title,
             brand: item.brand,
             price_cents: item.price_cents,
