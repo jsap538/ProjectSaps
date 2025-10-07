@@ -167,7 +167,7 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
 
         {/* Price Range Slider */}
         <div className="mb-4">
-          <div className="relative px-2">
+          <div className="relative px-2 py-2">
             {/* Slider Track */}
             <div className="h-2 bg-porcelain/20 rounded-full relative">
               {/* Active Range */}
@@ -181,42 +181,103 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
             </div>
             
             {/* Min Handle */}
-            <input
-              type="range"
-              min="0"
-              max="100000"
-              step="100"
-              value={filters.priceRange.min}
-              onChange={(e) => {
-                const minValue = parseInt(e.target.value);
-                const currentMax = filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max;
-                const maxValue = Math.max(minValue, currentMax);
-                handlePriceRangeChange({ 
-                  min: minValue, 
-                  max: maxValue === 100000 ? Infinity : maxValue
-                });
+            <div
+              className="absolute top-1 w-4 h-4 bg-titanium rounded-full cursor-pointer shadow-md hover:scale-110 transition-transform slider-handle"
+              style={{
+                left: `calc(${Math.max(0, ((filters.priceRange.min - 0) / (100000 - 0)) * 100)}% - 8px)`,
+                zIndex: 10
               }}
-              className="absolute top-0 left-2 right-2 w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb slider-thumb-min"
-              style={{ zIndex: 2 }}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                const slider = e.currentTarget.parentElement;
+                const track = slider?.querySelector('.slider-track') as HTMLElement;
+                if (!track) return;
+
+                const handleMouseMove = (event: MouseEvent) => {
+                  const rect = track.getBoundingClientRect();
+                  const percentage = Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100));
+                  const value = Math.round((percentage / 100) * 100000 / 100) * 100;
+                  const maxValue = filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max;
+                  const newMin = Math.min(value, maxValue);
+                  const newMax = Math.max(newMin, maxValue);
+                  handlePriceRangeChange({ 
+                    min: newMin, 
+                    max: newMax === 100000 ? Infinity : newMax
+                  });
+                };
+
+                const handleMouseUp = () => {
+                  document.removeEventListener('mousemove', handleMouseMove);
+                  document.removeEventListener('mouseup', handleMouseUp);
+                };
+
+                document.addEventListener('mousemove', handleMouseMove);
+                document.addEventListener('mouseup', handleMouseUp);
+              }}
             />
             
             {/* Max Handle */}
-            <input
-              type="range"
-              min="0"
-              max="100000"
-              step="100"
-              value={filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max}
-              onChange={(e) => {
-                const maxValue = parseInt(e.target.value);
-                const minValue = Math.min(maxValue, filters.priceRange.min);
-                handlePriceRangeChange({ 
-                  min: minValue, 
-                  max: maxValue === 100000 ? Infinity : maxValue
-                });
+            <div
+              className="absolute top-1 w-4 h-4 bg-titanium rounded-full cursor-pointer shadow-md hover:scale-110 transition-transform slider-handle"
+              style={{
+                left: `calc(${Math.max(0, (((filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max) - 0) / (100000 - 0)) * 100)}% - 8px)`,
+                zIndex: 10
               }}
-              className="absolute top-0 left-2 right-2 w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb slider-thumb-max"
-              style={{ zIndex: 1 }}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                const slider = e.currentTarget.parentElement;
+                const track = slider?.querySelector('.slider-track') as HTMLElement;
+                if (!track) return;
+
+                const handleMouseMove = (event: MouseEvent) => {
+                  const rect = track.getBoundingClientRect();
+                  const percentage = Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100));
+                  const value = Math.round((percentage / 100) * 100000 / 100) * 100;
+                  const newMax = Math.max(value, filters.priceRange.min);
+                  handlePriceRangeChange({ 
+                    min: filters.priceRange.min, 
+                    max: newMax === 100000 ? Infinity : newMax
+                  });
+                };
+
+                const handleMouseUp = () => {
+                  document.removeEventListener('mousemove', handleMouseMove);
+                  document.removeEventListener('mouseup', handleMouseUp);
+                };
+
+                document.addEventListener('mousemove', handleMouseMove);
+                document.addEventListener('mouseup', handleMouseUp);
+              }}
+            />
+            
+            {/* Hidden Track for Click Detection */}
+            <div 
+              className="absolute top-1 h-4 w-full cursor-pointer slider-track"
+              onClick={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const percentage = ((e.clientX - rect.left) / rect.width) * 100;
+                const value = Math.round((percentage / 100) * 100000 / 100) * 100;
+                const currentMin = filters.priceRange.min;
+                const currentMax = filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max;
+                
+                // Determine which handle to move based on which is closer
+                const distanceToMin = Math.abs(value - currentMin);
+                const distanceToMax = Math.abs(value - currentMax);
+                
+                if (distanceToMin < distanceToMax) {
+                  const newMin = Math.min(value, currentMax);
+                  handlePriceRangeChange({ 
+                    min: newMin, 
+                    max: currentMax === 100000 ? Infinity : currentMax
+                  });
+                } else {
+                  const newMax = Math.max(value, currentMin);
+                  handlePriceRangeChange({ 
+                    min: currentMin, 
+                    max: newMax === 100000 ? Infinity : newMax
+                  });
+                }
+              }}
             />
             
             {/* Price Labels */}

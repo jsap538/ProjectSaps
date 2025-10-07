@@ -88,50 +88,25 @@ body {
   border-radius: 4px;
 }
 
-/* Dual Range Slider Specific Styles */
-.slider-thumb-min::-webkit-slider-thumb {
-  background: #D9D9D9;
-  border-color: #D9D9D9;
+/* Custom Slider Handle Styles */
+.slider-handle {
+  border: 2px solid #F5F6F7;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
 }
 
-.slider-thumb-max::-webkit-slider-thumb {
-  background: #D9D9D9;
-  border-color: #D9D9D9;
+.slider-handle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-.slider-thumb-min::-moz-range-thumb {
-  background: #D9D9D9;
-  border-color: #D9D9D9;
-}
-
-.slider-thumb-max::-moz-range-thumb {
-  background: #D9D9D9;
-  border-color: #D9D9D9;
-}
-
-/* Ensure both handles are visible and functional */
-.slider-thumb-min::-webkit-slider-thumb:active {
-  background: #D9D9D9;
+.slider-handle:active {
   transform: scale(1.2);
-  z-index: 10;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
 }
 
-.slider-thumb-max::-webkit-slider-thumb:active {
-  background: #D9D9D9;
-  transform: scale(1.2);
-  z-index: 10;
-}
-
-.slider-thumb-min::-moz-range-thumb:active {
-  background: #D9D9D9;
-  transform: scale(1.2);
-  z-index: 10;
-}
-
-.slider-thumb-max::-moz-range-thumb:active {
-  background: #D9D9D9;
-  transform: scale(1.2);
-  z-index: 10;
+.slider-track {
+  background: transparent;
 }
 
 a {
