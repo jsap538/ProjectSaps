@@ -14,6 +14,15 @@ export default function CartPage() {
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
 
   const handleRemoveItem = async (itemId: string) => {
+    console.log('handleRemoveItem called with:', itemId); // Debug log
+    console.log('Cart data:', cart); // Debug log
+    
+    if (!itemId) {
+      console.error('No itemId provided to handleRemoveItem');
+      alert('Error: No item ID provided');
+      return;
+    }
+    
     setIsUpdating(itemId);
     try {
       await removeFromCart(itemId);
@@ -114,7 +123,9 @@ export default function CartPage() {
           {/* Cart Items */}
           <div className="lg:col-span-2">
             <div className="space-y-6">
-              {cart.map((cartItem) => (
+              {cart.map((cartItem) => {
+                console.log('Rendering cart item:', cartItem); // Debug log
+                return (
                 <div
                   key={cartItem.itemId}
                   className="rounded-2xl border border-porcelain/10 bg-graphite/60 p-6 shadow-subtle"
@@ -168,7 +179,8 @@ export default function CartPage() {
                     </div>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Clear Cart Button */}
