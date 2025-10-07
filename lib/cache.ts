@@ -169,7 +169,7 @@ export class DataTransformer {
     
     for (const key of essentialFields) {
       if (key in data && data[key] !== undefined) {
-        minimal[key] = data[key];
+        (minimal as any)[key] = (data as any)[key];
       }
     }
     

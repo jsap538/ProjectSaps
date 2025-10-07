@@ -38,12 +38,8 @@ export const itemSchema = z.object({
   images: z.array(z.string().url('Invalid image URL'))
     .min(1, 'At least one image is required')
     .max(5, 'Maximum 5 images allowed'),
-  condition: z.enum(['New', 'Like New', 'Good', 'Fair', 'Poor'], {
-    errorMap: () => ({ message: 'Invalid condition' })
-  }),
-  category: z.enum(['tie', 'belt', 'cufflinks', 'pocket-square'], {
-    errorMap: () => ({ message: 'Invalid category' })
-  }),
+  condition: z.enum(['New', 'Like New', 'Good', 'Fair', 'Poor']),
+  category: z.enum(['tie', 'belt', 'cufflinks', 'pocket-square']),
   color: z.string()
     .min(1, 'Color is required')
     .max(30, 'Color name too long')
@@ -151,7 +147,7 @@ export function sanitizeAndValidate<T>(schema: z.ZodSchema<T>, data: any): {
   if (!result.success && result.errors) {
     return {
       success: false,
-      errors: result.errors.errors.map(err => `${err.path.join('.')}: ${err.message}`)
+      errors: result.errors?.issues.map((err: any) => `${err.path.join('.')}: ${err.message}`) || []
     };
   }
 

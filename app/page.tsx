@@ -92,7 +92,7 @@ export default function Home() {
 
           <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4 lg:gap-7">
             {featuredItems.map((item) => (
-              <ListingCard key={item.id} item={item} />
+              <ListingCard key={item.id} item={{...item, _id: item.id}} />
             ))}
           </div>
 

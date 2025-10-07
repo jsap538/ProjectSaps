@@ -19,7 +19,7 @@ export default function TestAuthPage() {
       const data = await response.json();
       setApiResponse(data);
     } catch (error) {
-      setApiResponse({ error: error.message });
+      setApiResponse({ error: error instanceof Error ? error.message : 'Unknown error' });
     }
   };
 

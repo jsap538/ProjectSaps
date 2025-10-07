@@ -151,7 +151,22 @@ export default function BrowsePage() {
         if (maxPrice && item.price_cents > parseInt(maxPrice) * 100) return false;
         return true;
       });
-      setItems(filteredMockItems.map(item => ({ ...item, _id: item.id, images: [item.image] })));
+      setItems(filteredMockItems.map(item => ({ 
+        ...item, 
+        _id: item.id, 
+        images: [item.image],
+        description: 'Premium quality item',
+        shipping_cents: 599,
+        location: 'United States',
+        sellerId: {} as any,
+        condition: item.condition as 'New' | 'Like New' | 'Good' | 'Fair' | 'Poor',
+        category: item.category as 'tie' | 'belt' | 'cufflinks' | 'pocket-square',
+        isActive: true,
+        isApproved: true,
+        views: 0,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      })));
       setTotalItems(filteredMockItems.length);
     } finally {
       setLoading(false);

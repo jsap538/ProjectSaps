@@ -125,7 +125,7 @@ export function withRateLimit(
           status: 429,
           headers: {
             'Content-Type': 'application/json',
-            'X-RateLimit-Limit': rateLimiter.config.maxRequests.toString(),
+            'X-RateLimit-Limit': (rateLimiter as any).config.maxRequests.toString(),
             'X-RateLimit-Remaining': result.remaining.toString(),
             'X-RateLimit-Reset': result.resetTime.toString(),
             'Retry-After': Math.ceil((result.resetTime - Date.now()) / 1000).toString(),
@@ -137,7 +137,7 @@ export function withRateLimit(
     const response = await handler(request, ...args);
     
     // Add rate limit headers to successful responses
-    response.headers.set('X-RateLimit-Limit', rateLimiter.config.maxRequests.toString());
+    response.headers.set('X-RateLimit-Limit', (rateLimiter as any).config.maxRequests.toString());
     response.headers.set('X-RateLimit-Remaining', result.remaining.toString());
     response.headers.set('X-RateLimit-Reset', result.resetTime.toString());
 
