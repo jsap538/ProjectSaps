@@ -114,14 +114,17 @@ export async function PUT(
 
     const { id, ...updateData } = validation.data!; // Remove ID from update data
 
+    // Prepare update object with proper typing
+    const updateObject: any = { ...updateData, updatedAt: new Date() };
+
     // If item was approved and we're updating, it needs re-approval
     if (item.isApproved) {
-      updateData.isApproved = false;
+      updateObject.isApproved = false;
     }
 
     const updatedItem = await Item.findByIdAndUpdate(
       resolvedParams.id,
-      { ...updateData, updatedAt: new Date() },
+      updateObject,
       { new: true, runValidators: true }
     ).populate('sellerId', 'firstName lastName rating totalSales');
 
