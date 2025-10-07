@@ -167,7 +167,7 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
 
         {/* Price Range Slider */}
         <div className="mb-4">
-          <div className="relative">
+          <div className="relative px-2">
             {/* Slider Track */}
             <div className="h-2 bg-porcelain/20 rounded-full relative">
               {/* Active Range */}
@@ -178,49 +178,49 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
                   width: `${Math.min(100, (((filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max) - filters.priceRange.min) / (100000 - 0)) * 100)}%`
                 }}
               />
-              
-              {/* Min Handle */}
-              <input
-                type="range"
-                min="0"
-                max="100000"
-                step="100"
-                value={filters.priceRange.min}
-                onChange={(e) => {
-                  const minValue = parseInt(e.target.value);
-                  const currentMax = filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max;
-                  const maxValue = Math.max(minValue, currentMax);
-                  handlePriceRangeChange({ 
-                    min: minValue, 
-                    max: maxValue === 100000 ? Infinity : maxValue
-                  });
-                }}
-                className="absolute top-0 left-0 w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb"
-                style={{ zIndex: 2 }}
-              />
-              
-              {/* Max Handle */}
-              <input
-                type="range"
-                min="0"
-                max="100000"
-                step="100"
-                value={filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max}
-                onChange={(e) => {
-                  const maxValue = parseInt(e.target.value);
-                  const minValue = Math.min(maxValue, filters.priceRange.min);
-                  handlePriceRangeChange({ 
-                    min: minValue, 
-                    max: maxValue === 100000 ? Infinity : maxValue
-                  });
-                }}
-                className="absolute top-0 left-0 w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb"
-                style={{ zIndex: 1 }}
-              />
             </div>
             
+            {/* Min Handle */}
+            <input
+              type="range"
+              min="0"
+              max="100000"
+              step="100"
+              value={filters.priceRange.min}
+              onChange={(e) => {
+                const minValue = parseInt(e.target.value);
+                const currentMax = filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max;
+                const maxValue = Math.max(minValue, currentMax);
+                handlePriceRangeChange({ 
+                  min: minValue, 
+                  max: maxValue === 100000 ? Infinity : maxValue
+                });
+              }}
+              className="absolute top-0 left-2 right-2 w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb slider-thumb-min"
+              style={{ zIndex: 2 }}
+            />
+            
+            {/* Max Handle */}
+            <input
+              type="range"
+              min="0"
+              max="100000"
+              step="100"
+              value={filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max}
+              onChange={(e) => {
+                const maxValue = parseInt(e.target.value);
+                const minValue = Math.min(maxValue, filters.priceRange.min);
+                handlePriceRangeChange({ 
+                  min: minValue, 
+                  max: maxValue === 100000 ? Infinity : maxValue
+                });
+              }}
+              className="absolute top-0 left-2 right-2 w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb slider-thumb-max"
+              style={{ zIndex: 1 }}
+            />
+            
             {/* Price Labels */}
-            <div className="flex justify-between mt-2 text-xs text-nickel">
+            <div className="flex justify-between mt-3 text-xs text-nickel">
               <span>${Math.floor(filters.priceRange.min / 100)}</span>
               <span>{filters.priceRange.max === Infinity ? '$1000+' : `$${Math.floor(filters.priceRange.max / 100)}`}</span>
             </div>
