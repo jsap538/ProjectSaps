@@ -107,7 +107,7 @@ export default function Home() {
       </section>
 
       {/* Featured Listings */}
-      <section className="bg-gray-50 py-24">
+      <section className="bg-gray-100 py-24">
         <div className="mx-auto max-w-6xl px-8">
           <div className="mb-16 text-center">
             <div className="mb-6 text-sm font-medium text-gray-600 tracking-wider uppercase">
