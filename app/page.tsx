@@ -78,8 +78,8 @@ export default function Home() {
             </div>
             
             {/* Large Logo */}
-            <div className="hidden lg:flex items-center justify-center">
-              <BrandMark className="h-48 w-48 text-titanium/20" />
+            <div className="hidden lg:flex items-center justify-end">
+              <BrandMark className="h-120 w-120 text-titanium/20" />
             </div>
           </div>
         </div>
