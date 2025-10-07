@@ -120,6 +120,51 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
           Price Range
         </label>
         
+        {/* Price Range Input Boxes */}
+        <div className="flex items-center gap-3 mb-4">
+          <div className="flex-1">
+            <label className="block text-xs text-nickel mb-1">From</label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-nickel">$</span>
+              <input
+                type="number"
+                value={filters.priceRange.min === 0 ? '' : Math.floor(filters.priceRange.min / 100)}
+                onChange={(e) => {
+                  const value = e.target.value === '' ? 0 : parseInt(e.target.value) * 100;
+                  const maxValue = Math.max(value, filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max);
+                  handlePriceRangeChange({ 
+                    min: value, 
+                    max: maxValue === 100000 ? Infinity : maxValue
+                  });
+                }}
+                placeholder="0"
+                className="w-full pl-8 pr-3 py-2 rounded-lg border border-porcelain/20 bg-ink text-porcelain placeholder-nickel focus:border-titanium focus:outline-none focus:ring-1 focus:ring-titanium/20 text-sm"
+              />
+            </div>
+          </div>
+          
+          <div className="flex-1">
+            <label className="block text-xs text-nickel mb-1">To</label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-nickel">$</span>
+              <input
+                type="number"
+                value={filters.priceRange.max === Infinity ? '' : Math.floor(filters.priceRange.max / 100)}
+                onChange={(e) => {
+                  const value = e.target.value === '' ? Infinity : parseInt(e.target.value) * 100;
+                  const minValue = Math.min(value, filters.priceRange.min);
+                  handlePriceRangeChange({ 
+                    min: minValue, 
+                    max: value
+                  });
+                }}
+                placeholder="1000"
+                className="w-full pl-8 pr-3 py-2 rounded-lg border border-porcelain/20 bg-ink text-porcelain placeholder-nickel focus:border-titanium focus:outline-none focus:ring-1 focus:ring-titanium/20 text-sm"
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Price Range Slider */}
         <div className="mb-4">
           <div className="relative">
@@ -130,7 +175,7 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
                 className="absolute h-2 bg-titanium/60 rounded-full"
                 style={{
                   left: `${Math.max(0, ((filters.priceRange.min - 0) / (100000 - 0)) * 100)}%`,
-                  width: `${Math.min(100, ((filters.priceRange.max - filters.priceRange.min) / (100000 - 0)) * 100)}%`
+                  width: `${Math.min(100, (((filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max) - filters.priceRange.min) / (100000 - 0)) * 100)}%`
                 }}
               />
               
@@ -143,8 +188,12 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
                 value={filters.priceRange.min}
                 onChange={(e) => {
                   const minValue = parseInt(e.target.value);
-                  const maxValue = Math.max(minValue, filters.priceRange.max);
-                  handlePriceRangeChange({ min: minValue, max: maxValue });
+                  const currentMax = filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max;
+                  const maxValue = Math.max(minValue, currentMax);
+                  handlePriceRangeChange({ 
+                    min: minValue, 
+                    max: maxValue === 100000 ? Infinity : maxValue
+                  });
                 }}
                 className="absolute top-0 left-0 w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb"
                 style={{ zIndex: 2 }}
@@ -160,7 +209,10 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
                 onChange={(e) => {
                   const maxValue = parseInt(e.target.value);
                   const minValue = Math.min(maxValue, filters.priceRange.min);
-                  handlePriceRangeChange({ min: minValue, max: maxValue });
+                  handlePriceRangeChange({ 
+                    min: minValue, 
+                    max: maxValue === 100000 ? Infinity : maxValue
+                  });
                 }}
                 className="absolute top-0 left-0 w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb"
                 style={{ zIndex: 1 }}
