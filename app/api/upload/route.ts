@@ -10,12 +10,14 @@ import { corsHeaders } from '@/lib/security';
 const UPLOAD_DIR = join(process.cwd(), 'public', 'uploads');
 
 export async function POST(request: NextRequest) {
-  const { userId } = auth();
-  if (!userId) {
-    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401, headers: corsHeaders });
-  }
-
   try {
+    const { userId } = auth();
+    console.log('Upload API - User ID:', userId);
+    
+    if (!userId) {
+      console.log('Upload API - No user ID found, returning unauthorized');
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401, headers: corsHeaders });
+    }
     const formData = await request.formData();
     const file = formData.get('image') as File;
 
@@ -67,4 +69,12 @@ export async function POST(request: NextRequest) {
       error: 'Failed to upload image' 
     }, { status: 500, headers: corsHeaders });
   }
+}
+
+// Handle CORS preflight requests
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: corsHeaders,
+  });
 }
