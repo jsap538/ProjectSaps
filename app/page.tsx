@@ -45,7 +45,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative bg-ink text-porcelain">
         <div className="absolute inset-0 bg-gradient-to-b from-ink via-graphite to-ink opacity-70" />
-        <div className="relative z-10 mx-auto max-w-7xl px-6 py-24">
+        <div className="relative z-10 mx-auto max-w-7xl px-6 py-12">
           <div className="flex items-center justify-between">
             <div className="max-w-2xl">
               <div className="mb-8 text-sm font-medium text-nickel tracking-wider uppercase">
