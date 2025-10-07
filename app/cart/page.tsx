@@ -146,9 +146,11 @@ export default function CartPage() {
                     <div className="flex-1">
                       <div className="flex items-start justify-between">
                         <div>
-                          <h3 className="text-lg font-semibold text-porcelain">
-                            {cartItem.item?.title || 'Item'}
-                          </h3>
+                          <Link href={`/items/${cartItem.itemId}`}>
+                            <h3 className="text-lg font-semibold text-porcelain hover:text-titanium transition-colors duration-sap cursor-pointer">
+                              {cartItem.item?.title || 'Item'}
+                            </h3>
+                          </Link>
                           <p className="text-nickel">{cartItem.item?.brand}</p>
                           <p className="text-sm text-nickel">Condition: {cartItem.item?.condition}</p>
                         </div>
