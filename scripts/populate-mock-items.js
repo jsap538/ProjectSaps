@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 
-// Set environment variables directly for the script
-process.env.MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://jsap538:jsap538@cluster0.v8k5l.mongodb.net/saps?retryWrites=true&w=majority';
+// Environment variables should be set externally - never hardcode credentials
+if (!process.env.MONGODB_URI) {
+  console.error('❌ MONGODB_URI environment variable is required');
+  process.exit(1);
+}
 
 // Import models - need to handle both CommonJS and ES modules
 let Item, User;

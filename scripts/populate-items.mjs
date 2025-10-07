@@ -1,7 +1,13 @@
 import mongoose from 'mongoose';
 
-// MongoDB connection string
-const MONGODB_URI = 'mongodb+srv://jsap538:jsap538@cluster0.v8k5l.mongodb.net/saps?retryWrites=true&w=majority';
+// MongoDB connection string - should come from environment variables
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  console.error('❌ MONGODB_URI environment variable is required');
+  console.error('Please set MONGODB_URI in your environment variables');
+  process.exit(1);
+}
 
 // Define schemas directly in the script
 const UserSchema = new mongoose.Schema({

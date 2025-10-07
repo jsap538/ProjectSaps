@@ -27,12 +27,24 @@ A modern, sleek marketplace for buying and selling premium men's accessories inc
 
 ### Installation
 
-1. Install dependencies:
-```bash
-npm install
-```
+1. Clone the repository:
+   ```bash
+   git clone <your-repo-url>
+   cd ProjectSaps
+   ```
 
-2. Run the development server:
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   ```bash
+   cp env.example .env.local
+   ```
+   Edit `.env.local` with your actual credentials (never commit this file).
+
+4. Run the development server:
 ```bash
 npm run dev
 ```
@@ -78,6 +90,18 @@ npm run dev
 - ✅ Clerk authentication integration
 - ✅ MongoDB database with Mongoose models
 - ✅ Protected routes middleware
+
+## Security
+
+**⚠️ IMPORTANT SECURITY NOTICE:**
+
+- **Never commit `.env.local`** or any files containing credentials
+- **Use environment variables** for all sensitive data
+- **Rotate credentials** if they are ever exposed
+- **Use the secure script runner** for database operations:
+  ```bash
+  node scripts/run-with-env.js scripts/populate-items.mjs
+  ```
 
 ## Next Steps (Backend Integration)
 
