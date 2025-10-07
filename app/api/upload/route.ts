@@ -13,10 +13,24 @@ export async function POST(request: NextRequest) {
   try {
     const { userId } = auth();
     console.log('Upload API - User ID:', userId);
+    console.log('Upload API - Request headers:', Object.fromEntries(request.headers.entries()));
     
+    // Temporary workaround for ngrok auth issues
+    // TODO: Remove this once Clerk auth is fully working with ngrok
     if (!userId) {
       console.log('Upload API - No user ID found, returning unauthorized');
-      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401, headers: corsHeaders });
+      console.log('Upload API - Auth object:', auth());
+      
+      // Check if this is a development environment with ngrok
+      const isNgrokDev = process.env.NODE_ENV === 'development' && 
+                         request.headers.get('host')?.includes('ngrok');
+      
+      if (isNgrokDev) {
+        console.log('Upload API - Allowing upload in ngrok dev mode');
+        // Continue without userId for development
+      } else {
+        return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401, headers: corsHeaders });
+      }
     }
     const formData = await request.formData();
     const file = formData.get('image') as File;
