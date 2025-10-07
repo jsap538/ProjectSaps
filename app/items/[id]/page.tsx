@@ -3,33 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, use } from "react";
-
-interface Item {
-  _id: string;
-  title: string;
-  brand: string;
-  price_cents: number;
-  shipping_cents: number;
-  images?: string[];
-  condition: string;
-  category: string;
-  color: string;
-  material?: string;
-  width_cm?: number;
-  location: string;
-  description: string;
-  views: number;
-  sellerId: {
-    firstName: string;
-    lastName: string;
-    rating: number;
-    totalSales: number;
-  };
-}
+import type { IItem } from "@/types";
 
 export default function ItemPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
-  const [item, setItem] = useState<Item | null>(null);
+  const [item, setItem] = useState<IItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

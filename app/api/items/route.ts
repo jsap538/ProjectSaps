@@ -6,6 +6,8 @@ import User from '@/models/User';
 import { withRateLimit, rateLimiters } from '@/lib/rate-limit';
 import { sanitizeAndValidate, itemSchema } from '@/lib/validation';
 import { corsHeaders } from '@/lib/security';
+import { apiCache } from '@/lib/cache';
+import type { IItem, ItemFilters, ApiResponse } from '@/types';
 
 // GET /api/items - Browse items with filters
 export async function GET(request: NextRequest) {
@@ -15,17 +17,28 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const queryParams = Object.fromEntries(searchParams.entries());
     
+    // Generate cache key for this request
+    const cacheKey = apiCache.generateKey('/api/items', queryParams);
+    
+    // Try to get from cache first
+    const cachedResult = await apiCache.get<ApiResponse<IItem[]>>(cacheKey);
+    if (cachedResult) {
+      return NextResponse.json(cachedResult, { headers: corsHeaders });
+    }
+
     // Parse query parameters with defaults
-    const page = parseInt(queryParams.page || '1');
-    const limit = parseInt(queryParams.limit || '12');
-    const category = queryParams.category;
-    const brand = queryParams.brand;
-    const condition = queryParams.condition;
-    const color = queryParams.color;
-    const minPrice = queryParams.minPrice ? parseInt(queryParams.minPrice) : undefined;
-    const maxPrice = queryParams.maxPrice ? parseInt(queryParams.maxPrice) : undefined;
-    const search = queryParams.search;
-    const sortBy = queryParams.sortBy || 'newest';
+    const filters: ItemFilters = {
+      page: parseInt(queryParams.page || '1'),
+      limit: parseInt(queryParams.limit || '12'),
+      category: queryParams.category,
+      brand: queryParams.brand,
+      condition: queryParams.condition,
+      color: queryParams.color,
+      minPrice: queryParams.minPrice ? parseInt(queryParams.minPrice) : undefined,
+      maxPrice: queryParams.maxPrice ? parseInt(queryParams.maxPrice) : undefined,
+      search: queryParams.search,
+      sortBy: (queryParams.sortBy as any) || 'newest',
+    };
 
     // Build filter object
     const filter: any = {
@@ -33,28 +46,28 @@ export async function GET(request: NextRequest) {
       isApproved: true,
     };
 
-    if (category) filter.category = category;
-    if (brand) filter.brand = new RegExp(brand, 'i');
-    if (condition) filter.condition = condition;
-    if (color) filter.color = new RegExp(color, 'i');
+    if (filters.category) filter.category = filters.category;
+    if (filters.brand) filter.brand = new RegExp(filters.brand, 'i');
+    if (filters.condition) filter.condition = filters.condition;
+    if (filters.color) filter.color = new RegExp(filters.color, 'i');
     
-    if (minPrice || maxPrice) {
+    if (filters.minPrice || filters.maxPrice) {
       filter.price_cents = {};
-      if (minPrice) filter.price_cents.$gte = minPrice * 100; // Convert dollars to cents
-      if (maxPrice) filter.price_cents.$lte = maxPrice * 100; // Convert dollars to cents
+      if (filters.minPrice) filter.price_cents.$gte = filters.minPrice * 100; // Convert dollars to cents
+      if (filters.maxPrice) filter.price_cents.$lte = filters.maxPrice * 100; // Convert dollars to cents
     }
 
-    if (search) {
+    if (filters.search) {
       filter.$or = [
-        { title: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } },
-        { brand: { $regex: search, $options: 'i' } }
+        { title: { $regex: filters.search, $options: 'i' } },
+        { description: { $regex: filters.search, $options: 'i' } },
+        { brand: { $regex: filters.search, $options: 'i' } }
       ];
     }
 
     // Build sort object
     const sort: any = {};
-    switch (sortBy) {
+    switch (filters.sortBy) {
       case 'price_cents':
         sort.price_cents = 1;
         break;
@@ -70,7 +83,7 @@ export async function GET(request: NextRequest) {
         break;
     }
 
-    const skip = (page - 1) * limit;
+    const skip = ((filters.page || 1) - 1) * (filters.limit || 12);
     
     // Execute queries in parallel
     const [items, total] = await Promise.all([
@@ -78,26 +91,28 @@ export async function GET(request: NextRequest) {
         .populate('sellerId', 'firstName lastName rating totalSales')
         .sort(sort)
         .skip(skip)
-        .limit(limit)
+        .limit(filters.limit || 12)
         .lean(),
       Item.countDocuments(filter)
     ]);
 
-    const pages = Math.ceil(total / limit);
+    const pages = Math.ceil(total / (filters.limit || 12));
 
-    return NextResponse.json(
-      {
-        success: true,
-        data: items,
-        pagination: {
-          page,
-          limit,
-          total,
-          pages,
-        },
+    const response: ApiResponse<IItem[]> = {
+      success: true,
+      data: items as IItem[],
+      pagination: {
+        page: filters.page || 1,
+        limit: filters.limit || 12,
+        total,
+        pages,
       },
-      { headers: corsHeaders }
-    );
+    };
+
+    // Cache the response
+    await apiCache.set(cacheKey, response);
+
+    return NextResponse.json(response, { headers: corsHeaders });
 
   } catch (error) {
     console.error('Error fetching items:', error);

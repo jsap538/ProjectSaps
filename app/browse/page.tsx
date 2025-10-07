@@ -2,17 +2,7 @@
 
 import { useState, useEffect } from "react";
 import ListingCard from "@/components/ListingCard";
-
-interface Item {
-  _id: string;
-  title: string;
-  brand: string;
-  price_cents: number;
-  images?: string[];
-  condition: string;
-  category: string;
-  color: string;
-}
+import type { IItem, ItemFilters } from "@/types";
 
 // Mock data (fallback)
 const mockItems = [
@@ -84,7 +74,7 @@ const conditions = ["All", "New", "Like New", "Good", "Fair"];
 const colors = ["All", "Navy", "Black", "Red", "Green", "Silver"];
 
 export default function BrowsePage() {
-  const [items, setItems] = useState<Item[]>([]);
+  const [items, setItems] = useState<IItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedBrand, setSelectedBrand] = useState("All Brands");
