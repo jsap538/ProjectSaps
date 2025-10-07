@@ -25,7 +25,9 @@ export async function GET() {
       user.cart.map(async (cartItem: ICartItem) => {
         const item = await Item.findById(cartItem.itemId);
         return {
-          ...cartItem,
+          itemId: cartItem.itemId,
+          quantity: cartItem.quantity,
+          addedAt: cartItem.addedAt,
           item: item ? {
             _id: item._id,
             title: item.title,
