@@ -249,7 +249,7 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
                   }
                 </button>
                 
-                <button className="flex-1 rounded-xl border-2 border-porcelain/20 px-4 py-3 text-sm font-semibold text-porcelain transition-colors duration-sap hover:border-titanium hover:bg-titanium/5 hover:text-titanium">
+                <button className="flex-1 rounded-xl bg-titanium/10 border border-titanium/20 px-4 py-3 text-sm font-medium text-titanium transition-all duration-sap hover:bg-titanium/20 hover:border-titanium/40">
                   Make an Offer
                 </button>
               </div>
