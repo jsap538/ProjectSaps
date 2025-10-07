@@ -274,9 +274,9 @@ export default function BrowsePage() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-8 lg:flex-row">
+        <div className="flex flex-col gap-8 lg:flex-row lg:gap-12">
           {/* Filters Sidebar */}
-          <aside className="lg:w-80">
+          <aside className="lg:w-96 lg:flex-shrink-0">
             <div className="sticky top-24 bg-graphite/60 border border-porcelain/10 shadow-soft rounded-xl overflow-hidden">
               <div className="lg:hidden p-4 border-b border-porcelain/10">
                 <button
@@ -307,7 +307,7 @@ export default function BrowsePage() {
           </aside>
 
           {/* Listings Grid */}
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             {loading ? (
               <div className="grid grid-cols-2 gap-6 md:grid-cols-3">
                 {[...Array(6)].map((_, i) => (
