@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 interface BrandMarkProps {
   className?: string;
   size?: "sm" | "md" | "lg";
@@ -11,17 +13,13 @@ export default function BrandMark({ className = "h-8 w-8", size = "md" }: BrandM
   };
 
   return (
-    <svg 
-      viewBox="0 0 64 64" 
-      className={`${sizeClasses[size]} ${className}`} 
-      aria-label="SAPS mark" 
-      role="img"
-      fill="currentColor"
-    >
-      {/* Geometric lapel motif - minimalist, architectural */}
-      <path d="M32 6 L20 22 L26 46 L32 34 L38 46 L44 22 Z" fill="currentColor" />
-      <circle cx="32" cy="50" r="2" fill="currentColor" />
-      <rect x="30" y="52" width="4" height="6" fill="currentColor" />
-    </svg>
+    <Image
+      src="/saps-logo.png"
+      alt="SAPS"
+      width={32}
+      height={32}
+      className={`${sizeClasses[size]} ${className}`}
+      priority
+    />
   );
 }
