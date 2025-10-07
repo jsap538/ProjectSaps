@@ -11,7 +11,7 @@ const UPLOAD_DIR = join(process.cwd(), 'public', 'uploads');
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     console.log('Upload API - User ID:', userId);
     console.log('Upload API - Request headers:', Object.fromEntries(request.headers.entries()));
     
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     // TODO: Remove this once Clerk auth is fully working with ngrok
     if (!userId) {
       console.log('Upload API - No user ID found, returning unauthorized');
-      console.log('Upload API - Auth object:', auth());
+      console.log('Upload API - Auth object:', await auth());
       
       // Check if this is a development environment with ngrok
       const isNgrokDev = process.env.NODE_ENV === 'development' && 

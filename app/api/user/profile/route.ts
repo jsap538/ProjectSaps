@@ -6,7 +6,7 @@ import { corsHeaders } from '@/lib/security';
 
 // GET /api/user/profile - Get current user profile
 export async function GET(request: NextRequest) {
-  const { userId } = auth();
+  const { userId } = await auth();
   console.log('User profile API - User ID:', userId);
   
   if (!userId) {

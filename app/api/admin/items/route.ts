@@ -7,7 +7,7 @@ import { corsHeaders } from '@/lib/security';
 
 // GET /api/admin/items - Get all items for admin review
 export async function GET(request: NextRequest) {
-  const { userId } = auth();
+  const { userId } = await auth();
   
   if (!userId) {
     return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401, headers: corsHeaders });
