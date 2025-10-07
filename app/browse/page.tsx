@@ -185,7 +185,7 @@ export default function BrowsePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100">
       <div className="mx-auto max-w-6xl px-8 py-16">
         {/* Hero Header */}
         <div className="mb-16 text-center">
@@ -242,7 +242,7 @@ export default function BrowsePage() {
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Filters Sidebar */}
           <aside className="lg:w-64">
-            <div className="sticky top-24 bg-white border border-gray-300 shadow-sm p-6">
+            <div className="sticky top-24 bg-white border border-gray-400 shadow-lg p-6">
               <div className="mb-6 flex items-center justify-between lg:block">
                 <h2 className="text-lg font-medium text-gray-900">Filters</h2>
                 <button

@@ -41,30 +41,30 @@ export default function Home() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative bg-white">
+      <section className="relative bg-gray-900 text-white">
         <div className="mx-auto max-w-6xl px-8 py-32 md:py-40">
           <div className="grid grid-cols-1 gap-20 lg:grid-cols-2 lg:gap-32">
             {/* Content */}
             <div className="flex flex-col justify-center">
-              <div className="mb-8 text-sm font-medium text-gray-600 tracking-wider uppercase">
+              <div className="mb-8 text-sm font-medium text-gray-300 tracking-wider uppercase">
                 Premium Collection
               </div>
               
-              <h1 className="text-5xl font-light tracking-tight md:text-6xl lg:text-7xl leading-tight text-gray-900">
+              <h1 className="text-5xl font-light tracking-tight md:text-6xl lg:text-7xl leading-tight text-white">
                 Men's
-                <span className="block mt-2 text-gray-700">
+                <span className="block mt-2 text-gray-300">
                   Accessories
                 </span>
               </h1>
               
-              <p className="mt-8 text-lg leading-relaxed text-gray-600 max-w-lg">
+              <p className="mt-8 text-lg leading-relaxed text-gray-300 max-w-lg">
                 Curated selection of premium accessories. Quality craftsmanship meets modern design.
               </p>
               
               <div className="mt-12 flex flex-col gap-4 sm:flex-row">
                 <Link
                   href="/browse"
-                  className="group inline-flex items-center justify-center rounded-sm bg-gray-900 px-8 py-4 text-sm font-medium text-white transition-colors duration-200 hover:bg-gray-800"
+                  className="group inline-flex items-center justify-center rounded-sm bg-white px-8 py-4 text-sm font-medium text-gray-900 transition-colors duration-200 hover:bg-gray-100"
                 >
                   Browse Collection
                   <svg className="ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,7 +73,7 @@ export default function Home() {
                 </Link>
                 <Link
                   href="/sell"
-                  className="inline-flex items-center justify-center rounded-sm border border-gray-300 bg-white px-8 py-4 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-50"
+                  className="inline-flex items-center justify-center rounded-sm border border-gray-600 bg-transparent px-8 py-4 text-sm font-medium text-gray-300 transition-colors duration-200 hover:bg-gray-800 hover:text-white"
                 >
                   Sell Items
                 </Link>
@@ -107,7 +107,7 @@ export default function Home() {
       </section>
 
       {/* Featured Listings */}
-      <section className="bg-gray-100 py-24">
+      <section className="bg-white py-24">
         <div className="mx-auto max-w-6xl px-8">
           <div className="mb-16 text-center">
             <div className="mb-6 text-sm font-medium text-gray-600 tracking-wider uppercase">

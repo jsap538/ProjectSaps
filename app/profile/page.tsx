@@ -103,7 +103,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-200">
       <div className="mx-auto max-w-4xl px-8 py-16">
         {/* Header */}
         <div className="mb-12">

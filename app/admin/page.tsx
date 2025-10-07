@@ -92,40 +92,13 @@ export default function AdminPage() {
     }
   };
 
-  const populateMockItems = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch('/api/admin/populate-mock-items', {
-        method: 'POST',
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to populate mock items');
-      }
-      
-      const result = await response.json();
-      console.log('Mock items populated:', result);
-      
-      // Refresh the items list
-      fetchItems();
-      
-      // Show success message
-      alert(`Successfully added ${result.summary.newItems} mock items to the database!`);
-      
-    } catch (err) {
-      console.error('Error populating mock items:', err);
-      setError(err instanceof Error ? err.message : 'Failed to populate mock items');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-[#1a1d24] flex items-center justify-center">
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
         </div>
       </div>
     );
@@ -151,49 +124,21 @@ export default function AdminPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#1a1d24]">
-      <div className="mx-auto max-w-7xl px-6 py-10">
+    <div className="min-h-screen bg-gray-200">
+      <div className="mx-auto max-w-6xl px-8 py-16">
         {/* Header */}
         <div className="mb-10">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-dark md:text-4xl dark:text-white">
-                Admin Panel
-              </h1>
-              <p className="mt-3 text-gray-600 dark:text-gray-400">
-                Manage item approvals and marketplace content
-              </p>
-            </div>
-            <div className="mt-4 sm:mt-0">
-              <button
-                onClick={populateMockItems}
-                disabled={loading}
-                className="inline-flex items-center rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-primary-dark hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <>
-                    <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Adding Items...
-                  </>
-                ) : (
-                  <>
-                    <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    Add Mock Items
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
+          <h1 className="text-4xl font-light tracking-tight text-gray-900 md:text-5xl">
+            Admin Panel
+          </h1>
+          <p className="mt-4 text-lg text-gray-600">
+            Manage item approvals and marketplace content
+          </p>
         </div>
 
         {/* Tabs */}
         <div className="mb-8">
-          <div className="border-b border-gray-200 dark:border-gray-700">
+          <div className="border-b border-gray-300">
             <nav className="-mb-px flex space-x-8">
               {[
                 { key: 'pending', label: 'Pending Review', count: items.filter(item => !item.isApproved).length },
@@ -205,8 +150,8 @@ export default function AdminPage() {
                   onClick={() => setSelectedTab(tab.key as any)}
                   className={`py-2 px-1 border-b-2 font-medium text-sm ${
                     selectedTab === tab.key
-                      ? 'border-primary text-primary'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                      ? 'border-gray-900 text-gray-900'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
                   {tab.label} ({tab.count})
@@ -218,8 +163,8 @@ export default function AdminPage() {
 
         {/* Error Display */}
         {error && (
-          <div className="mb-6 rounded-lg bg-red-50 p-4 dark:bg-red-900/20">
-            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+          <div className="mb-6 rounded-lg bg-red-50 p-4 border border-red-200">
+            <p className="text-sm text-red-600">{error}</p>
           </div>
         )}
 
@@ -227,13 +172,13 @@ export default function AdminPage() {
         {loading ? (
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="animate-pulse rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200 dark:bg-[#1f2329] dark:ring-gray-800">
+              <div key={i} className="animate-pulse bg-white border border-gray-300 shadow-sm p-6">
                 <div className="flex gap-6">
-                  <div className="w-32 h-32 bg-gray-200 dark:bg-gray-700 rounded-xl"></div>
+                  <div className="w-32 h-32 bg-gray-200 rounded-lg"></div>
                   <div className="flex-1 space-y-3">
-                    <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
+                    <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                    <div className="h-4 bg-gray-200 rounded w-2/3"></div>
                   </div>
                 </div>
               </div>
@@ -242,10 +187,10 @@ export default function AdminPage() {
         ) : filteredItems.length > 0 ? (
           <div className="space-y-4">
             {filteredItems.map((item) => (
-              <div key={item._id} className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200 dark:bg-[#1f2329] dark:ring-gray-800">
+              <div key={item._id} className="bg-white border border-gray-300 shadow-sm p-6">
                 <div className="flex gap-6">
                   {/* Item Image */}
-                  <div className="w-32 h-32 rounded-xl bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
+                  <div className="w-32 h-32 rounded-lg bg-gray-200 flex items-center justify-center overflow-hidden">
                     {item.images && item.images.length > 0 ? (
                       <img
                         src={item.images[0]}
@@ -260,24 +205,24 @@ export default function AdminPage() {
                   {/* Item Details */}
                   <div className="flex-1">
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-xl font-semibold text-dark dark:text-white">
+                      <h3 className="text-xl font-medium text-gray-900">
                         {item.title}
                       </h3>
-                      <span className="text-2xl font-bold text-primary">
+                      <span className="text-2xl font-light text-gray-900">
                         ${(item.price_cents / 100).toFixed(2)}
                       </span>
                     </div>
                     
-                    <p className="text-gray-600 dark:text-gray-400 mb-2">
+                    <p className="text-gray-600 mb-2">
                       {item.brand} • {item.condition} • {item.category}
                     </p>
                     
-                    <p className="text-gray-700 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+                    <p className="text-gray-700 text-sm mb-4 line-clamp-2">
                       {item.description}
                     </p>
 
                     <div className="flex items-center justify-between">
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                      <div className="text-sm text-gray-500">
                         <p>Seller: {item.sellerId?.firstName} {item.sellerId?.lastName}</p>
                         <p>Submitted: {new Date(item.createdAt).toLocaleDateString()}</p>
                       </div>
@@ -286,13 +231,13 @@ export default function AdminPage() {
                         <div className="flex gap-3">
                           <button
                             onClick={() => rejectItem(item._id)}
-                            className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition dark:text-red-400 dark:bg-red-900/20 dark:hover:bg-red-900/30"
+                            className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-sm hover:bg-red-100 transition border border-red-200"
                           >
                             Reject
                           </button>
                           <button
                             onClick={() => approveItem(item._id)}
-                            className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition"
+                            className="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-sm hover:bg-gray-800 transition"
                           >
                             Approve
                           </button>
@@ -305,8 +250,8 @@ export default function AdminPage() {
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl bg-white p-16 text-center shadow-sm ring-1 ring-gray-200 dark:bg-[#1f2329] dark:ring-gray-800">
-            <p className="text-lg text-gray-600 dark:text-gray-400">
+          <div className="bg-white border border-gray-300 shadow-sm p-16 text-center">
+            <p className="text-lg text-gray-600">
               No items found for this category.
             </p>
           </div>

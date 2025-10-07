@@ -16,7 +16,7 @@ export default function ListingCard({ item }: { item: Item }) {
   return (
     <Link
       href={`/items/${item._id}`}
-      className="group block bg-white border border-gray-200 transition-all duration-200 hover:shadow-lg hover:-translate-y-1"
+      className="group block bg-white border border-gray-300 shadow-sm transition-all duration-200 hover:shadow-xl hover:-translate-y-1 hover:border-gray-400"
     >
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-100">
         <Image
