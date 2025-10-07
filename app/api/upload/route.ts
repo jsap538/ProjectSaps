@@ -14,12 +14,10 @@ export async function POST(request: NextRequest) {
     const { userId } = auth();
     console.log('Upload API - User ID:', userId);
     
-    // Temporarily disable auth check for ngrok testing
-    // TODO: Re-enable this after Clerk is configured with ngrok URL
-    // if (!userId) {
-    //   console.log('Upload API - No user ID found, returning unauthorized');
-    //   return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401, headers: corsHeaders });
-    // }
+    if (!userId) {
+      console.log('Upload API - No user ID found, returning unauthorized');
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401, headers: corsHeaders });
+    }
     const formData = await request.formData();
     const file = formData.get('image') as File;
 
