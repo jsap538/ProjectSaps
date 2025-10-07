@@ -86,10 +86,10 @@ const UserSchema = new Schema<IUser>({
       default: Date.now,
     },
   }],
-  watchlist: [{
-    type: String,
+  watchlist: {
+    type: [String],
     default: [],
-  }],
+  },
 }, {
   timestamps: true,
 });

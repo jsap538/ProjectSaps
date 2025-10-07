@@ -23,7 +23,7 @@ export async function GET() {
     // Get full item details for watchlist items
     const watchlistItems = await Promise.all(
       user.watchlist.map(async (itemId: string) => {
-        const item = await Item.findById(itemId);
+        const item = await Item.findById(itemId).lean(); // Use lean() for plain objects
         return item ? {
           _id: item._id.toString(),
           title: item.title,
@@ -37,7 +37,7 @@ export async function GET() {
     );
 
     // Filter out null items (deleted items)
-    const validItems = watchlistItems.filter(item => item !== null);
+    const validItems = watchlistItems.filter((item: any) => item !== null);
 
     return NextResponse.json({
       success: true,
@@ -130,7 +130,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Remove item from watchlist
-    user.watchlist = user.watchlist.filter(id => id !== itemId);
+    user.watchlist = user.watchlist.filter((id: string) => id !== itemId);
     await user.save();
 
     return NextResponse.json({
