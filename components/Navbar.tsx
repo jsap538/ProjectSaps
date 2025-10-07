@@ -11,7 +11,10 @@ export default function Navbar() {
 
   useEffect(() => {
     if (isSignedIn && user) {
-      checkAdminStatus();
+      // Temporarily disable admin check due to ngrok auth issues
+      // TODO: Re-enable when Clerk auth is working properly with ngrok
+      // checkAdminStatus();
+      setIsAdmin(false); // Default to non-admin for now
     }
   }, [isSignedIn, user]);
 
@@ -23,9 +26,18 @@ export default function Navbar() {
         if (data.success && data.user) {
           setIsAdmin(data.user.isAdmin || false);
         }
+      } else if (response.status === 401) {
+        // Handle unauthorized - user might not be synced to database yet
+        console.log('Admin check: User not found in database, defaulting to non-admin');
+        setIsAdmin(false);
+      } else {
+        console.error('Error fetching admin status:', response.status);
+        setIsAdmin(false);
       }
     } catch (error) {
       console.error('Error checking admin status:', error);
+      // Don't show admin link if we can't verify status
+      setIsAdmin(false);
     }
   };
 

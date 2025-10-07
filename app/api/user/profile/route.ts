@@ -7,8 +7,10 @@ import { corsHeaders } from '@/lib/security';
 // GET /api/user/profile - Get current user profile
 export async function GET(request: NextRequest) {
   const { userId } = auth();
+  console.log('User profile API - User ID:', userId);
   
   if (!userId) {
+    console.log('User profile API - No user ID found, returning unauthorized');
     return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401, headers: corsHeaders });
   }
 
