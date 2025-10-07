@@ -46,34 +46,41 @@ export default function Home() {
       <section className="relative bg-ink text-porcelain">
         <div className="absolute inset-0 bg-gradient-to-b from-ink via-graphite to-ink opacity-70" />
         <div className="relative z-10 mx-auto max-w-7xl px-6 py-24">
-          <div className="max-w-2xl">
-            <BrandMark className="h-12 w-12 text-titanium mb-6" />
-            <div className="mb-8 text-sm font-medium text-nickel tracking-wider uppercase">
-              Premium Collection
+          <div className="flex items-center justify-between">
+            <div className="max-w-2xl">
+              <BrandMark className="h-12 w-12 text-titanium mb-6" />
+              <div className="mb-8 text-sm font-medium text-nickel tracking-wider uppercase">
+                Premium Collection
+              </div>
+              
+              <h1 className="text-4xl md:text-6xl font-semibold tracking-wide1 text-display">
+                Quiet confidence.
+                <span className="block mt-2 text-titanium">
+                  Crafted for performance.
+                </span>
+              </h1>
+              
+              <p className="mt-6 text-lg leading-relaxed text-nickel max-w-xl text-body">
+                Premium accessories curated for the modern wardrobe. Precision, materials, and minimal design.
+              </p>
+              
+              <div className="mt-8 flex gap-3">
+                <Link href="/browse">
+                  <PrimaryButton>
+                    Shop the edit
+                  </PrimaryButton>
+                </Link>
+                <Link href="/sell">
+                  <GhostButton>
+                    View collections
+                  </GhostButton>
+                </Link>
+              </div>
             </div>
             
-            <h1 className="text-4xl md:text-6xl font-semibold tracking-wide1 text-display">
-              Quiet confidence.
-              <span className="block mt-2 text-titanium">
-                Crafted for performance.
-              </span>
-            </h1>
-            
-            <p className="mt-6 text-lg leading-relaxed text-nickel max-w-xl text-body">
-              Premium accessories curated for the modern wardrobe. Precision, materials, and minimal design.
-            </p>
-            
-            <div className="mt-8 flex gap-3">
-              <Link href="/browse">
-                <PrimaryButton>
-                  Shop the edit
-                </PrimaryButton>
-              </Link>
-              <Link href="/sell">
-                <GhostButton>
-                  View collections
-                </GhostButton>
-              </Link>
+            {/* Large Logo */}
+            <div className="hidden lg:flex items-center justify-center">
+              <BrandMark className="h-32 w-32 text-titanium/20" />
             </div>
           </div>
         </div>
