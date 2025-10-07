@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import { connectToDatabase } from '@/lib/mongodb';
+import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import Item from '@/models/Item';
 
@@ -13,7 +13,7 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    await connectToDatabase();
+    await connectDB();
     
     const user = await User.findOne({ clerkId: userId });
     if (!user) {
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Item ID is required' }, { status: 400 });
     }
 
-    await connectToDatabase();
+    await connectDB();
     
     // Verify item exists
     const item = await Item.findById(itemId);
@@ -125,7 +125,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Item ID is required' }, { status: 400 });
     }
 
-    await connectToDatabase();
+    await connectDB();
     
     const user = await User.findOne({ clerkId: userId });
     if (!user) {
