@@ -21,10 +21,12 @@ interface ProductCardProps {
 
 export default function ProductCard({ item }: ProductCardProps) {
   const price = (item.price_cents / 100).toFixed(2);
-  const { addToCart, isItemLoading: isCartItemLoading } = useCart();
+  const { cart, addToCart, isItemLoading: isCartItemLoading } = useCart();
   const { addToWatchlist, removeFromWatchlist, isInWatchlist, isItemLoading: isWatchlistItemLoading } = useWatchlist();
   const [isAdding, setIsAdding] = useState(false);
   const [isWatchlistLoading, setIsWatchlistLoading] = useState(false);
+
+  const isInCart = cart.some(cartItem => cartItem.itemId === item._id);
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -118,10 +120,19 @@ export default function ProductCard({ item }: ProductCardProps) {
       <div className="p-4 pt-0 space-y-2">
         <button
           onClick={handleAddToCart}
-          disabled={isAdding || isCartItemLoading(item._id)}
-          className="w-full rounded-xl bg-titanium/10 border border-titanium/20 px-4 py-2.5 text-sm font-medium text-titanium transition-all duration-sap hover:bg-titanium/20 hover:border-titanium/40 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={isAdding || isCartItemLoading(item._id) || isInCart}
+          className={`w-full rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-sap disabled:cursor-not-allowed ${
+            isInCart 
+              ? 'bg-nickel/20 border border-nickel/30 text-nickel cursor-not-allowed' 
+              : 'bg-titanium/10 border border-titanium/20 text-titanium hover:bg-titanium/20 hover:border-titanium/40 disabled:opacity-50'
+          }`}
         >
-          {isAdding || isCartItemLoading(item._id) ? 'Adding...' : 'Add to Cart'}
+          {isInCart 
+            ? 'In Cart' 
+            : isAdding || isCartItemLoading(item._id) 
+              ? 'Adding...' 
+              : 'Add to Cart'
+          }
         </button>
         
         <Link href={`/items/${item._id}`}>

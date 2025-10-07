@@ -85,8 +85,9 @@ export async function POST(request: NextRequest) {
     const existingCartItem = user.cart.find((cartItem: ICartItem) => cartItem.itemId === itemId);
     
     if (existingCartItem) {
-      // Update quantity
-      existingCartItem.quantity += quantity;
+      return NextResponse.json({ 
+        error: 'Item is already in your cart. Each item is unique in our marketplace.' 
+      }, { status: 400 });
     } else {
       // Add new item to cart
       user.cart.push({

@@ -72,6 +72,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    // Check if item is already in cart
+    const existingItem = cart.find(item => item.itemId === itemId);
+    if (existingItem) {
+      alert('This item is already in your cart. Each item is unique in our marketplace.');
+      return;
+    }
+
     // Set loading for this specific item
     setLoadingItems(prev => new Set(prev).add(itemId));
     try {
@@ -86,20 +93,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const data = await response.json();
       
       if (data.success) {
-        // Optimistically update cart count without full refresh
-        setCart(prevCart => {
-          const existingItem = prevCart.find(item => item.itemId === itemId);
-          if (existingItem) {
-            return prevCart.map(item => 
-              item.itemId === itemId 
-                ? { ...item, quantity: item.quantity + quantity }
-                : item
-            );
-          } else {
-            // Add new item optimistically - we'll get the full details on next page load
-            return [...prevCart, { itemId, quantity, addedAt: new Date().toISOString(), item: undefined }];
-          }
-        });
+        // Add new item optimistically - we'll get the full details on next page load
+        setCart(prevCart => [...prevCart, { itemId, quantity, addedAt: new Date().toISOString(), item: undefined }]);
       } else {
         alert(data.error || 'Failed to add item to cart');
       }
