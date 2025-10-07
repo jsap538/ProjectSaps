@@ -4,12 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, use } from "react";
 import type { IItem } from "@/types";
+import { useCart } from "@/contexts/CartContext";
 
 export default function ItemPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
   const [item, setItem] = useState<IItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const { addToCart, removeFromCart, isInCart, isItemLoading } = useCart();
 
   useEffect(() => {
     fetchItem();
@@ -31,6 +34,21 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCartToggle = async () => {
+    if (!item) return;
+    
+    setIsAddingToCart(true);
+    try {
+      if (isInCart(item._id)) {
+        await removeFromCart(item._id);
+      } else {
+        await addToCart(item._id, 1);
+      }
+    } finally {
+      setIsAddingToCart(false);
     }
   };
 
@@ -214,9 +232,27 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
               <button className="w-full rounded-xl bg-porcelain text-ink px-6 py-4 text-base font-semibold shadow-soft transition-transform duration-sap hover:-translate-y-px hover:shadow-soft">
                 Buy Now - ${total}
               </button>
-              <button className="w-full rounded-xl border-2 border-porcelain/20 px-6 py-4 text-base font-semibold text-porcelain transition-colors duration-sap hover:border-titanium hover:bg-titanium/5 hover:text-titanium">
-                Make an Offer
-              </button>
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={handleCartToggle}
+                  disabled={isAddingToCart || isItemLoading(item._id)}
+                  className={`flex-1 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-sap disabled:cursor-not-allowed ${
+                    isInCart(item._id)
+                      ? 'bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:border-red-500/40'
+                      : 'bg-titanium/10 border border-titanium/20 text-titanium hover:bg-titanium/20 hover:border-titanium/40 disabled:opacity-50'
+                  }`}
+                >
+                  {isInCart(item._id)
+                    ? (isAddingToCart || isItemLoading(item._id) ? 'Removing...' : 'Remove from Cart')
+                    : (isAddingToCart || isItemLoading(item._id) ? 'Adding...' : 'Add to Cart')
+                  }
+                </button>
+                
+                <button className="flex-1 rounded-xl border-2 border-porcelain/20 px-4 py-3 text-sm font-semibold text-porcelain transition-colors duration-sap hover:border-titanium hover:bg-titanium/5 hover:text-titanium">
+                  Make an Offer
+                </button>
+              </div>
             </div>
 
             {/* Trust Badges */}
