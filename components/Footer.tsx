@@ -2,13 +2,13 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-gray-200 bg-white dark:border-gray-800 dark:bg-[#151821]">
-      <div className="mx-auto max-w-7xl px-6 py-16">
+    <footer className="border-t border-gray-200 bg-white">
+      <div className="mx-auto max-w-6xl px-8 py-16">
         <div className="grid gap-12 md:grid-cols-4">
           {/* Brand */}
           <div>
-            <h3 className="mb-4 text-xl font-bold text-dark dark:text-white">SAPS</h3>
-            <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+            <h3 className="mb-4 text-xl font-medium text-gray-900">SAPS</h3>
+            <p className="text-sm leading-relaxed text-gray-600">
               Premium men's accessories resale marketplace. Authenticated,
               trusted, refined.
             </p>
@@ -16,14 +16,14 @@ export default function Footer() {
 
           {/* Shop */}
           <div>
-            <h4 className="mb-4 text-xs font-semibold uppercase tracking-widest text-dark dark:text-gray-400">
+            <h4 className="mb-4 text-xs font-medium uppercase tracking-wider text-gray-600">
               Shop
             </h4>
             <ul className="space-y-3">
               <li>
                 <Link
                   href="/browse?category=tie"
-                  className="text-sm text-gray-600 transition hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  className="text-sm text-gray-600 transition hover:text-gray-900"
                 >
                   Ties
                 </Link>
@@ -31,7 +31,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/browse?category=cufflinks"
-                  className="text-sm text-gray-600 transition hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  className="text-sm text-gray-600 transition hover:text-gray-900"
                 >
                   Cufflinks
                 </Link>
@@ -39,7 +39,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/browse?category=belt"
-                  className="text-sm text-gray-600 transition hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  className="text-sm text-gray-600 transition hover:text-gray-900"
                 >
                   Belts
                 </Link>
@@ -47,7 +47,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/browse?category=pocket-square"
-                  className="text-sm text-gray-600 transition hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  className="text-sm text-gray-600 transition hover:text-gray-900"
                 >
                   Pocket Squares
                 </Link>
@@ -57,14 +57,14 @@ export default function Footer() {
 
           {/* Company */}
           <div>
-            <h4 className="mb-4 text-xs font-semibold uppercase tracking-widest text-dark dark:text-gray-400">
+            <h4 className="mb-4 text-xs font-medium uppercase tracking-wider text-gray-600">
               Company
             </h4>
             <ul className="space-y-3">
               <li>
                 <Link
                   href="/about"
-                  className="text-sm text-gray-600 transition hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  className="text-sm text-gray-600 transition hover:text-gray-900"
                 >
                   About Us
                 </Link>
@@ -72,7 +72,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/how-it-works"
-                  className="text-sm text-gray-600 transition hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  className="text-sm text-gray-600 transition hover:text-gray-900"
                 >
                   How It Works
                 </Link>
@@ -80,7 +80,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/sell"
-                  className="text-sm text-gray-600 transition hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  className="text-sm text-gray-600 transition hover:text-gray-900"
                 >
                   Start Selling
                 </Link>
@@ -88,7 +88,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/contact"
-                  className="text-sm text-gray-600 transition hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  className="text-sm text-gray-600 transition hover:text-gray-900"
                 >
                   Contact
                 </Link>
@@ -98,14 +98,14 @@ export default function Footer() {
 
           {/* Support */}
           <div>
-            <h4 className="mb-4 text-xs font-semibold uppercase tracking-widest text-dark dark:text-gray-400">
+            <h4 className="mb-4 text-xs font-medium uppercase tracking-wider text-gray-600">
               Support
             </h4>
             <ul className="space-y-3">
               <li>
                 <Link
                   href="/faq"
-                  className="text-sm text-gray-600 transition hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  className="text-sm text-gray-600 transition hover:text-gray-900"
                 >
                   FAQ
                 </Link>
@@ -113,7 +113,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/shipping"
-                  className="text-sm text-gray-600 transition hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  className="text-sm text-gray-600 transition hover:text-gray-900"
                 >
                   Shipping
                 </Link>
@@ -121,7 +121,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/returns"
-                  className="text-sm text-gray-600 transition hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  className="text-sm text-gray-600 transition hover:text-gray-900"
                 >
                   Returns
                 </Link>
@@ -129,7 +129,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/privacy"
-                  className="text-sm text-gray-600 transition hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                  className="text-sm text-gray-600 transition hover:text-gray-900"
                 >
                   Privacy Policy
                 </Link>
@@ -139,8 +139,8 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-16 border-t border-gray-200 pt-8 text-center dark:border-gray-800">
-          <p className="text-sm text-gray-500 dark:text-gray-500">
+        <div className="mt-16 border-t border-gray-200 pt-8 text-center">
+          <p className="text-sm text-gray-500">
             © {new Date().getFullYear()} SAPS. All rights reserved.
           </p>
         </div>
