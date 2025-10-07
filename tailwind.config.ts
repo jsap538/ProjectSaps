@@ -10,23 +10,45 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // SAPS Brand Colors
+        ink: "#0B0C0E",        // near black
+        graphite: "#1B1E22",   // dark graphite
+        onyx: "#2A2F35",       // elevated surfaces
+        nickel: "#A8ADB3",     // muted text
+        titanium: "#D9D9D9",   // accent
+        porcelain: "#F5F6F7",  // light text
+        // Legacy colors for gradual migration
         primary: {
-          DEFAULT: "#33CC66",
-          dark: "#2BB359",
-          light: "#4AE184",
+          DEFAULT: "#D9D9D9",   // titanium as primary
+          dark: "#A8ADB3",     // nickel
+          light: "#F5F6F7",    // porcelain
         },
         dark: {
-          DEFAULT: "#3B414D",
-          light: "#4A515F",
-          lighter: "#5A616F",
+          DEFAULT: "#1B1E22",   // graphite
+          light: "#2A2F35",    // onyx
+          lighter: "#A8ADB3",  // nickel
         },
         gray: {
-          light: "#F1F1F1",
-          medium: "#D9DADA",
+          light: "#F5F6F7",   // porcelain
+          medium: "#D9D9D9",   // titanium
         },
       },
+      borderRadius: {
+        xl: "14px",
+        "2xl": "20px",
+      },
+      boxShadow: {
+        soft: "0 8px 20px rgba(0,0,0,0.12)",
+        subtle: "0 2px 10px rgba(0,0,0,0.10)",
+      },
+      letterSpacing: {
+        wide1: "0.02em",
+      },
       fontFamily: {
-        sans: ["system-ui", "-apple-system", "sans-serif"],
+        sans: ["Inter", "SF Pro Text", "Segoe UI", "Roboto", "system-ui", "sans-serif"],
+      },
+      transitionDuration: {
+        sap: "160ms",
       },
       animation: {
         "fade-in": "fadeIn 0.5s ease-in-out",

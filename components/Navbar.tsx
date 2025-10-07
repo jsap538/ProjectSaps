@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { UserButton, useUser } from "@clerk/nextjs";
+import { Search, ShoppingBag, Menu, X } from "lucide-react";
+import BrandMark from "./BrandMark";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -42,32 +44,32 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-gray-700 bg-gray-900/95 backdrop-blur-sm shadow-lg">
-      <div className="mx-auto max-w-6xl px-8">
-        <div className="flex h-20 items-center justify-between">
+    <header className="sticky top-0 z-50 bg-ink/90 backdrop-blur supports-[backdrop-filter]:bg-ink/70 border-b border-porcelain/10">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="group flex items-center space-x-3 text-2xl font-light tracking-tight text-white transition-colors duration-200 hover:text-gray-300">
-            <div className="h-8 w-8 bg-white"></div>
-            <span>SAPS</span>
+          <Link href="/" className="group flex items-center gap-3 text-porcelain transition-colors duration-sap hover:text-titanium">
+            <BrandMark className="h-7 w-7 text-titanium" />
+            <span className="text-xl font-medium tracking-wide1">SAPS</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden items-center gap-8 md:flex">
+          <nav className="hidden md:flex items-center gap-8 text-porcelain/80">
             <Link
               href="/browse"
-              className="text-sm font-medium text-gray-300 transition-colors duration-200 hover:text-white"
+              className="sap-link text-sm font-medium transition-colors duration-sap hover:text-porcelain"
             >
               Browse
             </Link>
             <Link
               href="/sell"
-              className="text-sm font-medium text-gray-300 transition-colors duration-200 hover:text-white"
+              className="sap-link text-sm font-medium transition-colors duration-sap hover:text-porcelain"
             >
               Sell
             </Link>
             <Link
               href="/how-it-works"
-              className="text-sm font-medium text-gray-300 transition-colors duration-200 hover:text-white"
+              className="sap-link text-sm font-medium transition-colors duration-sap hover:text-porcelain"
             >
               How It Works
             </Link>
@@ -76,25 +78,25 @@ export default function Navbar() {
                 <div className="flex items-center gap-4">
                   <Link
                     href="/dashboard"
-                    className="text-sm font-medium text-gray-300 transition hover:text-white"
+                    className="sap-link text-sm font-medium text-porcelain/80 transition-colors duration-sap hover:text-porcelain"
                   >
                     Dashboard
                   </Link>
                   <Link
                     href="/profile"
-                    className="text-sm font-medium text-gray-300 transition hover:text-white"
+                    className="sap-link text-sm font-medium text-porcelain/80 transition-colors duration-sap hover:text-porcelain"
                   >
                     Profile
                   </Link>
                   {isAdmin && (
                     <Link
                       href="/admin"
-                      className="text-sm font-medium text-gray-300 transition hover:text-white"
+                      className="sap-link text-sm font-medium text-porcelain/80 transition-colors duration-sap hover:text-porcelain"
                     >
                       Admin
                     </Link>
                   )}
-                  <span className="text-sm text-gray-400">
+                  <span className="text-sm text-nickel">
                     Hello, {user?.firstName || 'User'}
                   </span>
                   <UserButton afterSignOutUrl="/" />
@@ -103,13 +105,13 @@ export default function Navbar() {
                 <>
                   <Link
                     href="/sign-in"
-                    className="text-sm font-medium text-gray-700 transition hover:text-primary dark:text-gray-300 dark:hover:text-primary"
+                    className="sap-link text-sm font-medium text-porcelain/80 transition-colors duration-sap hover:text-porcelain"
                   >
                     Log In
                   </Link>
                   <Link
                     href="/sign-up"
-                    className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-primary/20 transition hover:bg-primary-dark hover:shadow-md hover:shadow-primary/30"
+                    className="inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-semibold text-ink bg-porcelain shadow-subtle transition-transform duration-sap hover:-translate-y-px"
                   >
                     Sign Up
                   </Link>
@@ -121,82 +123,65 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-dark dark:text-white md:hidden"
+            className="text-porcelain md:hidden p-2"
             aria-label="Toggle menu"
           >
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              {mobileMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
+            {mobileMenuOpen ? (
+              <X className="h-6 w-6" strokeWidth={1.75} />
+            ) : (
+              <Menu className="h-6 w-6" strokeWidth={1.75} />
+            )}
           </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="border-t border-gray-200 bg-white dark:border-gray-800 dark:bg-[#1a1d24] md:hidden">
+        <div className="border-t border-porcelain/10 bg-graphite/95 backdrop-blur md:hidden">
           <div className="space-y-1 px-6 py-4">
             <Link
               href="/browse"
-              className="block py-3 text-base font-medium text-dark dark:text-gray-300"
+              className="block py-3 text-base font-medium text-porcelain/90 transition-colors duration-sap hover:text-porcelain"
             >
               Browse
             </Link>
             <Link
               href="/sell"
-              className="block py-3 text-base font-medium text-dark dark:text-gray-300"
+              className="block py-3 text-base font-medium text-porcelain/90 transition-colors duration-sap hover:text-porcelain"
             >
               Sell
             </Link>
             <Link
               href="/how-it-works"
-              className="block py-3 text-base font-medium text-dark dark:text-gray-300"
+              className="block py-3 text-base font-medium text-porcelain/90 transition-colors duration-sap hover:text-porcelain"
             >
               How It Works
             </Link>
-            <div className="border-t border-gray-200 pt-4 dark:border-gray-800">
+            <div className="border-t border-porcelain/10 pt-4">
               {isSignedIn ? (
                 <div className="space-y-2">
                   <Link
                     href="/dashboard"
-                    className="block py-3 text-base font-medium text-dark dark:text-gray-300"
+                    className="block py-3 text-base font-medium text-porcelain/90 transition-colors duration-sap hover:text-porcelain"
                   >
                     Dashboard
                   </Link>
                   <Link
                     href="/profile"
-                    className="block py-3 text-base font-medium text-dark dark:text-gray-300"
+                    className="block py-3 text-base font-medium text-porcelain/90 transition-colors duration-sap hover:text-porcelain"
                   >
                     Profile
                   </Link>
                   {isAdmin && (
                     <Link
                       href="/admin"
-                      className="block py-3 text-base font-medium text-dark dark:text-gray-300"
+                      className="block py-3 text-base font-medium text-porcelain/90 transition-colors duration-sap hover:text-porcelain"
                     >
                       Admin
                     </Link>
                   )}
                   <div className="flex items-center justify-between py-3">
-                    <span className="text-base font-medium text-dark dark:text-gray-300">
+                    <span className="text-base font-medium text-porcelain/90">
                       Hello, {user?.firstName || 'User'}
                     </span>
                     <UserButton afterSignOutUrl="/" />
@@ -206,13 +191,13 @@ export default function Navbar() {
                 <>
                   <Link
                     href="/sign-in"
-                    className="block py-3 text-base font-medium text-dark dark:text-gray-300"
+                    className="block py-3 text-base font-medium text-porcelain/90 transition-colors duration-sap hover:text-porcelain"
                   >
                     Log In
                   </Link>
                   <Link
                     href="/sign-up"
-                    className="mt-2 block rounded-xl bg-primary px-4 py-3 text-center text-base font-semibold text-white"
+                    className="mt-2 block rounded-xl bg-porcelain text-ink px-4 py-3 text-center text-base font-semibold transition-transform duration-sap hover:-translate-y-px"
                   >
                     Sign Up
                   </Link>
@@ -222,7 +207,7 @@ export default function Navbar() {
           </div>
         </div>
       )}
-    </nav>
+    </header>
   );
 }
 

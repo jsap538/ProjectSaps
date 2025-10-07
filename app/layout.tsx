@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "../styles/brand.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -21,7 +22,7 @@ export default function RootLayout({
       signUpFallbackRedirectUrl="/"
     >
              <html lang="en" suppressHydrationWarning>
-               <body className="antialiased bg-gray-900 text-gray-100" suppressHydrationWarning>
+               <body className="antialiased bg-ink text-porcelain" suppressHydrationWarning>
           <ThemeProvider>
             <Navbar />
             <main className="min-h-screen">{children}</main>

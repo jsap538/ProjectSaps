@@ -1,0 +1,123 @@
+/* SAPS Brand Design System */
+:root {
+  /* Brand Colors */
+  --sap-bg: #0B0C0E;       /* near black */
+  --sap-panel: #1B1E22;    /* graphite */
+  --sap-elev: #2A2F35;     /* onyx */
+  --sap-text: #F5F6F7;     /* porcelain */
+  --sap-muted: #A8ADB3;    /* nickel */
+  --sap-accent: #D9D9D9;   /* titanium */
+  
+  /* Design Tokens */
+  --sap-radius: 14px;
+  --sap-radius-lg: 20px;
+  --sap-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  --sap-shadow-subtle: 0 2px 10px rgba(0,0,0,0.10);
+  --sap-timing: 160ms;
+  
+  /* Typography */
+  --sap-font-display: 'Inter', 'SF Pro Text', 'Segoe UI', 'Roboto', system-ui, sans-serif;
+  --sap-font-body: 'Inter', 'SF Pro Text', 'Segoe UI', 'Roboto', system-ui, sans-serif;
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: var(--sap-font-body);
+}
+
+body {
+  color: var(--sap-text);
+  background: var(--sap-bg);
+  font-family: var(--sap-font-body);
+  transition: background-color var(--sap-timing) ease, color var(--sap-timing) ease;
+  line-height: 1.6;
+}
+
+/* Typography Scale */
+.text-display {
+  font-family: var(--sap-font-display);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+.text-body {
+  font-family: var(--sap-font-body);
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.text-body-medium {
+  font-family: var(--sap-font-body);
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+/* Motion */
+.sap-transition {
+  transition-duration: var(--sap-timing);
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Focus States */
+.sap-focus {
+  outline: none;
+  ring: 2px;
+  ring-color: rgba(217, 217, 217, 0.4);
+}
+
+/* Hover Effects */
+.sap-hover-lift {
+  transition: transform var(--sap-timing) ease;
+}
+
+.sap-hover-lift:hover {
+  transform: translateY(-1px);
+}
+
+/* Link Underlines */
+.sap-link {
+  position: relative;
+  text-decoration: none;
+}
+
+.sap-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: currentColor;
+  transition: width var(--sap-timing) ease;
+}
+
+.sap-link:hover::after {
+  width: 100%;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --sap-text: #FFFFFF;
+    --sap-muted: #CCCCCC;
+    --sap-accent: #FFFFFF;
+  }
+}
