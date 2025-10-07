@@ -166,7 +166,7 @@ export default function BrowsePage() {
         views: 0,
         createdAt: new Date(),
         updatedAt: new Date()
-      })));
+      } as IItem)));
       setTotalItems(filteredMockItems.length);
     } finally {
       setLoading(false);
