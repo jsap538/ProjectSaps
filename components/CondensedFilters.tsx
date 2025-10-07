@@ -60,7 +60,8 @@ export default function CondensedFilters({ filters, onFiltersChange }: Condensed
       return value.length;
     }
     if (filterType === 'priceRange') {
-      return value.min > 0 || value.max < Infinity ? 1 : 0;
+      const priceRange = value as { min: number; max: number };
+      return priceRange.min > 0 || priceRange.max < Infinity ? 1 : 0;
     }
     return value ? 1 : 0;
   };
@@ -223,7 +224,10 @@ export default function CondensedFilters({ filters, onFiltersChange }: Condensed
       {(Object.keys(filters).some(key => {
         const value = filters[key as keyof FilterState];
         if (Array.isArray(value)) return value.length > 0;
-        if (key === 'priceRange') return value.min > 0 || value.max < Infinity;
+        if (key === 'priceRange') {
+          const priceRange = value as { min: number; max: number };
+          return priceRange.min > 0 || priceRange.max < Infinity;
+        }
         return value && value !== 'Newest First';
       })) && (
         <button
