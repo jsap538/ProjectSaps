@@ -21,6 +21,7 @@ interface CartContextType {
   cart: CartItem[];
   cartCount: number;
   isLoading: boolean;
+  isItemLoading: (itemId: string) => boolean;
   addToCart: (itemId: string, quantity?: number) => Promise<void>;
   removeFromCart: (itemId: string) => Promise<void>;
   updateQuantity: (itemId: string, quantity: number) => Promise<void>;
@@ -34,6 +35,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingItems, setLoadingItems] = useState<Set<string>>(new Set());
   const { isSignedIn } = useUser();
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
@@ -70,7 +72,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    setIsLoading(true);
+    // Set loading for this specific item
+    setLoadingItems(prev => new Set(prev).add(itemId));
     try {
       const response = await fetch('/api/cart', {
         method: 'POST',
@@ -104,7 +107,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       console.error('Error adding to cart:', error);
       alert('Failed to add item to cart');
     } finally {
-      setIsLoading(false);
+      // Remove loading for this specific item
+      setLoadingItems(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(itemId);
+        return newSet;
+      });
     }
   };
 
@@ -197,6 +205,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     await fetchCart();
   };
 
+  const isItemLoading = (itemId: string): boolean => {
+    return loadingItems.has(itemId);
+  };
+
   useEffect(() => {
     fetchCart();
   }, [isSignedIn]);
@@ -205,6 +217,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     cart,
     cartCount,
     isLoading,
+    isItemLoading,
     addToCart,
     removeFromCart,
     updateQuantity,

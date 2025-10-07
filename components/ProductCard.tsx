@@ -21,8 +21,8 @@ interface ProductCardProps {
 
 export default function ProductCard({ item }: ProductCardProps) {
   const price = (item.price_cents / 100).toFixed(2);
-  const { addToCart, isLoading } = useCart();
-  const { addToWatchlist, removeFromWatchlist, isInWatchlist, isLoading: watchlistLoading } = useWatchlist();
+  const { addToCart, isItemLoading: isCartItemLoading } = useCart();
+  const { addToWatchlist, removeFromWatchlist, isInWatchlist, isItemLoading: isWatchlistItemLoading } = useWatchlist();
   const [isAdding, setIsAdding] = useState(false);
   const [isWatchlistLoading, setIsWatchlistLoading] = useState(false);
 
@@ -81,7 +81,7 @@ export default function ProductCard({ item }: ProductCardProps) {
           <div className="absolute top-4 left-4">
             <button
               onClick={handleWatchlistToggle}
-              disabled={isWatchlistLoading || watchlistLoading}
+              disabled={isWatchlistLoading || isWatchlistItemLoading(item._id)}
               className="rounded-full bg-ink/90 backdrop-blur-sm p-2 text-porcelain transition-all duration-sap hover:bg-ink/95 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isInWatchlist(item._id) ? (
@@ -118,10 +118,10 @@ export default function ProductCard({ item }: ProductCardProps) {
       <div className="p-4 pt-0 space-y-2">
         <button
           onClick={handleAddToCart}
-          disabled={isAdding || isLoading}
+          disabled={isAdding || isCartItemLoading(item._id)}
           className="w-full rounded-xl bg-titanium/10 border border-titanium/20 px-4 py-2.5 text-sm font-medium text-titanium transition-all duration-sap hover:bg-titanium/20 hover:border-titanium/40 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isAdding ? 'Adding...' : 'Add to Cart'}
+          {isAdding || isCartItemLoading(item._id) ? 'Adding...' : 'Add to Cart'}
         </button>
         
         <Link href={`/items/${item._id}`}>

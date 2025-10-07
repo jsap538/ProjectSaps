@@ -17,6 +17,7 @@ interface WatchlistContextType {
   watchlist: WatchlistItem[];
   watchlistCount: number;
   isLoading: boolean;
+  isItemLoading: (itemId: string) => boolean;
   error: string | null;
   addToWatchlist: (itemId: string) => Promise<void>;
   removeFromWatchlist: (itemId: string) => Promise<void>;
@@ -30,6 +31,7 @@ export const WatchlistProvider = ({ children }: { children: ReactNode }) => {
   const { isSignedIn, isLoaded } = useUser();
   const [watchlist, setWatchlist] = useState<WatchlistItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingItems, setLoadingItems] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string | null>(null);
 
   const fetchWatchlist = async () => {
@@ -71,7 +73,8 @@ export const WatchlistProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
     
-    setIsLoading(true);
+    // Set loading for this specific item
+    setLoadingItems(prev => new Set(prev).add(itemId));
     setError(null);
     try {
       const response = await fetch('/api/watchlist', {
@@ -106,7 +109,12 @@ export const WatchlistProvider = ({ children }: { children: ReactNode }) => {
       console.error('Error adding to watchlist:', err);
       setError(err.message);
     } finally {
-      setIsLoading(false);
+      // Remove loading for this specific item
+      setLoadingItems(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(itemId);
+        return newSet;
+      });
     }
   };
 
@@ -145,12 +153,17 @@ export const WatchlistProvider = ({ children }: { children: ReactNode }) => {
     return watchlist.some(item => item._id === itemId);
   };
 
+  const isItemLoading = (itemId: string): boolean => {
+    return loadingItems.has(itemId);
+  };
+
   const watchlistCount = watchlist.length;
 
   const value: WatchlistContextType = {
     watchlist,
     watchlistCount,
     isLoading,
+    isItemLoading,
     error,
     addToWatchlist,
     removeFromWatchlist,
