@@ -117,9 +117,9 @@ export default function SearchableDropdown({
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-2 rounded-xl border border-porcelain/20 bg-graphite/95 backdrop-blur shadow-soft">
+        <div className="absolute z-50 w-full mt-2 rounded-xl border border-porcelain/20 bg-graphite/95 backdrop-blur shadow-soft animate-in slide-in-from-top-2 duration-200">
           {/* Search Input */}
-          <div className="p-3 border-b border-porcelain/10">
+          <div className="p-4 border-b border-porcelain/10">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-nickel" />
               <input
@@ -128,19 +128,19 @@ export default function SearchableDropdown({
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={`Search ${label.toLowerCase()}...`}
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-porcelain/20 bg-ink text-porcelain placeholder-nickel focus:border-titanium focus:ring-titanium/20 focus:outline-none transition-colors duration-sap"
+                className="w-full pl-10 pr-4 py-3 rounded-lg border border-porcelain/20 bg-ink text-porcelain placeholder-nickel focus:border-titanium focus:ring-titanium/20 focus:outline-none transition-colors duration-sap"
               />
             </div>
           </div>
 
           {/* Selected Items */}
           {selectedValues.length > 0 && (
-            <div className="p-3 border-b border-porcelain/10">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-nickel">Selected:</span>
+            <div className="p-4 border-b border-porcelain/10">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-nickel">Selected ({selectedValues.length}):</span>
                 <button
                   onClick={handleClearAll}
-                  className="text-xs text-titanium hover:text-porcelain transition-colors duration-sap"
+                  className="text-sm text-titanium hover:text-porcelain transition-colors duration-sap font-medium"
                 >
                   Clear all
                 </button>
@@ -149,14 +149,14 @@ export default function SearchableDropdown({
                 {selectedValues.map(value => (
                   <span
                     key={value}
-                    className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-titanium/10 text-titanium text-xs"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-titanium/15 text-titanium text-sm font-medium border border-titanium/20"
                   >
                     {value}
                     <button
                       onClick={() => handleRemoveSelection(value)}
                       className="hover:text-porcelain transition-colors duration-sap"
                     >
-                      <X className="h-3 w-3" />
+                      <X className="h-3.5 w-3.5" />
                     </button>
                   </span>
                 ))}
@@ -165,24 +165,28 @@ export default function SearchableDropdown({
           )}
 
           {/* Options List */}
-          <div className="max-h-48 overflow-y-auto">
+          <div className="max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-porcelain/20 scrollbar-track-transparent">
             {filteredOptions.length === 0 ? (
-              <div className="p-3 text-center text-nickel text-sm">
+              <div className="p-6 text-center text-nickel text-sm">
+                <div className="text-4xl mb-2">🔍</div>
                 No {label.toLowerCase()} found
               </div>
             ) : (
-              filteredOptions.map(option => (
-                <button
-                  key={option}
-                  onClick={() => handleOptionClick(option)}
-                  className="w-full px-4 py-3 text-left hover:bg-porcelain/5 transition-colors duration-sap flex items-center justify-between"
-                >
-                  <span className="text-porcelain">{option}</span>
-                  {selectedValues.includes(option) && (
-                    <Check className="h-4 w-4 text-titanium" />
-                  )}
-                </button>
-              ))
+              <div className="py-2">
+                {filteredOptions.map((option, index) => (
+                  <button
+                    key={option}
+                    onClick={() => handleOptionClick(option)}
+                    className="w-full px-4 py-3 text-left hover:bg-porcelain/8 transition-all duration-200 flex items-center justify-between group"
+                    style={{ animationDelay: `${index * 20}ms` }}
+                  >
+                    <span className="text-porcelain group-hover:text-titanium transition-colors duration-200">{option}</span>
+                    {selectedValues.includes(option) && (
+                      <Check className="h-4 w-4 text-titanium animate-in zoom-in-50 duration-200" />
+                    )}
+                  </button>
+                ))}
+              </div>
             )}
           </div>
         </div>
