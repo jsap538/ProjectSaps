@@ -35,12 +35,7 @@ export async function POST(req: Request) {
 
   let evt: any;
 
-  // For now, skip verification to test if the issue is with verification
-  console.log('Skipping webhook verification for debugging');
-  evt = payload;
-  
-  // TODO: Re-enable verification once we confirm the webhook works
-  /*
+  // Verify webhook signature for security
   if (svix_id && svix_timestamp && svix_signature) {
     const wh = new Webhook(WEBHOOK_SECRET);
     try {
@@ -58,7 +53,6 @@ export async function POST(req: Request) {
     console.log('Skipping webhook verification (missing headers)');
     evt = payload;
   }
-  */
 
   // Handle the webhook
   const eventType = evt.type;
