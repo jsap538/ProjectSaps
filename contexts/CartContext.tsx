@@ -22,6 +22,7 @@ interface CartContextType {
   cartCount: number;
   isLoading: boolean;
   isItemLoading: (itemId: string) => boolean;
+  isInCart: (itemId: string) => boolean;
   addToCart: (itemId: string, quantity?: number) => Promise<void>;
   removeFromCart: (itemId: string) => Promise<void>;
   updateQuantity: (itemId: string, quantity: number) => Promise<void>;
@@ -204,6 +205,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return loadingItems.has(itemId);
   };
 
+  const isInCart = (itemId: string): boolean => {
+    return cart.some(cartItem => cartItem.itemId === itemId);
+  };
+
   useEffect(() => {
     fetchCart();
   }, [isSignedIn]);
@@ -213,6 +218,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     cartCount,
     isLoading,
     isItemLoading,
+    isInCart,
     addToCart,
     removeFromCart,
     updateQuantity,
