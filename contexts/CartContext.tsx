@@ -97,6 +97,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const removeFromCart = async (itemId: string) => {
     if (!isSignedIn) return;
 
+    console.log('Removing item from cart:', itemId); // Debug log
+    
+    if (!itemId) {
+      console.error('No itemId provided to removeFromCart');
+      alert('Error: No item ID provided');
+      return;
+    }
+
     setIsLoading(true);
     try {
       const response = await fetch('/api/cart', {

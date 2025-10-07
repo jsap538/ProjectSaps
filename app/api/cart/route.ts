@@ -119,9 +119,13 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { itemId } = await request.json();
+    const body = await request.json();
+    console.log('DELETE request body:', body); // Debug log
+    
+    const { itemId } = body;
 
     if (!itemId) {
+      console.error('No itemId in request body:', body);
       return NextResponse.json({ error: 'Item ID is required' }, { status: 400 });
     }
 
