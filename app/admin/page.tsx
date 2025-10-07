@@ -92,6 +92,34 @@ export default function AdminPage() {
     }
   };
 
+  const populateMockItems = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/admin/populate-mock-items', {
+        method: 'POST',
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to populate mock items');
+      }
+      
+      const result = await response.json();
+      console.log('Mock items populated:', result);
+      
+      // Refresh the items list
+      fetchItems();
+      
+      // Show success message
+      alert(`Successfully added ${result.summary.newItems} mock items to the database!`);
+      
+    } catch (err) {
+      console.error('Error populating mock items:', err);
+      setError(err instanceof Error ? err.message : 'Failed to populate mock items');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-[#1a1d24] flex items-center justify-center">
@@ -127,12 +155,40 @@ export default function AdminPage() {
       <div className="mx-auto max-w-7xl px-6 py-10">
         {/* Header */}
         <div className="mb-10">
-          <h1 className="text-3xl font-bold text-dark md:text-4xl dark:text-white">
-            Admin Panel
-          </h1>
-          <p className="mt-3 text-gray-600 dark:text-gray-400">
-            Manage item approvals and marketplace content
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-dark md:text-4xl dark:text-white">
+                Admin Panel
+              </h1>
+              <p className="mt-3 text-gray-600 dark:text-gray-400">
+                Manage item approvals and marketplace content
+              </p>
+            </div>
+            <div className="mt-4 sm:mt-0">
+              <button
+                onClick={populateMockItems}
+                disabled={loading}
+                className="inline-flex items-center rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-primary-dark hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Adding Items...
+                  </>
+                ) : (
+                  <>
+                    <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Add Mock Items
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Tabs */}
