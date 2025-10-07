@@ -93,8 +93,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const data = await response.json();
       
       if (data.success) {
-        // Add new item optimistically - we'll get the full details on next page load
-        setCart(prevCart => [...prevCart, { itemId, quantity, addedAt: new Date().toISOString(), item: undefined }]);
+        // Fetch full cart details after adding
+        await fetchCart();
       } else {
         alert(data.error || 'Failed to add item to cart');
       }

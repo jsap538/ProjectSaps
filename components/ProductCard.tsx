@@ -21,7 +21,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ item }: ProductCardProps) {
   const price = (item.price_cents / 100).toFixed(2);
-  const { cart, addToCart, isItemLoading: isCartItemLoading } = useCart();
+  const { cart, addToCart, removeFromCart, isItemLoading: isCartItemLoading } = useCart();
   const { addToWatchlist, removeFromWatchlist, isInWatchlist, isItemLoading: isWatchlistItemLoading } = useWatchlist();
   const [isAdding, setIsAdding] = useState(false);
   const [isWatchlistLoading, setIsWatchlistLoading] = useState(false);
@@ -53,6 +53,22 @@ export default function ProductCard({ item }: ProductCardProps) {
       }
     } finally {
       setIsWatchlistLoading(false);
+    }
+  };
+
+  const handleCartToggle = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    setIsAdding(true);
+    try {
+      if (isInCart) {
+        await removeFromCart(item._id);
+      } else {
+        await addToCart(item._id, 1);
+      }
+    } finally {
+      setIsAdding(false);
     }
   };
 
@@ -119,19 +135,17 @@ export default function ProductCard({ item }: ProductCardProps) {
       {/* Action Buttons */}
       <div className="p-4 pt-0 space-y-2">
         <button
-          onClick={handleAddToCart}
-          disabled={isAdding || isCartItemLoading(item._id) || isInCart}
+          onClick={handleCartToggle}
+          disabled={isAdding || isCartItemLoading(item._id)}
           className={`w-full rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-sap disabled:cursor-not-allowed ${
             isInCart 
-              ? 'bg-nickel/20 border border-nickel/30 text-nickel cursor-not-allowed' 
+              ? 'bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:border-red-500/40' 
               : 'bg-titanium/10 border border-titanium/20 text-titanium hover:bg-titanium/20 hover:border-titanium/40 disabled:opacity-50'
           }`}
         >
           {isInCart 
-            ? 'In Cart' 
-            : isAdding || isCartItemLoading(item._id) 
-              ? 'Adding...' 
-              : 'Add to Cart'
+            ? (isAdding || isCartItemLoading(item._id) ? 'Removing...' : 'Remove from Cart')
+            : (isAdding || isCartItemLoading(item._id) ? 'Adding...' : 'Add to Cart')
           }
         </button>
         
