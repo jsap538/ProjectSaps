@@ -100,7 +100,7 @@ export async function GET(request: NextRequest) {
 
     const response: ApiResponse<IItem[]> = {
       success: true,
-      data: items as IItem[],
+      data: items as unknown as IItem[],
       pagination: {
         page: filters.page || 1,
         limit: filters.limit || 12,
