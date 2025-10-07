@@ -42,40 +42,40 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/90 backdrop-blur-xl shadow-sm dark:border-gray-800/50 dark:bg-[#1a1d24]/90">
+    <nav className="sticky top-0 z-50 border-b border-gray-800/50 bg-black/95 backdrop-blur-xl shadow-2xl shadow-black/50">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="flex h-20 items-center justify-between">
+        <div className="flex h-24 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="group flex items-center space-x-3 text-2xl font-bold tracking-tight text-dark transition-all duration-300 hover:text-primary hover:scale-105 dark:text-white">
+          <Link href="/" className="group flex items-center space-x-4 text-3xl font-black tracking-tight text-white transition-all duration-500 hover:text-amber-400 hover:scale-105">
             <div className="relative">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-primary-light shadow-lg"></div>
-              <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-primary-light to-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-amber-500 to-amber-600 shadow-2xl shadow-amber-500/50"></div>
+              <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-yellow-400 to-amber-400 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
             </div>
-            <span>SAPS</span>
+            <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent group-hover:from-amber-400 group-hover:to-yellow-300 transition-all duration-500">SAPS</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden items-center gap-8 md:flex">
+          <div className="hidden items-center gap-10 md:flex">
             <Link
               href="/browse"
-              className="group relative text-sm font-medium text-gray-700 transition-all duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary"
+              className="group relative text-sm font-bold text-gray-300 transition-all duration-500 hover:text-amber-400 tracking-wide"
             >
-              Browse
-              <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full"></span>
+              COLLECTION
+              <span className="absolute -bottom-2 left-0 h-0.5 w-0 bg-gradient-to-r from-amber-400 to-yellow-300 transition-all duration-500 group-hover:w-full"></span>
             </Link>
             <Link
               href="/sell"
-              className="group relative text-sm font-medium text-gray-700 transition-all duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary"
+              className="group relative text-sm font-bold text-gray-300 transition-all duration-500 hover:text-amber-400 tracking-wide"
             >
-              Sell
-              <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full"></span>
+              CONSIGN
+              <span className="absolute -bottom-2 left-0 h-0.5 w-0 bg-gradient-to-r from-amber-400 to-yellow-300 transition-all duration-500 group-hover:w-full"></span>
             </Link>
             <Link
               href="/how-it-works"
-              className="group relative text-sm font-medium text-gray-700 transition-all duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary"
+              className="group relative text-sm font-bold text-gray-300 transition-all duration-500 hover:text-amber-400 tracking-wide"
             >
-              How It Works
-              <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full"></span>
+              STANDARDS
+              <span className="absolute -bottom-2 left-0 h-0.5 w-0 bg-gradient-to-r from-amber-400 to-yellow-300 transition-all duration-500 group-hover:w-full"></span>
             </Link>
             <div className="ml-6 flex items-center gap-4">
               {isSignedIn ? (

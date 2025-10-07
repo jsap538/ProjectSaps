@@ -20,8 +20,8 @@ export default function RootLayout({
       signInFallbackRedirectUrl="/"
       signUpFallbackRedirectUrl="/"
     >
-      <html lang="en" suppressHydrationWarning>
-        <body className="antialiased bg-white text-dark dark:bg-[#1a1d24] dark:text-gray-100" suppressHydrationWarning>
+             <html lang="en" suppressHydrationWarning>
+               <body className="antialiased bg-black text-white" suppressHydrationWarning>
           <ThemeProvider>
             <Navbar />
             <main className="min-h-screen">{children}</main>
