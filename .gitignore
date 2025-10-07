@@ -39,3 +39,7 @@ next-env.d.ts
 
 # OS
 Thumbs.db
+
+# Uploaded files
+/public/uploads/*
+!/public/uploads/.gitkeep

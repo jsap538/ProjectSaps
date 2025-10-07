@@ -1,10 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ListingCard from "@/components/ListingCard";
 
-// Mock data
-const allItems = [
+interface Item {
+  _id: string;
+  title: string;
+  brand: string;
+  price_cents: number;
+  images?: string[];
+  condition: string;
+  category: string;
+  color: string;
+}
+
+// Mock data (fallback)
+const mockItems = [
   {
     id: "1",
     title: "Navy Grenadine Tie",
@@ -73,13 +84,43 @@ const conditions = ["All", "New", "Like New", "Good", "Fair"];
 const colors = ["All", "Navy", "Black", "Red", "Green", "Silver"];
 
 export default function BrowsePage() {
+  const [items, setItems] = useState<Item[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedBrand, setSelectedBrand] = useState("All Brands");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedCondition, setSelectedCondition] = useState("All");
   const [selectedColor, setSelectedColor] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
 
-  const filteredItems = allItems.filter((item) => {
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
+  const fetchItems = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/items');
+      if (!response.ok) {
+        throw new Error('Failed to fetch items');
+      }
+      const data = await response.json();
+      if (data.success) {
+        setItems(data.data || []);
+      } else {
+        throw new Error(data.error || 'Failed to fetch items');
+      }
+    } catch (err) {
+      console.error('Error fetching items:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred');
+      // Fallback to mock data
+      setItems(mockItems.map(item => ({ ...item, _id: item.id, images: [item.image] })));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredItems = items.filter((item) => {
     if (selectedBrand !== "All Brands" && item.brand !== selectedBrand) return false;
     if (selectedCategory !== "All" && item.category !== selectedCategory.toLowerCase()) return false;
     if (selectedCondition !== "All" && item.condition !== selectedCondition) return false;

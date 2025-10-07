@@ -64,12 +64,20 @@ export default function SellPage() {
             <li>• Provide accurate condition descriptions</li>
             <li>• Authentic items only - counterfeits will be removed</li>
           </ul>
-          <Link
-            href="/sign-up"
-            className="inline-block rounded-lg bg-primary px-8 py-4 text-base font-semibold text-white transition hover:bg-primary-dark"
-          >
-            Get Started
-          </Link>
+          <div className="flex gap-4">
+            <Link
+              href="/sign-up"
+              className="inline-block rounded-lg bg-primary px-8 py-4 text-base font-semibold text-white transition hover:bg-primary-dark"
+            >
+              Get Started
+            </Link>
+            <Link
+              href="/sell/form"
+              className="inline-block rounded-lg border border-primary px-8 py-4 text-base font-semibold text-primary transition hover:bg-primary hover:text-white"
+            >
+              List Item
+            </Link>
+          </div>
         </div>
       </div>
     </div>

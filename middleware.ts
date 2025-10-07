@@ -5,10 +5,14 @@ const isProtectedRoute = createRouteMatcher([
   '/dashboard(.*)',
   '/profile(.*)',
   '/my-items(.*)',
+  '/api/items/my-items(.*)',
+  '/api/profile(.*)',
 ]);
 
 export default clerkMiddleware((auth, req) => {
-  if (isProtectedRoute(req)) auth().protect();
+  if (isProtectedRoute(req)) {
+    auth.protect();
+  }
 });
 
 export const config = {

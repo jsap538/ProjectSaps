@@ -1,39 +1,92 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
-// Mock data - in production this would come from your database
-const getItemById = (id: string) => {
-  const items: any = {
-    "1": {
-      id: "1",
-      title: "Navy Grenadine Tie",
-      brand: "Drake's",
-      price_cents: 6500,
-      shipping_cents: 599,
-      images: [
-        "https://placehold.co/800x800/1a2742/33CC66?text=Navy+Grenadine+Tie",
-        "https://placehold.co/800x800/2a3752/33CC66?text=Detail+View",
-      ],
-      condition: "Like New",
-      category: "Tie",
-      color: "Navy",
-      material: "Silk",
-      width_cm: 8,
-      location: "NYC",
-      description:
-        "Stunning navy grenadine tie from Drake's London. Hand-rolled edges, woven in England. Classic textured grenadine weave that works for business and special occasions. Minimal wear, excellent condition.",
-      seller: {
-        name: "StyleCollector",
-        rating: 4.9,
-        sales: 47,
-      },
-    },
+interface Item {
+  _id: string;
+  title: string;
+  brand: string;
+  price_cents: number;
+  shipping_cents: number;
+  images?: string[];
+  condition: string;
+  category: string;
+  color: string;
+  material?: string;
+  width_cm?: number;
+  location: string;
+  description: string;
+  views: number;
+  sellerId: {
+    firstName: string;
+    lastName: string;
+    rating: number;
+    totalSales: number;
   };
-  return items[id] || items["1"];
-};
+}
 
 export default function ItemPage({ params }: { params: { id: string } }) {
-  const item = getItemById(params.id);
+  const [item, setItem] = useState<Item | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchItem();
+  }, [params.id]);
+
+  const fetchItem = async () => {
+    try {
+      const response = await fetch(`/api/items/${params.id}`);
+      if (!response.ok) {
+        throw new Error('Item not found');
+      }
+      const data = await response.json();
+      if (data.success) {
+        setItem(data.data);
+      } else {
+        throw new Error(data.error || 'Failed to fetch item');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-[#1a1d24] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading item...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !item) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-[#1a1d24] flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-dark dark:text-white mb-4">
+            Item Not Found
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
+            {error || 'The item you\'re looking for doesn\'t exist.'}
+          </p>
+          <Link
+            href="/browse"
+            className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition"
+          >
+            Browse Items
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   const price = (item.price_cents / 100).toFixed(2);
   const shipping = (item.shipping_cents / 100).toFixed(2);
   const total = ((item.price_cents + item.shipping_cents) / 100).toFixed(2);
@@ -59,7 +112,7 @@ export default function ItemPage({ params }: { params: { id: string } }) {
           <div className="space-y-4">
             <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-gray-100 ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-800">
               <Image
-                src={item.images[0]}
+                src={item.images?.[0] || 'https://placehold.co/800x800/1a2742/33CC66?text=No+Image'}
                 alt={item.title}
                 fill
                 className="object-cover"
@@ -67,7 +120,7 @@ export default function ItemPage({ params }: { params: { id: string } }) {
                 unoptimized
               />
             </div>
-            {item.images.length > 1 && (
+            {item.images && item.images.length > 1 && (
               <div className="grid grid-cols-4 gap-4">
                 {item.images.slice(1).map((img: string, idx: number) => (
                   <div
@@ -101,6 +154,11 @@ export default function ItemPage({ params }: { params: { id: string } }) {
                 <span className="text-sm text-gray-600 dark:text-gray-400">
                   + ${shipping} shipping
                 </span>
+              </div>
+              <div className="mt-2 flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                <span>{item.views} views</span>
+                <span>•</span>
+                <span>{item.condition}</span>
               </div>
             </div>
 
@@ -150,9 +208,11 @@ export default function ItemPage({ params }: { params: { id: string } }) {
               <h2 className="mb-5 text-lg font-semibold text-dark dark:text-white">Seller</h2>
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="font-medium text-dark dark:text-white">{item.seller.name}</div>
+                  <div className="font-medium text-dark dark:text-white">
+                    {item.sellerId.firstName} {item.sellerId.lastName}
+                  </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
-                    {item.seller.sales} sales
+                    {item.sellerId.totalSales} sales
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
@@ -164,7 +224,7 @@ export default function ItemPage({ params }: { params: { id: string } }) {
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
                   <span className="font-semibold text-dark dark:text-white">
-                    {item.seller.rating}
+                    {item.sellerId.rating.toFixed(1)}
                   </span>
                 </div>
               </div>

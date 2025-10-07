@@ -40,6 +40,18 @@ export default function Navbar() {
             <div className="ml-6 flex items-center gap-4">
               {isSignedIn ? (
                 <div className="flex items-center gap-4">
+                  <Link
+                    href="/dashboard"
+                    className="text-sm font-medium text-gray-700 transition hover:text-primary dark:text-gray-300 dark:hover:text-primary"
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                    href="/profile"
+                    className="text-sm font-medium text-gray-700 transition hover:text-primary dark:text-gray-300 dark:hover:text-primary"
+                  >
+                    Profile
+                  </Link>
                   <span className="text-sm text-gray-700 dark:text-gray-300">
                     Hello, {user?.firstName || 'User'}
                   </span>
@@ -120,11 +132,25 @@ export default function Navbar() {
             </Link>
             <div className="border-t border-gray-200 pt-4 dark:border-gray-800">
               {isSignedIn ? (
-                <div className="flex items-center justify-between py-3">
-                  <span className="text-base font-medium text-dark dark:text-gray-300">
-                    Hello, {user?.firstName || 'User'}
-                  </span>
-                  <UserButton afterSignOutUrl="/" />
+                <div className="space-y-2">
+                  <Link
+                    href="/dashboard"
+                    className="block py-3 text-base font-medium text-dark dark:text-gray-300"
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                    href="/profile"
+                    className="block py-3 text-base font-medium text-dark dark:text-gray-300"
+                  >
+                    Profile
+                  </Link>
+                  <div className="flex items-center justify-between py-3">
+                    <span className="text-base font-medium text-dark dark:text-gray-300">
+                      Hello, {user?.firstName || 'User'}
+                    </span>
+                    <UserButton afterSignOutUrl="/" />
+                  </div>
                 </div>
               ) : (
                 <>

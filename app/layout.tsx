@@ -16,7 +16,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      signInFallbackRedirectUrl="/"
+      signUpFallbackRedirectUrl="/"
+    >
       <html lang="en" suppressHydrationWarning>
         <body className="antialiased bg-white text-dark dark:bg-[#1a1d24] dark:text-gray-100">
           <ThemeProvider>
