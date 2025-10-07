@@ -5,7 +5,7 @@ interface BrandMarkProps {
   size?: "sm" | "md" | "lg";
 }
 
-export default function BrandMark({ className = "h-8 w-8", size = "md" }: BrandMarkProps) {
+export default function BrandMark({ className = "h-8 w-8", size = "lg" }: BrandMarkProps) {
   const sizeClasses = {
     sm: "h-6 w-6",
     md: "h-8 w-8", 
