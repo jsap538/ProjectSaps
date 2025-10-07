@@ -78,10 +78,10 @@ export default function ProfilePage() {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-ink flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-titanium mx-auto"></div>
+          <p className="mt-4 text-nickel">Loading...</p>
         </div>
       </div>
     );
@@ -89,12 +89,12 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-ink flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-medium text-gray-900 mb-4">
+          <h1 className="text-2xl font-medium text-porcelain mb-4">
             Access Denied
           </h1>
-          <p className="text-gray-600 mb-6">
+          <p className="text-nickel mb-6">
             Please sign in to view your profile.
           </p>
         </div>
@@ -103,29 +103,32 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-200">
-      <div className="mx-auto max-w-4xl px-8 py-16">
+    <div className="min-h-screen bg-ink">
+      <div className="mx-auto max-w-7xl px-6 py-24">
         {/* Header */}
-        <div className="mb-12">
-          <h1 className="text-4xl font-light tracking-tight text-gray-900 md:text-5xl">
+        <div className="mb-16 text-center">
+          <div className="mb-6 text-sm font-medium text-nickel tracking-wider uppercase">
+            Account Settings
+          </div>
+          <h1 className="text-4xl font-semibold tracking-wide1 text-porcelain md:text-6xl text-display">
             Profile
           </h1>
-          <p className="mt-4 text-lg text-gray-600">
+          <p className="mt-6 text-lg text-nickel max-w-2xl mx-auto text-body">
             Manage your account settings and seller status
           </p>
         </div>
 
         {loading ? (
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading profile...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-titanium mx-auto"></div>
+            <p className="mt-4 text-nickel">Loading profile...</p>
           </div>
         ) : error ? (
-          <div className="bg-red-50 border border-red-200 p-6">
-            <p className="text-red-600">{error}</p>
+          <div className="rounded-2xl border border-red-400/20 bg-red-400/10 p-8 text-center">
+            <p className="text-red-400 mb-4">{error}</p>
             <button
               onClick={fetchProfile}
-              className="mt-4 text-red-600 hover:underline"
+              className="rounded-xl bg-porcelain text-ink px-6 py-3 font-medium hover:bg-titanium transition-colors duration-sap"
             >
               Try Again
             </button>
@@ -133,38 +136,38 @@ export default function ProfilePage() {
         ) : profile ? (
           <div className="space-y-8">
             {/* Profile Information */}
-            <div className="bg-white border border-gray-300 shadow-sm p-8">
-              <h2 className="text-xl font-medium text-gray-900 mb-6">
+            <div className="rounded-2xl border border-porcelain/10 bg-graphite/60 p-8 shadow-soft">
+              <h2 className="text-xl font-semibold text-porcelain mb-6">
                 Account Information
               </h2>
 
               <div className="grid gap-6 md:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-600 mb-2">
+                  <label className="block text-sm font-medium text-nickel mb-2">
                     First Name
                   </label>
-                  <div className="text-gray-900">{profile.firstName}</div>
+                  <div className="text-porcelain">{profile.firstName}</div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-600 mb-2">
+                  <label className="block text-sm font-medium text-nickel mb-2">
                     Last Name
                   </label>
-                  <div className="text-gray-900">{profile.lastName}</div>
+                  <div className="text-porcelain">{profile.lastName}</div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-600 mb-2">
+                  <label className="block text-sm font-medium text-nickel mb-2">
                     Email
                   </label>
-                  <div className="text-gray-900">{profile.email}</div>
+                  <div className="text-porcelain">{profile.email}</div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-600 mb-2">
+                  <label className="block text-sm font-medium text-nickel mb-2">
                     Member Since
                   </label>
-                  <div className="text-gray-900">
+                  <div className="text-porcelain">
                     {new Date(profile.createdAt).toLocaleDateString()}
                   </div>
                 </div>
@@ -172,29 +175,29 @@ export default function ProfilePage() {
             </div>
 
             {/* Seller Status */}
-            <div className="bg-white border border-gray-300 shadow-sm p-8">
-              <h2 className="text-xl font-medium text-gray-900 mb-6">
+            <div className="rounded-2xl border border-porcelain/10 bg-graphite/60 p-8 shadow-soft">
+              <h2 className="text-xl font-semibold text-porcelain mb-6">
                 Seller Status
               </h2>
 
               <div className="flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <span className={`px-3 py-1 rounded-sm text-sm font-medium ${
+                    <span className={`px-3 py-1 rounded-xl text-sm font-medium ${
                       profile.isSeller 
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
+                        ? 'bg-titanium/20 text-titanium'
+                        : 'bg-nickel/20 text-nickel'
                     }`}>
                       {profile.isSeller ? 'Active Seller' : 'Buyer Only'}
                     </span>
                   </div>
                   {profile.isSeller ? (
-                    <div className="text-sm text-gray-600">
-                      <div>Rating: {profile.rating.toFixed(1)}/5.0</div>
-                      <div>Total Sales: {profile.totalSales}</div>
+                    <div className="text-sm text-nickel">
+                      <div>Rating: <span className="text-titanium font-medium">{profile.rating.toFixed(1)}/5.0</span></div>
+                      <div>Total Sales: <span className="text-titanium font-medium">{profile.totalSales}</span></div>
                     </div>
                   ) : (
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-nickel">
                       Become a seller to start listing items and earning money.
                     </p>
                   )}
@@ -204,7 +207,7 @@ export default function ProfilePage() {
                   <button
                     onClick={becomeSeller}
                     disabled={updating}
-                    className="bg-gray-900 text-white px-6 py-3 rounded-sm hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="rounded-xl bg-porcelain text-ink px-6 py-3 font-medium transition-transform duration-sap hover:-translate-y-px disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   >
                     {updating ? 'Updating...' : 'Become Seller'}
                   </button>
@@ -214,33 +217,41 @@ export default function ProfilePage() {
 
             {/* Seller Benefits */}
             {!profile.isSeller && (
-              <div className="bg-gray-50 border border-gray-300 p-8">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">
+              <div className="rounded-2xl border border-porcelain/10 bg-graphite/60 p-8 shadow-soft">
+                <h3 className="text-lg font-semibold text-porcelain mb-6">
                   Seller Benefits
                 </h3>
-                <ul className="space-y-2 text-gray-700">
-                  <li className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-gray-900" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
+                <ul className="space-y-4 text-nickel text-body">
+                  <li className="flex items-center gap-4">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-titanium/20">
+                      <svg className="h-4 w-4 text-titanium" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
                     List unlimited items for sale
                   </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-gray-900" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
+                  <li className="flex items-center gap-4">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-titanium/20">
+                      <svg className="h-4 w-4 text-titanium" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
                     Access to seller dashboard
                   </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-gray-900" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
+                  <li className="flex items-center gap-4">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-titanium/20">
+                      <svg className="h-4 w-4 text-titanium" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
                     Build your seller rating and reputation
                   </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-gray-900" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
+                  <li className="flex items-center gap-4">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-titanium/20">
+                      <svg className="h-4 w-4 text-titanium" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
                     Secure payments and buyer protection
                   </li>
                 </ul>
