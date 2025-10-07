@@ -172,7 +172,7 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
             <div className="h-2 bg-porcelain/20 rounded-full relative">
               {/* Active Range */}
               <div 
-                className="absolute h-2 bg-titanium/60 rounded-full"
+                className="absolute h-2 bg-titanium/60 rounded-full transition-all duration-150 ease-out"
                 style={{
                   left: `${Math.max(0, ((filters.priceRange.min - 0) / (100000 - 0)) * 100)}%`,
                   width: `${Math.min(100, (((filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max) - filters.priceRange.min) / (100000 - 0)) * 100)}%`
@@ -182,7 +182,7 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
             
             {/* Min Handle */}
             <div
-              className="absolute top-1 w-4 h-4 bg-titanium rounded-full cursor-pointer shadow-md hover:scale-110 transition-transform slider-handle"
+              className="absolute top-1 w-4 h-4 bg-titanium rounded-full cursor-pointer shadow-md hover:scale-110 transition-all duration-150 ease-out slider-handle"
               style={{
                 left: `calc(${Math.max(0, ((filters.priceRange.min - 0) / (100000 - 0)) * 100)}% - 8px)`,
                 zIndex: 10
@@ -218,7 +218,7 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
             
             {/* Max Handle */}
             <div
-              className="absolute top-1 w-4 h-4 bg-titanium rounded-full cursor-pointer shadow-md hover:scale-110 transition-transform slider-handle"
+              className="absolute top-1 w-4 h-4 bg-titanium rounded-full cursor-pointer shadow-md hover:scale-110 transition-all duration-150 ease-out slider-handle"
               style={{
                 left: `calc(${Math.max(0, (((filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max) - 0) / (100000 - 0)) * 100)}% - 8px)`,
                 zIndex: 10
