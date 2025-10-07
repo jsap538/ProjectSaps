@@ -14,7 +14,7 @@ export default function BrandMark({ className = "h-10 w-10", size = "md" }: Bran
 
   return (
     <Image
-      src="/saps-logo-white-5x.png"
+      src="/saps-logo-white-10x.png"
       alt="SAPS"
       width={160}
       height={160}
