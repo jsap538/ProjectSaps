@@ -23,27 +23,29 @@ export async function GET() {
     // Get full item details for watchlist items
     const watchlistItems = await Promise.all(
       user.watchlist.map(async (itemId: string) => {
-        const item = await Item.findById(itemId).lean(); // Use lean() for plain objects
-        return item ? {
-          _id: (item._id as any).toString(),
+        const item = await Item.findById(itemId);
+        if (!item) return null;
+        
+        return {
+          _id: item._id.toString(),
           title: item.title,
           brand: item.brand,
           price_cents: item.price_cents,
           images: item.images,
           condition: item.condition,
           createdAt: item.createdAt,
-        } : null;
+        };
       })
     );
 
     // Filter out null items (deleted items)
-    const validItems = watchlistItems.filter((item: any) => item !== null);
+    const validItems = watchlistItems.filter((item) => item !== null);
 
     return NextResponse.json({
       success: true,
       data: validItems,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching watchlist:', error);
     return NextResponse.json(
       { error: 'Failed to fetch watchlist' },
@@ -98,7 +100,7 @@ export async function POST(request: NextRequest) {
       message: 'Item added to watchlist',
       data: user.watchlist,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error adding to watchlist:', error);
     return NextResponse.json(
       { error: 'Failed to add item to watchlist' },
@@ -138,7 +140,7 @@ export async function DELETE(request: NextRequest) {
       message: 'Item removed from watchlist',
       data: user.watchlist,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error removing from watchlist:', error);
     return NextResponse.json(
       { error: 'Failed to remove item from watchlist' },
