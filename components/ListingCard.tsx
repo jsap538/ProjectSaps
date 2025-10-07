@@ -16,9 +16,9 @@ export default function ListingCard({ item }: { item: Item }) {
   return (
     <Link
       href={`/items/${item._id}`}
-      className="group block bg-white border border-gray-300 shadow-sm transition-all duration-200 hover:shadow-xl hover:-translate-y-1 hover:border-gray-400"
+      className="group block bg-gray-50 border border-gray-400 shadow-lg transition-all duration-200 hover:shadow-xl hover:-translate-y-1 hover:border-gray-500"
     >
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-100">
+      <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-200">
         <Image
           src={item.images?.[0] || 'https://placehold.co/600x750/1a2742/33CC66?text=No+Image'}
           alt={item.title}

@@ -242,7 +242,7 @@ export default function BrowsePage() {
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Filters Sidebar */}
           <aside className="lg:w-64">
-            <div className="sticky top-24 bg-white border border-gray-400 shadow-lg p-6">
+            <div className="sticky top-24 bg-gray-50 border border-gray-400 shadow-lg p-6">
               <div className="mb-6 flex items-center justify-between lg:block">
                 <h2 className="text-lg font-medium text-gray-900">Filters</h2>
                 <button
@@ -406,18 +406,18 @@ export default function BrowsePage() {
             {loading ? (
               <div className="grid grid-cols-2 gap-6 md:grid-cols-3">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="animate-pulse bg-white border border-gray-200 p-4">
-                    <div className="aspect-[4/5] bg-gray-100 mb-4"></div>
+                  <div key={i} className="animate-pulse bg-gray-50 border border-gray-300 shadow-sm p-4">
+                    <div className="aspect-[4/5] bg-gray-200 mb-4"></div>
                     <div className="space-y-2">
-                      <div className="h-4 bg-gray-100 rounded w-3/4"></div>
-                      <div className="h-4 bg-gray-100 rounded w-1/2"></div>
-                      <div className="h-4 bg-gray-100 rounded w-2/3"></div>
+                      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                      <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                      <div className="h-4 bg-gray-200 rounded w-2/3"></div>
                     </div>
                   </div>
                 ))}
               </div>
             ) : error ? (
-              <div className="bg-white border border-gray-200 p-16 text-center">
+              <div className="bg-gray-50 border border-gray-300 shadow-sm p-16 text-center">
                 <p className="text-lg text-red-600 mb-4">
                   Error: {error}
                 </p>
@@ -435,7 +435,7 @@ export default function BrowsePage() {
                 ))}
               </div>
             ) : (
-              <div className="bg-white border border-gray-200 p-16 text-center">
+              <div className="bg-gray-50 border border-gray-300 shadow-sm p-16 text-center">
                 <p className="text-lg text-gray-600">
                   No items match your filters. Try adjusting your search.
                 </p>
