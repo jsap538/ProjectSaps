@@ -5,11 +5,13 @@ import { useState, useEffect } from "react";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { Search, ShoppingBag, Menu, X } from "lucide-react";
 import BrandMark from "./BrandMark";
+import { useCart } from "@/contexts/CartContext";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const { isSignedIn, user } = useUser();
+  const { cartCount } = useCart();
 
   useEffect(() => {
     if (isSignedIn && user) {
@@ -74,6 +76,19 @@ export default function Navbar() {
               How It Works
             </Link>
             <div className="ml-6 flex items-center gap-4">
+              {/* Cart Icon */}
+              <Link
+                href="/cart"
+                className="relative p-2 text-porcelain/80 transition-colors duration-sap hover:text-porcelain"
+              >
+                <ShoppingBag className="h-5 w-5" strokeWidth={1.75} />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-titanium text-ink text-xs font-bold">
+                    {cartCount > 99 ? '99+' : cartCount}
+                  </span>
+                )}
+              </Link>
+
               {isSignedIn ? (
                 <div className="flex items-center gap-4">
                   <Link

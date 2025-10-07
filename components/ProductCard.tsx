@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useCart } from "@/contexts/CartContext";
+import { useState } from "react";
 
 interface ProductCardProps {
   item: {
@@ -17,6 +19,20 @@ interface ProductCardProps {
 
 export default function ProductCard({ item }: ProductCardProps) {
   const price = (item.price_cents / 100).toFixed(2);
+  const { addToCart, isLoading } = useCart();
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    setIsAdding(true);
+    try {
+      await addToCart(item._id, 1);
+    } finally {
+      setIsAdding(false);
+    }
+  };
 
   return (
     <motion.article
@@ -62,6 +78,17 @@ export default function ProductCard({ item }: ProductCardProps) {
           </div>
         </div>
       </Link>
+      
+      {/* Add to Cart Button */}
+      <div className="p-4 pt-0">
+        <button
+          onClick={handleAddToCart}
+          disabled={isAdding || isLoading}
+          className="w-full rounded-xl bg-titanium/10 border border-titanium/20 px-4 py-2.5 text-sm font-medium text-titanium transition-all duration-sap hover:bg-titanium/20 hover:border-titanium/40 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isAdding ? 'Adding...' : 'Add to Cart'}
+        </button>
+      </div>
     </motion.article>
   );
 }

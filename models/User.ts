@@ -1,5 +1,11 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
+export interface ICartItem {
+  itemId: string;
+  quantity: number;
+  addedAt: Date;
+}
+
 export interface IUser extends Document {
   clerkId: string;
   email: string;
@@ -12,6 +18,7 @@ export interface IUser extends Document {
   stripeAccountId?: string;
   rating?: number;
   totalSales?: number;
+  cart: ICartItem[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -62,6 +69,22 @@ const UserSchema = new Schema<IUser>({
     type: Number,
     default: 0,
   },
+  cart: [{
+    itemId: {
+      type: String,
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+      min: 1,
+      default: 1,
+    },
+    addedAt: {
+      type: Date,
+      default: Date.now,
+    },
+  }],
 }, {
   timestamps: true,
 });

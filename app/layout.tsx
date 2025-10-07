@@ -4,6 +4,7 @@ import "../styles/brand.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { CartProvider } from "@/contexts/CartContext";
 import { ClerkProvider } from '@clerk/nextjs';
 
 export const metadata: Metadata = {
@@ -17,20 +18,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider
-      signInFallbackRedirectUrl="/"
-      signUpFallbackRedirectUrl="/"
-    >
-             <html lang="en" suppressHydrationWarning>
-               <body className="antialiased bg-ink text-porcelain" suppressHydrationWarning>
-          <ThemeProvider>
-            <Navbar />
-            <main className="min-h-screen">{children}</main>
-            <Footer />
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+            <ClerkProvider
+              signInFallbackRedirectUrl="/"
+              signUpFallbackRedirectUrl="/"
+            >
+                     <html lang="en" suppressHydrationWarning>
+                       <body className="antialiased bg-ink text-porcelain" suppressHydrationWarning>
+                  <ThemeProvider>
+                    <CartProvider>
+                      <Navbar />
+                      <main className="min-h-screen">{children}</main>
+                      <Footer />
+                    </CartProvider>
+                  </ThemeProvider>
+                </body>
+              </html>
+            </ClerkProvider>
   );
 }
 
