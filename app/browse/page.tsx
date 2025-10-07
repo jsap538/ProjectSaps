@@ -185,17 +185,17 @@ export default function BrowsePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-900">
       <div className="mx-auto max-w-6xl px-8 py-16">
         {/* Hero Header */}
         <div className="mb-16 text-center">
-          <div className="mb-6 text-sm font-medium text-gray-600 tracking-wider uppercase">
+          <div className="mb-6 text-sm font-medium text-gray-400 tracking-wider uppercase">
             Premium Collection
           </div>
-          <h1 className="text-4xl font-light tracking-tight md:text-5xl leading-tight text-gray-900 mb-6">
+          <h1 className="text-4xl font-light tracking-tight md:text-5xl leading-tight text-white mb-6">
             Browse Collection
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
             Discover luxury men's accessories from the world's finest brands. {totalItems} items available.
           </p>
         </div>
@@ -242,12 +242,12 @@ export default function BrowsePage() {
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Filters Sidebar */}
           <aside className="lg:w-64">
-            <div className="sticky top-24 bg-gray-50 border border-gray-400 shadow-lg p-6">
+            <div className="sticky top-24 bg-gray-800 border border-gray-600 shadow-lg p-6">
               <div className="mb-6 flex items-center justify-between lg:block">
-                <h2 className="text-lg font-medium text-gray-900">Filters</h2>
+                <h2 className="text-lg font-medium text-white">Filters</h2>
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className="text-gray-600 lg:hidden"
+                  className="text-gray-400 lg:hidden"
                 >
                   <svg
                     className={`h-5 w-5 transition ${showFilters ? "rotate-180" : ""}`}

@@ -42,12 +42,12 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur-sm shadow-lg">
+    <nav className="sticky top-0 z-50 border-b border-gray-700 bg-gray-900/95 backdrop-blur-sm shadow-lg">
       <div className="mx-auto max-w-6xl px-8">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="group flex items-center space-x-3 text-2xl font-light tracking-tight text-gray-900 transition-colors duration-200 hover:text-gray-700">
-            <div className="h-8 w-8 bg-gray-900"></div>
+          <Link href="/" className="group flex items-center space-x-3 text-2xl font-light tracking-tight text-white transition-colors duration-200 hover:text-gray-300">
+            <div className="h-8 w-8 bg-white"></div>
             <span>SAPS</span>
           </Link>
 
@@ -55,19 +55,19 @@ export default function Navbar() {
           <div className="hidden items-center gap-8 md:flex">
             <Link
               href="/browse"
-              className="text-sm font-medium text-gray-600 transition-colors duration-200 hover:text-gray-900"
+              className="text-sm font-medium text-gray-300 transition-colors duration-200 hover:text-white"
             >
               Browse
             </Link>
             <Link
               href="/sell"
-              className="text-sm font-medium text-gray-600 transition-colors duration-200 hover:text-gray-900"
+              className="text-sm font-medium text-gray-300 transition-colors duration-200 hover:text-white"
             >
               Sell
             </Link>
             <Link
               href="/how-it-works"
-              className="text-sm font-medium text-gray-600 transition-colors duration-200 hover:text-gray-900"
+              className="text-sm font-medium text-gray-300 transition-colors duration-200 hover:text-white"
             >
               How It Works
             </Link>
@@ -76,25 +76,25 @@ export default function Navbar() {
                 <div className="flex items-center gap-4">
                   <Link
                     href="/dashboard"
-                    className="text-sm font-medium text-gray-700 transition hover:text-primary dark:text-gray-300 dark:hover:text-primary"
+                    className="text-sm font-medium text-gray-300 transition hover:text-white"
                   >
                     Dashboard
                   </Link>
                   <Link
                     href="/profile"
-                    className="text-sm font-medium text-gray-700 transition hover:text-primary dark:text-gray-300 dark:hover:text-primary"
+                    className="text-sm font-medium text-gray-300 transition hover:text-white"
                   >
                     Profile
                   </Link>
                   {isAdmin && (
                     <Link
                       href="/admin"
-                      className="text-sm font-medium text-gray-700 transition hover:text-primary dark:text-gray-300 dark:hover:text-primary"
+                      className="text-sm font-medium text-gray-300 transition hover:text-white"
                     >
                       Admin
                     </Link>
                   )}
-                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                  <span className="text-sm text-gray-400">
                     Hello, {user?.firstName || 'User'}
                   </span>
                   <UserButton afterSignOutUrl="/" />

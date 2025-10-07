@@ -41,7 +41,7 @@ export default function Home() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative bg-gray-900 text-white">
+      <section className="relative bg-gray-800 text-white">
         <div className="mx-auto max-w-6xl px-8 py-32 md:py-40">
           <div className="grid grid-cols-1 gap-20 lg:grid-cols-2 lg:gap-32">
             {/* Content */}
@@ -107,16 +107,16 @@ export default function Home() {
       </section>
 
       {/* Featured Listings */}
-      <section className="bg-white py-24">
+      <section className="bg-gray-900 py-24">
         <div className="mx-auto max-w-6xl px-8">
           <div className="mb-16 text-center">
-            <div className="mb-6 text-sm font-medium text-gray-600 tracking-wider uppercase">
+            <div className="mb-6 text-sm font-medium text-gray-400 tracking-wider uppercase">
               Featured Collection
             </div>
-            <h2 className="text-4xl font-light tracking-tight md:text-5xl leading-tight text-gray-900">
+            <h2 className="text-4xl font-light tracking-tight md:text-5xl leading-tight text-white">
               Selected Items
             </h2>
-            <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="mt-6 text-lg text-gray-300 max-w-2xl mx-auto">
               A carefully curated selection of premium accessories from trusted sellers.
             </p>
           </div>
