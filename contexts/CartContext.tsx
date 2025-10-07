@@ -83,7 +83,20 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const data = await response.json();
       
       if (data.success) {
-        await fetchCart(); // Refresh cart
+        // Optimistically update cart count without full refresh
+        setCart(prevCart => {
+          const existingItem = prevCart.find(item => item.itemId === itemId);
+          if (existingItem) {
+            return prevCart.map(item => 
+              item.itemId === itemId 
+                ? { ...item, quantity: item.quantity + quantity }
+                : item
+            );
+          } else {
+            // Add new item optimistically - we'll get the full details on next page load
+            return [...prevCart, { itemId, quantity, addedAt: new Date().toISOString(), item: undefined }];
+          }
+        });
       } else {
         alert(data.error || 'Failed to add item to cart');
       }
@@ -119,7 +132,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const data = await response.json();
       
       if (data.success) {
-        await fetchCart(); // Refresh cart
+        // Optimistically remove item from cart
+        setCart(prevCart => prevCart.filter(item => item.itemId !== itemId));
       } else {
         console.error('Failed to remove item:', data.error);
         alert(data.error || 'Failed to remove item from cart');

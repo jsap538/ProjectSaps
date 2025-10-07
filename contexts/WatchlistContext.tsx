@@ -83,7 +83,22 @@ export const WatchlistProvider = ({ children }: { children: ReactNode }) => {
       const data = await response.json();
       
       if (data.success) {
-        await fetchWatchlist(); // Re-fetch to get updated details
+        // Optimistically add to watchlist without full refresh
+        setWatchlist(prevWatchlist => {
+          const isAlreadyWatched = prevWatchlist.some(item => item._id === itemId);
+          if (isAlreadyWatched) return prevWatchlist;
+          
+          // Add optimistically - we'll get full details on next page load
+          return [...prevWatchlist, {
+            _id: itemId,
+            title: 'Loading...',
+            brand: '',
+            price_cents: 0,
+            images: [],
+            condition: '',
+            createdAt: new Date().toISOString(),
+          }];
+        });
       } else {
         throw new Error(data.error || 'Failed to add item to watchlist');
       }
@@ -113,7 +128,8 @@ export const WatchlistProvider = ({ children }: { children: ReactNode }) => {
       const data = await response.json();
       
       if (data.success) {
-        await fetchWatchlist();
+        // Optimistically remove from watchlist
+        setWatchlist(prevWatchlist => prevWatchlist.filter(item => item._id !== itemId));
       } else {
         throw new Error(data.error || 'Failed to remove item from watchlist');
       }
