@@ -9,7 +9,7 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { userId } = auth();
+  const { userId } = await auth();
   
   if (!userId) {
     return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401, headers: corsHeaders });
