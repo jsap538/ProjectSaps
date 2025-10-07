@@ -25,7 +25,7 @@ export async function GET() {
       user.watchlist.map(async (itemId: string) => {
         const item = await Item.findById(itemId).lean(); // Use lean() for plain objects
         return item ? {
-          _id: item._id.toString(),
+          _id: (item._id as any).toString(),
           title: item.title,
           brand: item.brand,
           price_cents: item.price_cents,
