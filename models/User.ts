@@ -8,6 +8,7 @@ export interface IUser extends Document {
   username?: string;
   profileImageUrl?: string;
   isSeller: boolean;
+  isAdmin: boolean;
   stripeAccountId?: string;
   rating?: number;
   totalSales?: number;
@@ -43,6 +44,10 @@ const UserSchema = new Schema<IUser>({
   },
   profileImageUrl: String,
   isSeller: {
+    type: Boolean,
+    default: false,
+  },
+  isAdmin: {
     type: Boolean,
     default: false,
   },
