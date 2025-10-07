@@ -86,22 +86,8 @@ export const WatchlistProvider = ({ children }: { children: ReactNode }) => {
       const data = await response.json();
       
       if (data.success) {
-        // Optimistically add to watchlist without full refresh
-        setWatchlist(prevWatchlist => {
-          const isAlreadyWatched = prevWatchlist.some(item => item._id === itemId);
-          if (isAlreadyWatched) return prevWatchlist;
-          
-          // Add optimistically - we'll get full details on next page load
-          return [...prevWatchlist, {
-            _id: itemId,
-            title: 'Loading...',
-            brand: '',
-            price_cents: 0,
-            images: [],
-            condition: '',
-            createdAt: new Date().toISOString(),
-          }];
-        });
+        // Fetch full watchlist to get complete item details
+        await fetchWatchlist();
       } else {
         throw new Error(data.error || 'Failed to add item to watchlist');
       }
@@ -124,7 +110,8 @@ export const WatchlistProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
     
-    setIsLoading(true);
+    // Set loading for this specific item
+    setLoadingItems(prev => new Set(prev).add(itemId));
     setError(null);
     try {
       const response = await fetch('/api/watchlist', {
@@ -145,7 +132,12 @@ export const WatchlistProvider = ({ children }: { children: ReactNode }) => {
       console.error('Error removing from watchlist:', err);
       setError(err.message);
     } finally {
-      setIsLoading(false);
+      // Remove loading for this specific item
+      setLoadingItems(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(itemId);
+        return newSet;
+      });
     }
   };
 
