@@ -185,32 +185,36 @@ export default function BrowsePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#1a1d24]">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-[#1a1d24] dark:to-[#0f1116]">
       <div className="mx-auto max-w-7xl px-6 py-10">
-        {/* Header */}
-        <div className="mb-10">
-          <h1 className="text-3xl font-bold text-dark md:text-4xl dark:text-white">
+        {/* Hero Header */}
+        <div className="mb-12 text-center">
+          <div className="mb-4 inline-flex items-center rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary ring-1 ring-primary/20">
+            <span className="mr-2 h-2 w-2 rounded-full bg-primary"></span>
+            Premium Collection
+          </div>
+          <h1 className="text-5xl font-bold text-dark dark:text-white mb-4">
             Browse Collection
           </h1>
-          <p className="mt-3 text-gray-600 dark:text-gray-400">
-            {totalItems} items available
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            Discover luxury men's accessories from the world's finest brands. {totalItems} items available.
           </p>
         </div>
 
         {/* Search and Sort Bar */}
-        <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           {/* Search Bar */}
-          <div className="flex-1 max-w-md">
-            <div className="relative">
+          <div className="flex-1 max-w-lg">
+            <div className="relative group">
               <input
                 type="text"
                 placeholder="Search items, brands, or descriptions..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 pl-10 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-700 dark:bg-[#151821] dark:text-white"
+                className="w-full rounded-2xl border border-gray-300 bg-white px-6 py-4 pl-12 text-base shadow-sm transition-all duration-300 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/20 focus:shadow-lg dark:border-gray-700 dark:bg-[#1f2329] dark:text-white dark:focus:ring-primary/20"
               />
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg className="h-6 w-6 text-gray-400 transition-colors duration-300 group-focus-within:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
@@ -218,15 +222,15 @@ export default function BrowsePage() {
           </div>
 
           {/* Sort Dropdown */}
-          <div className="flex items-center gap-3">
-            <label htmlFor="sort" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <div className="flex items-center gap-4">
+            <label htmlFor="sort" className="text-base font-medium text-gray-700 dark:text-gray-300">
               Sort by:
             </label>
             <select
               id="sort"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-700 dark:bg-[#151821] dark:text-white"
+              className="rounded-2xl border border-gray-300 bg-white px-4 py-3 text-base shadow-sm transition-all duration-300 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/20 dark:border-gray-700 dark:bg-[#1f2329] dark:text-white dark:focus:ring-primary/20"
             >
               <option value="newest">Newest First</option>
               <option value="price_cents">Price: Low to High</option>

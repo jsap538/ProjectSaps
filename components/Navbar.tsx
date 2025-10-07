@@ -42,33 +42,40 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-xl dark:border-gray-800 dark:bg-[#1a1d24]/80">
+    <nav className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/90 backdrop-blur-xl shadow-sm dark:border-gray-800/50 dark:bg-[#1a1d24]/90">
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-bold tracking-tight text-dark transition hover:text-primary dark:text-white">
-            SAPS
+          <Link href="/" className="group flex items-center space-x-3 text-2xl font-bold tracking-tight text-dark transition-all duration-300 hover:text-primary hover:scale-105 dark:text-white">
+            <div className="relative">
+              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-primary-light shadow-lg"></div>
+              <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-primary-light to-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+            </div>
+            <span>SAPS</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden items-center gap-10 md:flex">
+          <div className="hidden items-center gap-8 md:flex">
             <Link
               href="/browse"
-              className="text-sm font-medium text-gray-700 transition hover:text-primary dark:text-gray-300 dark:hover:text-primary"
+              className="group relative text-sm font-medium text-gray-700 transition-all duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary"
             >
               Browse
+              <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link
               href="/sell"
-              className="text-sm font-medium text-gray-700 transition hover:text-primary dark:text-gray-300 dark:hover:text-primary"
+              className="group relative text-sm font-medium text-gray-700 transition-all duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary"
             >
               Sell
+              <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link
               href="/how-it-works"
-              className="text-sm font-medium text-gray-700 transition hover:text-primary dark:text-gray-300 dark:hover:text-primary"
+              className="group relative text-sm font-medium text-gray-700 transition-all duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary"
             >
               How It Works
+              <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <div className="ml-6 flex items-center gap-4">
               {isSignedIn ? (
