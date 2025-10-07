@@ -75,14 +75,14 @@ export default function EnhancedFilters({ onFiltersChange, className = "" }: Enh
   };
 
   return (
-    <div className={`space-y-8 ${className}`}>
+    <div className={`space-y-6 ${className}`}>
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-porcelain/10 pb-4">
+      <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold text-porcelain">Filters</h2>
         {hasActiveFilters() && (
           <button
             onClick={clearAllFilters}
-            className="text-sm text-titanium hover:text-porcelain transition-colors duration-sap font-medium px-3 py-1.5 rounded-lg hover:bg-titanium/10"
+            className="text-sm text-titanium hover:text-porcelain transition-colors duration-sap"
           >
             Clear all
           </button>
@@ -90,14 +90,14 @@ export default function EnhancedFilters({ onFiltersChange, className = "" }: Enh
       </div>
 
       {/* Sort By */}
-      <div className="bg-graphite/40 rounded-xl p-4 border border-porcelain/10">
-        <label className="block text-sm font-semibold text-porcelain mb-3">
+      <div>
+        <label className="block text-sm font-medium text-porcelain mb-2">
           Sort By
         </label>
         <select
           value={filters.sortBy}
           onChange={(e) => handleSortChange(e.target.value)}
-          className="w-full rounded-xl border border-porcelain/20 bg-ink px-4 py-3 text-porcelain focus:border-titanium focus:ring-titanium/20 focus:outline-none transition-colors duration-sap font-medium"
+          className="w-full rounded-xl border border-porcelain/20 bg-ink px-4 py-3 text-porcelain focus:border-titanium focus:ring-titanium/20 focus:outline-none transition-colors duration-sap"
         >
           {SORT_OPTIONS.map(option => (
             <option key={option} value={option} className="bg-ink text-porcelain">
@@ -108,8 +108,8 @@ export default function EnhancedFilters({ onFiltersChange, className = "" }: Enh
       </div>
 
       {/* Price Range */}
-      <div className="bg-graphite/40 rounded-xl p-4 border border-porcelain/10">
-        <label className="block text-sm font-semibold text-porcelain mb-3">
+      <div>
+        <label className="block text-sm font-medium text-porcelain mb-2">
           Price Range
         </label>
         <div className="space-y-2">
