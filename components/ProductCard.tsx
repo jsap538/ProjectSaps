@@ -4,7 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useCart } from "@/contexts/CartContext";
+import { useWatchlist } from "@/contexts/WatchlistContext";
 import { useState } from "react";
+import { Heart, HeartOff } from "lucide-react";
 
 interface ProductCardProps {
   item: {
@@ -20,7 +22,9 @@ interface ProductCardProps {
 export default function ProductCard({ item }: ProductCardProps) {
   const price = (item.price_cents / 100).toFixed(2);
   const { addToCart, isLoading } = useCart();
+  const { addToWatchlist, removeFromWatchlist, isInWatchlist, isLoading: watchlistLoading } = useWatchlist();
   const [isAdding, setIsAdding] = useState(false);
+  const [isWatchlistLoading, setIsWatchlistLoading] = useState(false);
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -31,6 +35,22 @@ export default function ProductCard({ item }: ProductCardProps) {
       await addToCart(item._id, 1);
     } finally {
       setIsAdding(false);
+    }
+  };
+
+  const handleWatchlistToggle = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    setIsWatchlistLoading(true);
+    try {
+      if (isInWatchlist(item._id)) {
+        await removeFromWatchlist(item._id);
+      } else {
+        await addToWatchlist(item._id);
+      }
+    } finally {
+      setIsWatchlistLoading(false);
     }
   };
 
@@ -55,6 +75,21 @@ export default function ProductCard({ item }: ProductCardProps) {
             <span className="inline-flex items-center rounded-sm bg-ink/90 backdrop-blur-sm px-2 py-1 text-xs font-medium text-porcelain shadow-sm">
               {item.condition}
             </span>
+          </div>
+
+          {/* Watchlist button */}
+          <div className="absolute top-4 left-4">
+            <button
+              onClick={handleWatchlistToggle}
+              disabled={isWatchlistLoading || watchlistLoading}
+              className="rounded-full bg-ink/90 backdrop-blur-sm p-2 text-porcelain transition-all duration-sap hover:bg-ink/95 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isInWatchlist(item._id) ? (
+                <Heart className="h-4 w-4 fill-red-500 text-red-500" strokeWidth={1.75} />
+              ) : (
+                <HeartOff className="h-4 w-4" strokeWidth={1.75} />
+              )}
+            </button>
           </div>
         </div>
         

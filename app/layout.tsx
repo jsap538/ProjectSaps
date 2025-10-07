@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { CartProvider } from "@/contexts/CartContext";
+import { WatchlistProvider } from "@/contexts/WatchlistContext";
 import { ClerkProvider } from '@clerk/nextjs';
 
 export const metadata: Metadata = {
@@ -26,9 +27,11 @@ export default function RootLayout({
                        <body className="antialiased bg-ink text-porcelain" suppressHydrationWarning>
                   <ThemeProvider>
                     <CartProvider>
-                      <Navbar />
-                      <main className="min-h-screen">{children}</main>
-                      <Footer />
+                      <WatchlistProvider>
+                        <Navbar />
+                        <main className="min-h-screen">{children}</main>
+                        <Footer />
+                      </WatchlistProvider>
                     </CartProvider>
                   </ThemeProvider>
                 </body>

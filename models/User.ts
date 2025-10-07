@@ -19,6 +19,7 @@ export interface IUser extends Document {
   rating?: number;
   totalSales?: number;
   cart: ICartItem[];
+  watchlist: string[]; // Array of item IDs
   createdAt: Date;
   updatedAt: Date;
 }
@@ -84,6 +85,10 @@ const UserSchema = new Schema<IUser>({
       type: Date,
       default: Date.now,
     },
+  }],
+  watchlist: [{
+    type: String,
+    default: [],
   }],
 }, {
   timestamps: true,
