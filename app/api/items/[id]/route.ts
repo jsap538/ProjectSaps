@@ -112,8 +112,7 @@ export async function PUT(
       );
     }
 
-    const updateData = validation.data!;
-    delete updateData.id; // Remove ID from update data
+    const { id, ...updateData } = validation.data!; // Remove ID from update data
 
     // If item was approved and we're updating, it needs re-approval
     if (item.isApproved) {
