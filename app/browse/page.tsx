@@ -92,41 +92,92 @@ export default function BrowsePage() {
   const [selectedCondition, setSelectedCondition] = useState("All");
   const [selectedColor, setSelectedColor] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [sortBy, setSortBy] = useState("newest");
+  const [totalItems, setTotalItems] = useState(0);
 
   useEffect(() => {
     fetchItems();
-  }, []);
+  }, [selectedBrand, selectedCategory, selectedCondition, selectedColor, searchQuery, minPrice, maxPrice, sortBy]);
 
   const fetchItems = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/items');
+      
+      // Build query parameters
+      const params = new URLSearchParams();
+      
+      // Add filters
+      if (selectedBrand !== "All Brands") {
+        params.append('brand', selectedBrand);
+      }
+      if (selectedCategory !== "All") {
+        params.append('category', selectedCategory.toLowerCase());
+      }
+      if (selectedCondition !== "All") {
+        params.append('condition', selectedCondition);
+      }
+      if (selectedColor !== "All") {
+        params.append('color', selectedColor.toLowerCase());
+      }
+      if (searchQuery.trim()) {
+        params.append('search', searchQuery.trim());
+      }
+      if (minPrice) {
+        params.append('minPrice', minPrice);
+      }
+      if (maxPrice) {
+        params.append('maxPrice', maxPrice);
+      }
+      
+      // Add sorting
+      params.append('sortBy', sortBy);
+      params.append('sortOrder', 'desc');
+
+      const response = await fetch(`/api/items?${params.toString()}`);
       if (!response.ok) {
         throw new Error('Failed to fetch items');
       }
       const data = await response.json();
       if (data.success) {
         setItems(data.data || []);
+        setTotalItems(data.pagination?.total || 0);
       } else {
         throw new Error(data.error || 'Failed to fetch items');
       }
     } catch (err) {
       console.error('Error fetching items:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
-      // Fallback to mock data
-      setItems(mockItems.map(item => ({ ...item, _id: item.id, images: [item.image] })));
+      // Fallback to mock data with client-side filtering
+      const filteredMockItems = mockItems.filter((item) => {
+        if (selectedBrand !== "All Brands" && item.brand !== selectedBrand) return false;
+        if (selectedCategory !== "All" && item.category !== selectedCategory.toLowerCase()) return false;
+        if (selectedCondition !== "All" && item.condition !== selectedCondition) return false;
+        if (selectedColor !== "All" && item.color !== selectedColor.toLowerCase()) return false;
+        if (searchQuery.trim() && !item.title.toLowerCase().includes(searchQuery.toLowerCase()) && !item.brand.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+        if (minPrice && item.price_cents < parseInt(minPrice) * 100) return false;
+        if (maxPrice && item.price_cents > parseInt(maxPrice) * 100) return false;
+        return true;
+      });
+      setItems(filteredMockItems.map(item => ({ ...item, _id: item.id, images: [item.image] })));
+      setTotalItems(filteredMockItems.length);
     } finally {
       setLoading(false);
     }
   };
 
-  const filteredItems = items.filter((item) => {
-    if (selectedBrand !== "All Brands" && item.brand !== selectedBrand) return false;
-    if (selectedCategory !== "All" && item.category !== selectedCategory.toLowerCase()) return false;
-    if (selectedCondition !== "All" && item.condition !== selectedCondition) return false;
-    if (selectedColor !== "All" && item.color !== selectedColor.toLowerCase()) return false;
-    return true;
-  });
+  const clearAllFilters = () => {
+    setSelectedBrand("All Brands");
+    setSelectedCategory("All");
+    setSelectedCondition("All");
+    setSelectedColor("All");
+    setSearchQuery("");
+    setMinPrice("");
+    setMaxPrice("");
+    setSortBy("newest");
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#1a1d24]">
@@ -137,8 +188,47 @@ export default function BrowsePage() {
             Browse Collection
           </h1>
           <p className="mt-3 text-gray-600 dark:text-gray-400">
-            {filteredItems.length} items available
+            {totalItems} items available
           </p>
+        </div>
+
+        {/* Search and Sort Bar */}
+        <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          {/* Search Bar */}
+          <div className="flex-1 max-w-md">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search items, brands, or descriptions..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 pl-10 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-700 dark:bg-[#151821] dark:text-white"
+              />
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Sort Dropdown */}
+          <div className="flex items-center gap-3">
+            <label htmlFor="sort" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Sort by:
+            </label>
+            <select
+              id="sort"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-700 dark:bg-[#151821] dark:text-white"
+            >
+              <option value="newest">Newest First</option>
+              <option value="price_cents">Price: Low to High</option>
+              <option value="price_cents_desc">Price: High to Low</option>
+              <option value="views">Most Popular</option>
+            </select>
+          </div>
         </div>
 
         <div className="flex flex-col gap-6 lg:flex-row">
@@ -255,14 +345,46 @@ export default function BrowsePage() {
                   </div>
                 </div>
 
+                {/* Price Range Filter */}
+                <div>
+                  <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-dark dark:text-gray-400">
+                    Price Range
+                  </h3>
+                  <div className="space-y-3">
+                    <div>
+                      <label htmlFor="minPrice" className="block text-xs text-gray-600 dark:text-gray-400 mb-1">
+                        Min Price ($)
+                      </label>
+                      <input
+                        type="number"
+                        id="minPrice"
+                        value={minPrice}
+                        onChange={(e) => setMinPrice(e.target.value)}
+                        placeholder="0"
+                        min="0"
+                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-700 dark:bg-[#151821] dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="maxPrice" className="block text-xs text-gray-600 dark:text-gray-400 mb-1">
+                        Max Price ($)
+                      </label>
+                      <input
+                        type="number"
+                        id="maxPrice"
+                        value={maxPrice}
+                        onChange={(e) => setMaxPrice(e.target.value)}
+                        placeholder="No limit"
+                        min="0"
+                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-700 dark:bg-[#151821] dark:text-white"
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 {/* Clear Filters */}
                 <button
-                  onClick={() => {
-                    setSelectedBrand("All Brands");
-                    setSelectedCategory("All");
-                    setSelectedCondition("All");
-                    setSelectedColor("All");
-                  }}
+                  onClick={clearAllFilters}
                   className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-dark transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-[#151821]"
                 >
                   Clear All Filters
@@ -273,10 +395,35 @@ export default function BrowsePage() {
 
           {/* Listings Grid */}
           <div className="flex-1">
-            {filteredItems.length > 0 ? (
+            {loading ? (
               <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:gap-7">
-                {filteredItems.map((item) => (
-                  <ListingCard key={item.id} item={item} />
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="animate-pulse rounded-2xl bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-[#1f2329] dark:ring-gray-800">
+                    <div className="aspect-[4/5] rounded-xl bg-gray-200 dark:bg-gray-700 mb-4"></div>
+                    <div className="space-y-2">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : error ? (
+              <div className="rounded-2xl bg-white p-16 text-center shadow-sm ring-1 ring-gray-200 dark:bg-[#1f2329] dark:ring-gray-800">
+                <p className="text-lg text-red-600 dark:text-red-400 mb-4">
+                  Error: {error}
+                </p>
+                <button
+                  onClick={fetchItems}
+                  className="rounded-lg bg-primary px-6 py-3 text-white font-medium hover:bg-primary-dark transition"
+                >
+                  Try Again
+                </button>
+              </div>
+            ) : items.length > 0 ? (
+              <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:gap-7">
+                {items.map((item) => (
+                  <ListingCard key={item._id} item={item} />
                 ))}
               </div>
             ) : (

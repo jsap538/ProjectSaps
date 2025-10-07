@@ -1,12 +1,33 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UserButton, useUser } from "@clerk/nextjs";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { isSignedIn, user } = useUser();
+
+  useEffect(() => {
+    if (isSignedIn && user) {
+      checkAdminStatus();
+    }
+  }, [isSignedIn, user]);
+
+  const checkAdminStatus = async () => {
+    try {
+      const response = await fetch('/api/user/profile');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.user) {
+          setIsAdmin(data.user.isAdmin || false);
+        }
+      }
+    } catch (error) {
+      console.error('Error checking admin status:', error);
+    }
+  };
 
   return (
     <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-xl dark:border-gray-800 dark:bg-[#1a1d24]/80">
@@ -52,6 +73,14 @@ export default function Navbar() {
                   >
                     Profile
                   </Link>
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      className="text-sm font-medium text-gray-700 transition hover:text-primary dark:text-gray-300 dark:hover:text-primary"
+                    >
+                      Admin
+                    </Link>
+                  )}
                   <span className="text-sm text-gray-700 dark:text-gray-300">
                     Hello, {user?.firstName || 'User'}
                   </span>
@@ -145,6 +174,14 @@ export default function Navbar() {
                   >
                     Profile
                   </Link>
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      className="block py-3 text-base font-medium text-dark dark:text-gray-300"
+                    >
+                      Admin
+                    </Link>
+                  )}
                   <div className="flex items-center justify-between py-3">
                     <span className="text-base font-medium text-dark dark:text-gray-300">
                       Hello, {user?.firstName || 'User'}

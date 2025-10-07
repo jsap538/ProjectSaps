@@ -4,26 +4,28 @@ import connectDB from '@/lib/mongodb';
 import Item from '@/models/Item';
 import User from '@/models/User';
 import { withRateLimit, rateLimiters } from '@/lib/rate-limit';
-import { sanitizeAndValidate, browseQuerySchema, itemSchema } from '@/lib/validation';
+import { sanitizeAndValidate, itemSchema } from '@/lib/validation';
 import { corsHeaders } from '@/lib/security';
 
 // GET /api/items - Browse items with filters
-export const GET = withRateLimit(rateLimiters.general, async (request: NextRequest) => {
+export async function GET(request: NextRequest) {
   try {
     await connectDB();
 
     const { searchParams } = new URL(request.url);
     const queryParams = Object.fromEntries(searchParams.entries());
     
-    const validation = sanitizeAndValidate(browseQuerySchema, queryParams);
-    if (!validation.success) {
-      return NextResponse.json(
-        { error: 'Invalid query parameters', details: validation.errors },
-        { status: 400 }
-      );
-    }
-
-    const { page, limit, category, brand, condition, color, minPrice, maxPrice, search, sortBy } = validation.data!;
+    // Parse query parameters with defaults
+    const page = parseInt(queryParams.page || '1');
+    const limit = parseInt(queryParams.limit || '12');
+    const category = queryParams.category;
+    const brand = queryParams.brand;
+    const condition = queryParams.condition;
+    const color = queryParams.color;
+    const minPrice = queryParams.minPrice ? parseInt(queryParams.minPrice) : undefined;
+    const maxPrice = queryParams.maxPrice ? parseInt(queryParams.maxPrice) : undefined;
+    const search = queryParams.search;
+    const sortBy = queryParams.sortBy || 'newest';
 
     // Build filter object
     const filter: any = {
@@ -38,27 +40,31 @@ export const GET = withRateLimit(rateLimiters.general, async (request: NextReque
     
     if (minPrice || maxPrice) {
       filter.price_cents = {};
-      if (minPrice) filter.price_cents.$gte = minPrice;
-      if (maxPrice) filter.price_cents.$lte = maxPrice;
+      if (minPrice) filter.price_cents.$gte = minPrice * 100; // Convert dollars to cents
+      if (maxPrice) filter.price_cents.$lte = maxPrice * 100; // Convert dollars to cents
     }
 
     if (search) {
-      filter.$text = { $search: search };
+      filter.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+        { brand: { $regex: search, $options: 'i' } }
+      ];
     }
 
     // Build sort object
     const sort: any = {};
     switch (sortBy) {
-      case 'price_asc':
+      case 'price_cents':
         sort.price_cents = 1;
         break;
-      case 'price_desc':
+      case 'price_cents_desc':
         sort.price_cents = -1;
         break;
-      case 'created_asc':
-        sort.createdAt = 1;
+      case 'views':
+        sort.views = -1;
         break;
-      case 'created_desc':
+      case 'newest':
       default:
         sort.createdAt = -1;
         break;
@@ -100,7 +106,7 @@ export const GET = withRateLimit(rateLimiters.general, async (request: NextReque
       { status: 500, headers: corsHeaders }
     );
   }
-});
+}
 
 // POST /api/items - Create new item
 export const POST = withRateLimit(rateLimiters.createItem, async (request: NextRequest) => {

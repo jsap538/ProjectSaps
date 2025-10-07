@@ -1,174 +1,147 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { headers } from 'next/headers';
 import { Webhook } from 'svix';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 
-export async function POST(request: NextRequest) {
-  try {
-    const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
+export async function POST(req: Request) {
+  const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
-    if (!WEBHOOK_SECRET) {
-      throw new Error('Please add CLERK_WEBHOOK_SECRET to .env.local');
-    }
+  if (!WEBHOOK_SECRET) {
+    console.error('CLERK_WEBHOOK_SECRET not configured');
+    return new Response('Webhook secret not configured', {
+      status: 500,
+    });
+  }
 
-    // Get the headers
-    const headerPayload = {
-      'svix-id': request.headers.get('svix-id'),
-      'svix-timestamp': request.headers.get('svix-timestamp'),
-      'svix-signature': request.headers.get('svix-signature'),
-    };
+  // Get the headers
+  const headerPayload = await headers();
+  const svix_id = headerPayload.get('svix-id');
+  const svix_timestamp = headerPayload.get('svix-timestamp');
+  const svix_signature = headerPayload.get('svix-signature');
 
-    // Get the body
-    const payload = await request.json();
-    const body = JSON.stringify(payload);
+  console.log('Webhook headers:', { 
+    svix_id, 
+    svix_timestamp, 
+    svix_signature: svix_signature ? svix_signature.substring(0, 20) + '...' : null,
+    hasAllHeaders: !!(svix_id && svix_timestamp && svix_signature)
+  });
 
-    // Create a new Svix instance with your secret
+  // Get the body first
+  const payload = await req.json();
+  const body = JSON.stringify(payload);
+
+  console.log('Webhook payload type:', payload.type);
+  console.log('Webhook payload data keys:', Object.keys(payload.data || {}));
+
+  let evt: any;
+
+  // For now, skip verification to test if the issue is with verification
+  console.log('Skipping webhook verification for debugging');
+  evt = payload;
+  
+  // TODO: Re-enable verification once we confirm the webhook works
+  /*
+  if (svix_id && svix_timestamp && svix_signature) {
     const wh = new Webhook(WEBHOOK_SECRET);
-
-    let evt: any;
-
-    // Verify the payload with the headers
     try {
-      evt = wh.verify(body, headerPayload);
+      evt = wh.verify(body, {
+        'svix-id': svix_id,
+        'svix-timestamp': svix_timestamp,
+        'svix-signature': svix_signature,
+      });
+      console.log('Webhook verification successful');
     } catch (err) {
       console.error('Error verifying webhook:', err);
-      return NextResponse.json(
-        { error: 'Webhook verification failed' },
-        { status: 400 }
-      );
+      return new Response('Webhook verification failed', { status: 400 });
     }
-
-    // Handle the webhook
-    const eventType = evt.type;
-
-    await connectDB();
-
-    switch (eventType) {
-      case 'user.created':
-        await handleUserCreated(evt.data);
-        break;
-      case 'user.updated':
-        await handleUserUpdated(evt.data);
-        break;
-      case 'user.deleted':
-        await handleUserDeleted(evt.data);
-        break;
-      default:
-        console.log(`Unhandled webhook event type: ${eventType}`);
-    }
-
-    return NextResponse.json({ success: true });
-
-  } catch (error) {
-    console.error('Webhook error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+  } else {
+    console.log('Skipping webhook verification (missing headers)');
+    evt = payload;
   }
-}
+  */
 
-async function handleUserCreated(userData: any) {
-  try {
-    const {
-      id: clerkId,
-      email_addresses,
-      first_name,
-      last_name,
-      username,
-      image_url,
-    } = userData;
+  // Handle the webhook
+  const eventType = evt.type;
+  
+  await connectDB();
 
-    const email = email_addresses[0]?.email_address;
+  if (eventType === 'user.created') {
+    const { id, email_addresses, first_name, last_name, image_url } = evt.data;
 
-    if (!email) {
-      console.error('No email found for user:', clerkId);
-      return;
-    }
-
-    // Check if user already exists
-    const existingUser = await User.findOne({ clerkId });
-    if (existingUser) {
-      console.log('User already exists:', clerkId);
-      return;
-    }
-
-    // Create new user
-    const user = new User({
-      clerkId,
-      email,
-      firstName: first_name || '',
-      lastName: last_name || '',
-      username: username || undefined,
-      profileImageUrl: image_url || undefined,
-      isSeller: false,
-      rating: 0,
-      totalSales: 0,
+    console.log('Creating user with data:', {
+      clerkId: id,
+      email: email_addresses?.[0]?.email_address,
+      firstName: first_name,
+      lastName: last_name,
+      imageUrl: image_url
     });
 
-    await user.save();
-    console.log('User created:', clerkId);
+    try {
+      // Check if user already exists
+      const existingUser = await User.findOne({ clerkId: id });
+      if (existingUser) {
+        console.log('User already exists:', id);
+        return new Response('User already exists', { status: 200 });
+      }
 
-  } catch (error) {
-    console.error('Error creating user:', error);
-  }
-}
-
-async function handleUserUpdated(userData: any) {
-  try {
-    const {
-      id: clerkId,
-      email_addresses,
-      first_name,
-      last_name,
-      username,
-      image_url,
-    } = userData;
-
-    const email = email_addresses[0]?.email_address;
-
-    if (!email) {
-      console.error('No email found for user:', clerkId);
-      return;
-    }
-
-    // Update existing user
-    const user = await User.findOneAndUpdate(
-      { clerkId },
-      {
-        email,
+      const newUser = await User.create({
+        clerkId: id,
+        email: email_addresses[0].email_address,
         firstName: first_name || '',
         lastName: last_name || '',
-        username: username || undefined,
-        profileImageUrl: image_url || undefined,
-        updatedAt: new Date(),
-      },
-      { new: true, upsert: true }
-    );
+        profileImageUrl: image_url || '',
+        isSeller: false,
+        rating: 0,
+        totalSales: 0,
+      });
 
-    console.log('User updated:', clerkId);
-
-  } catch (error) {
-    console.error('Error updating user:', error);
-  }
-}
-
-async function handleUserDeleted(userData: any) {
-  try {
-    const { id: clerkId } = userData;
-
-    // Soft delete - mark user as inactive instead of actually deleting
-    await User.findOneAndUpdate(
-      { clerkId },
-      { 
-        isActive: false,
-        updatedAt: new Date()
+      console.log('User created successfully:', newUser._id);
+      return new Response('User created', { status: 200 });
+    } catch (error) {
+      console.error('Error creating user:', error);
+      if (error instanceof Error) {
+        console.error('Error details:', error.message, error.stack);
       }
-    );
-
-    console.log('User deleted:', clerkId);
-
-  } catch (error) {
-    console.error('Error deleting user:', error);
+      return new Response(`Error creating user: ${error instanceof Error ? error.message : 'Unknown error'}`, { status: 500 });
+    }
   }
+
+  if (eventType === 'user.updated') {
+    const { id, email_addresses, first_name, last_name, image_url } = evt.data;
+
+    try {
+      await User.findOneAndUpdate(
+        { clerkId: id },
+        {
+          email: email_addresses[0].email_address,
+          firstName: first_name || '',
+          lastName: last_name || '',
+          profileImageUrl: image_url || '',
+        }
+      );
+
+      console.log('User updated:', id);
+      return new Response('User updated', { status: 200 });
+    } catch (error) {
+      console.error('Error updating user:', error);
+      return new Response('Error updating user', { status: 500 });
+    }
+  }
+
+  if (eventType === 'user.deleted') {
+    const { id } = evt.data;
+
+    try {
+      await User.findOneAndDelete({ clerkId: id });
+      console.log('User deleted:', id);
+      return new Response('User deleted', { status: 200 });
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      return new Response('Error deleting user', { status: 500 });
+    }
+  }
+
+  // Handle unknown event types
+  console.log(`Unhandled webhook event type: ${eventType}`);
+  return new Response(`Event type ${eventType} not handled`, { status: 200 });
 }

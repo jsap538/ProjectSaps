@@ -11,10 +11,12 @@ import { corsHeaders } from '@/lib/security';
 // GET /api/items/[id] - Get single item
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
+  
   try {
-    if (!isValidObjectId(params.id)) {
+    if (!isValidObjectId(resolvedParams.id)) {
       return NextResponse.json(
         { error: 'Invalid item ID' },
         { status: 400, headers: corsHeaders }
@@ -24,7 +26,7 @@ export async function GET(
     await connectDB();
 
     const item = await Item.findOne({
-      _id: params.id,
+      _id: resolvedParams.id,
       isActive: true,
       isApproved: true,
     })
@@ -39,7 +41,7 @@ export async function GET(
     }
 
     // Increment view count (fire and forget)
-    Item.findByIdAndUpdate(params.id, { $inc: { views: 1 } }).catch(console.error);
+    Item.findByIdAndUpdate(resolvedParams.id, { $inc: { views: 1 } }).catch(console.error);
 
     return NextResponse.json(
       {
@@ -59,10 +61,12 @@ export async function GET(
 }
 
 // PUT /api/items/[id] - Update item
-export const PUT = withRateLimit(rateLimiters.createItem, async (
+export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
-) => {
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const resolvedParams = await params;
+  
   try {
     const { userId } = await auth();
     
@@ -73,7 +77,7 @@ export const PUT = withRateLimit(rateLimiters.createItem, async (
       );
     }
 
-    if (!isValidObjectId(params.id)) {
+    if (!isValidObjectId(resolvedParams.id)) {
       return NextResponse.json(
         { error: 'Invalid item ID' },
         { status: 400, headers: corsHeaders }
@@ -83,7 +87,7 @@ export const PUT = withRateLimit(rateLimiters.createItem, async (
     await connectDB();
 
     // Check if user owns this item
-    const item = await Item.findById(params.id).populate('sellerId');
+    const item = await Item.findById(resolvedParams.id).populate('sellerId');
     if (!item) {
       return NextResponse.json(
         { error: 'Item not found' },
@@ -99,7 +103,7 @@ export const PUT = withRateLimit(rateLimiters.createItem, async (
     }
 
     const body = await request.json();
-    const validation = sanitizeAndValidate(updateItemSchema, { ...body, id: params.id });
+    const validation = sanitizeAndValidate(updateItemSchema, { ...body, id: resolvedParams.id });
     
     if (!validation.success) {
       return NextResponse.json(
@@ -117,7 +121,7 @@ export const PUT = withRateLimit(rateLimiters.createItem, async (
     }
 
     const updatedItem = await Item.findByIdAndUpdate(
-      params.id,
+      resolvedParams.id,
       { ...updateData, updatedAt: new Date() },
       { new: true, runValidators: true }
     ).populate('sellerId', 'firstName lastName rating totalSales');
@@ -140,13 +144,14 @@ export const PUT = withRateLimit(rateLimiters.createItem, async (
       { status: 500, headers: corsHeaders }
     );
   }
-});
+}
 
 // DELETE /api/items/[id] - Delete item
-export const DELETE = withRateLimit(rateLimiters.general, async (
+export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
-) => {
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const resolvedParams = await params;
   try {
     const { userId } = await auth();
     
@@ -157,7 +162,7 @@ export const DELETE = withRateLimit(rateLimiters.general, async (
       );
     }
 
-    if (!isValidObjectId(params.id)) {
+    if (!isValidObjectId(resolvedParams.id)) {
       return NextResponse.json(
         { error: 'Invalid item ID' },
         { status: 400, headers: corsHeaders }
@@ -167,7 +172,7 @@ export const DELETE = withRateLimit(rateLimiters.general, async (
     await connectDB();
 
     // Check if user owns this item
-    const item = await Item.findById(params.id).populate('sellerId');
+    const item = await Item.findById(resolvedParams.id).populate('sellerId');
     if (!item) {
       return NextResponse.json(
         { error: 'Item not found' },
@@ -183,7 +188,7 @@ export const DELETE = withRateLimit(rateLimiters.general, async (
     }
 
     // Soft delete - mark as inactive instead of actually deleting
-    await Item.findByIdAndUpdate(params.id, { 
+    await Item.findByIdAndUpdate(resolvedParams.id, { 
       isActive: false,
       updatedAt: new Date()
     });
@@ -203,7 +208,7 @@ export const DELETE = withRateLimit(rateLimiters.general, async (
       { status: 500, headers: corsHeaders }
     );
   }
-});
+}
 
 // Handle CORS preflight
 export async function OPTIONS() {
