@@ -112,12 +112,6 @@ export default function Navbar() {
                   >
                     Dashboard
                   </Link>
-                  <Link
-                    href="/profile"
-                    className="sap-link text-sm font-medium text-porcelain/80 transition-colors duration-sap hover:text-porcelain"
-                  >
-                    Profile
-                  </Link>
                   {isAdmin && (
                     <Link
                       href="/admin"
@@ -126,10 +120,24 @@ export default function Navbar() {
                       Admin
                     </Link>
                   )}
-                  <span className="text-sm text-nickel">
-                    Hello, {user?.firstName || 'User'}
-                  </span>
-                  <UserButton afterSignOutUrl="/" />
+                  
+                  {/* User Menu */}
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href="/profile"
+                      className="flex items-center gap-2 px-3 py-2 rounded-xl bg-graphite/60 border border-porcelain/10 text-porcelain/90 hover:bg-graphite/80 hover:text-porcelain transition-all duration-sap"
+                    >
+                      <div className="w-6 h-6 rounded-full bg-titanium/20 flex items-center justify-center">
+                        <span className="text-xs font-medium text-titanium">
+                          {user?.firstName?.charAt(0) || 'U'}
+                        </span>
+                      </div>
+                      <span className="text-sm font-medium">
+                        {user?.firstName || 'User'}
+                      </span>
+                    </Link>
+                    <UserButton afterSignOutUrl="/" />
+                  </div>
                 </div>
               ) : (
                 <>
@@ -196,12 +204,6 @@ export default function Navbar() {
                   >
                     Dashboard
                   </Link>
-                  <Link
-                    href="/profile"
-                    className="block py-3 text-base font-medium text-porcelain/90 transition-colors duration-sap hover:text-porcelain"
-                  >
-                    Profile
-                  </Link>
                   {isAdmin && (
                     <Link
                       href="/admin"
@@ -210,11 +212,30 @@ export default function Navbar() {
                       Admin
                     </Link>
                   )}
-                  <div className="flex items-center justify-between py-3">
-                    <span className="text-base font-medium text-porcelain/90">
-                      Hello, {user?.firstName || 'User'}
-                    </span>
-                    <UserButton afterSignOutUrl="/" />
+                  
+                  {/* User Profile Section */}
+                  <div className="border-t border-porcelain/10 pt-4">
+                    <Link
+                      href="/profile"
+                      className="flex items-center gap-3 py-3 px-4 rounded-xl bg-graphite/60 border border-porcelain/10 text-porcelain/90 hover:bg-graphite/80 hover:text-porcelain transition-all duration-sap"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-titanium/20 flex items-center justify-center">
+                        <span className="text-sm font-medium text-titanium">
+                          {user?.firstName?.charAt(0) || 'U'}
+                        </span>
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-base font-medium text-porcelain">
+                          {user?.firstName || 'User'}
+                        </div>
+                        <div className="text-sm text-nickel">
+                          View Profile
+                        </div>
+                      </div>
+                    </Link>
+                    <div className="mt-3 flex justify-center">
+                      <UserButton afterSignOutUrl="/" />
+                    </div>
                   </div>
                 </div>
               ) : (
