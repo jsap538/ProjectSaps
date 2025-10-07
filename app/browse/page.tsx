@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import ListingCard from "@/components/ListingCard";
+import ProductCard from "@/components/ProductCard";
 import type { IItem, ItemFilters } from "@/types";
 
 // Mock data (fallback)
@@ -185,17 +185,17 @@ export default function BrowsePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900">
-      <div className="mx-auto max-w-6xl px-8 py-16">
+    <div className="min-h-screen bg-ink">
+      <div className="mx-auto max-w-7xl px-6 py-16">
         {/* Hero Header */}
         <div className="mb-16 text-center">
-          <div className="mb-6 text-sm font-medium text-gray-400 tracking-wider uppercase">
+          <div className="mb-6 text-sm font-medium text-nickel tracking-wider uppercase">
             Premium Collection
           </div>
-          <h1 className="text-4xl font-light tracking-tight md:text-5xl leading-tight text-white mb-6">
+          <h1 className="text-4xl font-semibold tracking-wide1 md:text-5xl text-porcelain mb-6 text-display">
             Browse Collection
           </h1>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-nickel max-w-2xl mx-auto text-body">
             Discover luxury men's accessories from the world's finest brands. {totalItems} items available.
           </p>
         </div>
@@ -210,11 +210,11 @@ export default function BrowsePage() {
                 placeholder="Search items, brands, or descriptions..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-sm border border-gray-300 bg-white px-6 py-4 pl-12 text-base transition-all duration-200 focus:border-gray-900 focus:outline-none"
+                className="w-full rounded-xl border border-porcelain/20 bg-graphite/60 px-6 py-4 pl-12 text-porcelain placeholder-nickel transition-all duration-sap focus:border-titanium focus:outline-none focus:ring-2 focus:ring-titanium/20"
               />
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400 transition-colors duration-200 group-focus-within:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <svg className="h-5 w-5 text-nickel transition-colors duration-sap group-focus-within:text-titanium" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
             </div>
@@ -222,19 +222,19 @@ export default function BrowsePage() {
 
           {/* Sort Dropdown */}
           <div className="flex items-center gap-4">
-            <label htmlFor="sort" className="text-sm font-medium text-gray-600">
+            <label htmlFor="sort" className="text-sm font-medium text-nickel">
               Sort by:
             </label>
             <select
               id="sort"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="rounded-sm border border-gray-300 bg-white px-4 py-3 text-sm transition-all duration-200 focus:border-gray-900 focus:outline-none"
+              className="rounded-xl border border-porcelain/20 bg-graphite/60 px-4 py-3 text-sm text-porcelain transition-all duration-sap focus:border-titanium focus:outline-none focus:ring-2 focus:ring-titanium/20"
             >
-              <option value="newest">Newest First</option>
-              <option value="price_cents">Price: Low to High</option>
-              <option value="price_cents_desc">Price: High to Low</option>
-              <option value="views">Most Popular</option>
+              <option value="newest" className="bg-graphite text-porcelain">Newest First</option>
+              <option value="price_cents" className="bg-graphite text-porcelain">Price: Low to High</option>
+              <option value="price_cents_desc" className="bg-graphite text-porcelain">Price: High to Low</option>
+              <option value="views" className="bg-graphite text-porcelain">Most Popular</option>
             </select>
           </div>
         </div>
@@ -242,23 +242,23 @@ export default function BrowsePage() {
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Filters Sidebar */}
           <aside className="lg:w-64">
-            <div className="sticky top-24 bg-gray-800 border border-gray-600 shadow-lg p-6">
+            <div className="sticky top-24 bg-graphite/60 border border-porcelain/10 shadow-soft p-6 rounded-xl">
               <div className="mb-6 flex items-center justify-between lg:block">
-                <h2 className="text-lg font-medium text-white">Filters</h2>
+                <h2 className="text-lg font-medium text-porcelain">Filters</h2>
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className="text-gray-400 lg:hidden"
+                  className="text-nickel lg:hidden"
                 >
                   <svg
-                    className={`h-5 w-5 transition ${showFilters ? "rotate-180" : ""}`}
+                    className={`h-5 w-5 transition duration-sap ${showFilters ? "rotate-180" : ""}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    strokeWidth={1.75}
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
                       d="M19 9l-7 7-7-7"
                     />
                   </svg>
@@ -268,7 +268,7 @@ export default function BrowsePage() {
               <div className={`space-y-6 ${showFilters ? "block" : "hidden lg:block"}`}>
                 {/* Category Filter */}
                 <div>
-                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-gray-600">
+                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-nickel">
                     Category
                   </h3>
                   <div className="space-y-2">
@@ -279,9 +279,9 @@ export default function BrowsePage() {
                           name="category"
                           checked={selectedCategory === category}
                           onChange={() => setSelectedCategory(category)}
-                          className="h-4 w-4 text-gray-900 accent-gray-900"
+                          className="h-4 w-4 text-titanium accent-titanium"
                         />
-                        <span className="ml-3 text-sm text-gray-700">
+                        <span className="ml-3 text-sm text-porcelain/90">
                           {category}
                         </span>
                       </label>
@@ -291,16 +291,16 @@ export default function BrowsePage() {
 
                 {/* Brand Filter */}
                 <div>
-                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-gray-600">
+                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-nickel">
                     Brand
                   </h3>
                   <select
                     value={selectedBrand}
                     onChange={(e) => setSelectedBrand(e.target.value)}
-                    className="w-full rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
+                    className="w-full rounded-xl border border-porcelain/20 bg-graphite/60 px-3 py-2 text-sm text-porcelain focus:border-titanium focus:outline-none focus:ring-2 focus:ring-titanium/20"
                   >
                     {brands.map((brand) => (
-                      <option key={brand} value={brand}>
+                      <option key={brand} value={brand} className="bg-graphite text-porcelain">
                         {brand}
                       </option>
                     ))}
@@ -309,7 +309,7 @@ export default function BrowsePage() {
 
                 {/* Condition Filter */}
                 <div>
-                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-gray-600">
+                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-nickel">
                     Condition
                   </h3>
                   <div className="space-y-2">
@@ -320,9 +320,9 @@ export default function BrowsePage() {
                           name="condition"
                           checked={selectedCondition === condition}
                           onChange={() => setSelectedCondition(condition)}
-                          className="h-4 w-4 text-gray-900 accent-gray-900"
+                          className="h-4 w-4 text-titanium accent-titanium"
                         />
-                        <span className="ml-3 text-sm text-gray-700">
+                        <span className="ml-3 text-sm text-porcelain/90">
                           {condition}
                         </span>
                       </label>
@@ -332,7 +332,7 @@ export default function BrowsePage() {
 
                 {/* Color Filter */}
                 <div>
-                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-gray-600">
+                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-nickel">
                     Color
                   </h3>
                   <div className="space-y-2">
@@ -343,9 +343,9 @@ export default function BrowsePage() {
                           name="color"
                           checked={selectedColor === color}
                           onChange={() => setSelectedColor(color)}
-                          className="h-4 w-4 text-gray-900 accent-gray-900"
+                          className="h-4 w-4 text-titanium accent-titanium"
                         />
-                        <span className="ml-3 text-sm text-gray-700">
+                        <span className="ml-3 text-sm text-porcelain/90">
                           {color}
                         </span>
                       </label>
@@ -355,12 +355,12 @@ export default function BrowsePage() {
 
                 {/* Price Range Filter */}
                 <div>
-                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-gray-600">
+                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-nickel">
                     Price Range
                   </h3>
                   <div className="space-y-3">
                     <div>
-                      <label htmlFor="minPrice" className="block text-xs text-gray-600 mb-1">
+                      <label htmlFor="minPrice" className="block text-xs text-nickel mb-1">
                         Min Price ($)
                       </label>
                       <input
@@ -370,11 +370,11 @@ export default function BrowsePage() {
                         onChange={(e) => setMinPrice(e.target.value)}
                         placeholder="0"
                         min="0"
-                        className="w-full rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
+                        className="w-full rounded-xl border border-porcelain/20 bg-graphite/60 px-3 py-2 text-sm text-porcelain placeholder-nickel focus:border-titanium focus:outline-none focus:ring-2 focus:ring-titanium/20"
                       />
                     </div>
                     <div>
-                      <label htmlFor="maxPrice" className="block text-xs text-gray-600 mb-1">
+                      <label htmlFor="maxPrice" className="block text-xs text-nickel mb-1">
                         Max Price ($)
                       </label>
                       <input
@@ -384,7 +384,7 @@ export default function BrowsePage() {
                         onChange={(e) => setMaxPrice(e.target.value)}
                         placeholder="No limit"
                         min="0"
-                        className="w-full rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
+                        className="w-full rounded-xl border border-porcelain/20 bg-graphite/60 px-3 py-2 text-sm text-porcelain placeholder-nickel focus:border-titanium focus:outline-none focus:ring-2 focus:ring-titanium/20"
                       />
                     </div>
                   </div>
@@ -393,7 +393,7 @@ export default function BrowsePage() {
                 {/* Clear Filters */}
                 <button
                   onClick={clearAllFilters}
-                  className="w-full rounded-sm border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+                  className="w-full rounded-xl border border-porcelain/20 px-4 py-2.5 text-sm font-medium text-porcelain/90 transition-colors duration-sap hover:bg-porcelain/5 hover:text-porcelain"
                 >
                   Clear All Filters
                 </button>
@@ -406,24 +406,24 @@ export default function BrowsePage() {
             {loading ? (
               <div className="grid grid-cols-2 gap-6 md:grid-cols-3">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="animate-pulse bg-gray-50 border border-gray-300 shadow-sm p-4">
-                    <div className="aspect-[4/5] bg-gray-200 mb-4"></div>
+                  <div key={i} className="animate-pulse bg-graphite/60 border border-porcelain/10 shadow-subtle p-4 rounded-xl">
+                    <div className="aspect-[4/5] bg-onyx mb-4 rounded-lg"></div>
                     <div className="space-y-2">
-                      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                      <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                      <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                      <div className="h-4 bg-onyx rounded w-3/4"></div>
+                      <div className="h-4 bg-onyx rounded w-1/2"></div>
+                      <div className="h-4 bg-onyx rounded w-2/3"></div>
                     </div>
                   </div>
                 ))}
               </div>
             ) : error ? (
-              <div className="bg-gray-50 border border-gray-300 shadow-sm p-16 text-center">
-                <p className="text-lg text-red-600 mb-4">
+              <div className="bg-graphite/60 border border-porcelain/10 shadow-subtle p-16 text-center rounded-xl">
+                <p className="text-lg text-red-400 mb-4">
                   Error: {error}
                 </p>
                 <button
                   onClick={fetchItems}
-                  className="rounded-sm bg-gray-900 px-6 py-3 text-white font-medium hover:bg-gray-800 transition"
+                  className="rounded-xl bg-porcelain text-ink px-6 py-3 font-medium hover:bg-titanium transition-colors duration-sap"
                 >
                   Try Again
                 </button>
@@ -431,12 +431,12 @@ export default function BrowsePage() {
             ) : items.length > 0 ? (
               <div className="grid grid-cols-2 gap-6 md:grid-cols-3">
                 {items.map((item) => (
-                  <ListingCard key={item._id} item={item} />
+                  <ProductCard key={item._id} item={item} />
                 ))}
               </div>
             ) : (
-              <div className="bg-gray-50 border border-gray-300 shadow-sm p-16 text-center">
-                <p className="text-lg text-gray-600">
+              <div className="bg-graphite/60 border border-porcelain/10 shadow-subtle p-16 text-center rounded-xl">
+                <p className="text-lg text-nickel">
                   No items match your filters. Try adjusting your search.
                 </p>
               </div>
