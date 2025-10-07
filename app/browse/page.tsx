@@ -300,7 +300,7 @@ export default function BrowsePage() {
                 </button>
               </div>
 
-              <div className={`${showFilters ? "block" : "hidden lg:block"}`}>
+              <div className={`p-6 ${showFilters ? "block" : "hidden lg:block"}`}>
                 <EnhancedFilters onFiltersChange={handleFiltersChange} />
               </div>
             </div>
