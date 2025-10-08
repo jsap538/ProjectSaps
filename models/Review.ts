@@ -188,10 +188,10 @@ ReviewSchema.virtual('averageDetailedRating').get(function() {
     this.communicationRating,
     this.accuracyRating,
     this.shippingRating,
-  ].filter(r => r !== undefined && r !== null) as number[];
+  ].filter((r: number | undefined) => r !== undefined && r !== null) as number[];
   
   if (ratings.length === 0) return null;
-  return ratings.reduce((sum, r) => sum + r, 0) / ratings.length;
+  return ratings.reduce((sum: number, r: number) => sum + r, 0) / ratings.length;
 });
 
 // Methods

@@ -183,7 +183,7 @@ MessageSchema.methods = {
     if (!this.deletedBy) {
       this.deletedBy = [];
     }
-    if (!this.deletedBy.some(id => id.equals(userId))) {
+    if (!this.deletedBy.some((id: mongoose.Types.ObjectId) => id.equals(userId))) {
       this.deletedBy.push(userId);
       await this.save();
     }

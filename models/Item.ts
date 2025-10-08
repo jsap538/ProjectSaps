@@ -332,7 +332,7 @@ ItemSchema.index({
 
 // Virtual for main image
 ItemSchema.virtual('mainImage').get(function() {
-  const main = this.images.find(img => img.isMain);
+  const main = this.images.find((img: IItemImage) => img.isMain);
   return main || this.images[0];
 });
 
