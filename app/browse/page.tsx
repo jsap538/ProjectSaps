@@ -3,76 +3,7 @@
 import { useState, useEffect } from "react";
 import ProductCard from "@/components/ProductCard";
 import EnhancedFilters from "@/components/EnhancedFilters";
-import type { IItem, ItemFilters } from "@/types";
-
-// Mock data (fallback)
-const mockItems = [
-  {
-    id: "1",
-    title: "Navy Grenadine Tie",
-    brand: "Drake's",
-    price_cents: 6500,
-    image: "https://placehold.co/600x750/1a2742/33CC66?text=Navy+Grenadine",
-    condition: "Like New",
-    category: "tie",
-    color: "navy",
-  },
-  {
-    id: "2",
-    title: "Bar Stripe Repp Tie",
-    brand: "Brooks Brothers",
-    price_cents: 3500,
-    image: "https://placehold.co/600x750/2a3752/33CC66?text=Bar+Stripe",
-    condition: "Good",
-    category: "tie",
-    color: "navy",
-  },
-  {
-    id: "3",
-    title: "Burgundy Silk Tie",
-    brand: "Tom Ford",
-    price_cents: 8900,
-    image: "https://placehold.co/600x750/3a1722/33CC66?text=Burgundy+Silk",
-    condition: "New",
-    category: "tie",
-    color: "red",
-  },
-  {
-    id: "4",
-    title: "Forest Green Knit Tie",
-    brand: "Brunello Cucinelli",
-    price_cents: 7200,
-    image: "https://placehold.co/600x750/1a3725/33CC66?text=Green+Knit",
-    condition: "Like New",
-    category: "tie",
-    color: "green",
-  },
-  {
-    id: "5",
-    title: "Classic Black Leather Belt",
-    brand: "Hermes",
-    price_cents: 12500,
-    image: "https://placehold.co/600x750/0a0a0a/33CC66?text=Leather+Belt",
-    condition: "Like New",
-    category: "belt",
-    color: "black",
-  },
-  {
-    id: "6",
-    title: "Silver Cufflinks",
-    brand: "Tiffany & Co.",
-    price_cents: 15000,
-    image: "https://placehold.co/600x750/4a5568/33CC66?text=Silver+Cufflinks",
-    condition: "New",
-    category: "cufflinks",
-    color: "silver",
-  },
-];
-
-const brands = ["All Brands", "Drake's", "Brooks Brothers", "Tom Ford", "Brunello Cucinelli", "Hermes", "Tiffany & Co."];
-const categories = ["All", "Tie", "Belt", "Cufflinks", "Pocket Square"];
-const conditions = ["All", "New", "Like New", "Good", "Fair"];
-const colors = ["All", "Navy", "Black", "Red", "Green", "Silver"];
+import type { IItem } from "@/types";
 
 interface FilterState {
   brands: string[];
@@ -180,46 +111,8 @@ export default function BrowsePage() {
     } catch (err) {
       console.error('Error fetching items:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
-      // Fallback to mock data with client-side filtering
-      const filteredMockItems = mockItems.filter((item) => {
-        // Brand filter
-        if (appliedFilters.brands.length > 0 && !appliedFilters.brands.includes(item.brand)) return false;
-        
-        // Category filter
-        if (appliedFilters.categories.length > 0 && !appliedFilters.categories.includes(item.category)) return false;
-        
-        // Condition filter
-        if (appliedFilters.conditions.length > 0 && !appliedFilters.conditions.includes(item.condition)) return false;
-        
-        // Color filter
-        if (appliedFilters.colors.length > 0 && !appliedFilters.colors.includes(item.color)) return false;
-        
-        // Search query
-        if (searchQuery.trim() && !item.title.toLowerCase().includes(searchQuery.toLowerCase()) && !item.brand.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-        
-        // Price range
-        if (appliedFilters.priceRange.min > 0 && item.price_cents < appliedFilters.priceRange.min) return false;
-        if (appliedFilters.priceRange.max < Infinity && item.price_cents > appliedFilters.priceRange.max) return false;
-        
-        return true;
-      });
-      setItems(filteredMockItems.map(item => ({ 
-        ...item, 
-        _id: item.id, 
-        images: [item.image],
-        description: 'Premium quality item',
-        shipping_cents: 599,
-        location: 'United States',
-        sellerId: {} as any,
-        condition: item.condition as 'New' | 'Like New' | 'Good' | 'Fair' | 'Poor',
-        category: item.category as 'tie' | 'belt' | 'cufflinks' | 'pocket-square',
-        isActive: true,
-        isApproved: true,
-        views: 0,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      } as IItem)));
-      setTotalItems(filteredMockItems.length);
+      setItems([]);
+      setTotalItems(0);
     } finally {
       setLoading(false);
     }
