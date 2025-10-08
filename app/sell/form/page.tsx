@@ -385,7 +385,7 @@ export default function SellFormPage() {
             <ImageUpload
               images={images}
               onImagesChange={handleImagesChange}
-              maxImages={5}
+              maxImages={10}
               className="w-full"
             />
           </div>

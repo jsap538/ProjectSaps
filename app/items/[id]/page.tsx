@@ -109,7 +109,7 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
           <div className="space-y-4">
             <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-onyx ring-1 ring-porcelain/10">
               <Image
-                src={item.images?.[0] || 'https://placehold.co/800x800/0B0C0E/F5F6F7?text=No+Image'}
+                src={item.images?.[0]?.url || 'https://placehold.co/800x800/0B0C0E/F5F6F7?text=No+Image'}
                 alt={item.title}
                 fill
                 className="object-cover"
@@ -119,13 +119,13 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
             </div>
             {item.images && item.images.length > 1 && (
               <div className="grid grid-cols-4 gap-4">
-                {item.images.slice(1).map((img: string, idx: number) => (
+                {item.images.slice(1).map((img, idx: number) => (
                   <div
                     key={idx}
                     className="relative aspect-square cursor-pointer overflow-hidden rounded-xl bg-onyx ring-1 ring-porcelain/10 transition hover:ring-2 hover:ring-titanium"
                   >
                     <Image
-                      src={img}
+                      src={img.url}
                       alt={`${item.title} ${idx + 2}`}
                       fill
                       className="object-cover"
@@ -153,7 +153,7 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
                 </span>
               </div>
               <div className="mt-2 flex items-center gap-4 text-sm text-nickel">
-                <span>{item.views} views</span>
+                <span>{item.stats?.views || 0} views</span>
                 <span>•</span>
                 <span>{item.condition}</span>
               </div>

@@ -128,7 +128,7 @@ export async function PUT(
       resolvedParams.id,
       updateObject,
       { new: true, runValidators: true }
-    ).populate('sellerId', 'firstName lastName rating totalSales');
+    ).populate('sellerId', 'firstName lastName stats');
 
     return NextResponse.json(
       {

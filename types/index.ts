@@ -1,5 +1,29 @@
 import mongoose from 'mongoose';
 
+// User statistics subdocument
+export interface IUserStats {
+  totalListings: number;
+  totalSold: number;
+  totalPurchased: number;
+  totalRevenue: number; // in cents
+  averageRating: number;
+  totalReviews: number;
+}
+
+// Address subdocument
+export interface IAddress {
+  label?: string;
+  fullName: string;
+  street1: string;
+  street2?: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  phone?: string;
+  isDefault?: boolean;
+}
+
 // Core domain types - optimized for minimal serialization overhead
 export interface IUser {
   _id: string;
@@ -9,13 +33,47 @@ export interface IUser {
   lastName: string;
   username?: string;
   profileImageUrl?: string;
+  bio?: string;
   isSeller: boolean;
-  stripeAccountId?: string;
-  rating: number;
-  totalSales: number;
   isAdmin?: boolean;
+  isVerified?: boolean;
+  stripeAccountId?: string;
+  stripeCustomerId?: string;
+  addresses?: IAddress[];
+  defaultShippingAddressIndex?: number;
+  stats: IUserStats;
+  followers?: string[]; // Array of user IDs
+  following?: string[]; // Array of user IDs
+  isActive?: boolean;
+  isSuspended?: boolean;
+  suspensionReason?: string;
+  lastLoginAt?: Date;
   createdAt: Date;
   updatedAt: Date;
+}
+
+// Item image subdocument
+export interface IItemImage {
+  url: string;
+  publicId?: string;
+  order: number;
+  isMain: boolean;
+}
+
+// Item dimensions subdocument
+export interface IItemDimensions {
+  width_cm?: number;
+  length_cm?: number;
+  height_cm?: number;
+  weight_g?: number;
+}
+
+// Item statistics subdocument
+export interface IItemStats {
+  views: number;
+  favorites: number;
+  timesShared: number;
+  clicks: number;
 }
 
 export interface IItem {
@@ -24,18 +82,31 @@ export interface IItem {
   description: string;
   brand: string;
   price_cents: number;
+  originalPrice_cents?: number;
   shipping_cents: number;
-  images: string[];
+  acceptsOffers?: boolean;
+  lowestOfferPrice_cents?: number;
+  images: IItemImage[];
   condition: 'New' | 'Like New' | 'Good' | 'Fair' | 'Poor';
   category: 'tie' | 'belt' | 'cufflinks' | 'pocket-square';
   color: string;
   material?: string;
-  width_cm?: number;
+  dimensions?: IItemDimensions;
   location: string;
+  shipsFrom?: string;
+  shipsTo?: string[];
+  processingTime_days?: number;
   sellerId: mongoose.Types.ObjectId | IUser;
   isActive: boolean;
   isApproved: boolean;
-  views: number;
+  isSold?: boolean;
+  soldAt?: Date;
+  soldTo?: string;
+  isFeatured?: boolean;
+  featuredUntil?: Date;
+  stats: IItemStats;
+  rejectionReason?: string;
+  moderationNotes?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -60,14 +131,20 @@ export interface ItemFormData {
   description: string;
   brand: string;
   price_cents: number;
+  originalPrice_cents?: number;
   shipping_cents: number;
-  images: string[];
+  acceptsOffers?: boolean;
+  lowestOfferPrice_cents?: number;
+  images: string[]; // Frontend uses string array, API converts to IItemImage[]
   condition: string;
   category: string;
   color: string;
   material?: string;
-  width_cm?: number;
+  width_cm?: number; // Form still uses flat structure, API converts to dimensions object
   location: string;
+  shipsFrom?: string;
+  shipsTo?: string[];
+  processingTime_days?: number;
 }
 
 // Filter types - optimized for query building

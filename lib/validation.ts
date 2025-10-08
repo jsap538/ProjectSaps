@@ -37,7 +37,7 @@ export const itemSchema = z.object({
     .max(2000, 'Maximum shipping is $20.00'),
   images: z.array(z.string().url('Invalid image URL'))
     .min(1, 'At least one image is required')
-    .max(5, 'Maximum 5 images allowed'),
+    .max(10, 'Maximum 10 images allowed'),
   condition: z.enum(['New', 'Like New', 'Good', 'Fair', 'Poor']),
   category: z.enum(['tie', 'belt', 'cufflinks', 'pocket-square']),
   color: z.string()

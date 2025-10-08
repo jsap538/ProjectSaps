@@ -2,13 +2,14 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useUser } from '@clerk/nextjs';
+import type { IItemImage } from '@/types';
 
 interface WatchlistItem {
   _id: string;
   title: string;
   brand: string;
   price_cents: number;
-  images: string[];
+  images: IItemImage[];
   condition: string;
   createdAt: string;
 }

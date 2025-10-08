@@ -85,8 +85,7 @@ export async function POST(req: Request) {
         lastName: last_name || '',
         profileImageUrl: image_url || '',
         isSeller: false,
-        rating: 0,
-        totalSales: 0,
+        // stats object will be created with default values by schema
       });
 
       console.log('User created successfully:', newUser._id);

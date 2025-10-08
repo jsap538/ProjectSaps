@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
+import type { IItemImage } from '@/types';
 
 interface CartItem {
   itemId: string;
@@ -12,7 +13,7 @@ interface CartItem {
     title: string;
     brand: string;
     price_cents: number;
-    images: string[];
+    images: IItemImage[];
     condition: string;
   };
 }

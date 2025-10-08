@@ -1,12 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { IItemImage } from "@/types";
 
 type Item = {
   _id: string;
   title: string;
   brand: string;
   price_cents: number;
-  images?: string[];
+  images?: IItemImage[];
   condition: string;
 };
 
@@ -20,7 +21,7 @@ export default function ListingCard({ item }: { item: Item }) {
     >
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-700">
         <Image
-          src={item.images?.[0] || 'https://placehold.co/600x750/1a2742/33CC66?text=No+Image'}
+          src={item.images?.[0]?.url || 'https://placehold.co/600x750/1a2742/33CC66?text=No+Image'}
           alt={item.title}
           fill
           className="object-cover transition-all duration-300 group-hover:scale-105"

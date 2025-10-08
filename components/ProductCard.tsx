@@ -7,6 +7,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { useState } from "react";
 import { Heart, HeartOff } from "lucide-react";
+import type { IItemImage } from "@/types";
 
 interface ProductCardProps {
   item: {
@@ -14,7 +15,7 @@ interface ProductCardProps {
     title: string;
     brand: string;
     price_cents: number;
-    images?: string[];
+    images?: IItemImage[];
     condition: string;
   };
 }
@@ -80,7 +81,7 @@ export default function ProductCard({ item }: ProductCardProps) {
       <Link href={`/items/${item._id}`} className="block">
         <div className="relative aspect-[4/5] bg-ink">
           <Image
-            src={item.images?.[0] || 'https://placehold.co/600x750/0B0C0E/F5F6F7?text=No+Image'}
+            src={item.images?.[0]?.url || 'https://placehold.co/600x750/0B0C0E/F5F6F7?text=No+Image'}
             alt={item.title}
             fill
             className="object-cover transition-transform duration-sap group-hover:scale-[1.02]"

@@ -13,7 +13,7 @@ interface ImageUploadProps {
 export default function ImageUpload({
   images,
   onImagesChange,
-  maxImages = 5,
+  maxImages = 10,
   className = "",
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
