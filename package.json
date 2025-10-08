@@ -12,6 +12,7 @@
   "dependencies": {
     "@clerk/nextjs": "^6.33.3",
     "@types/helmet": "^0.0.48",
+    "@vercel/blob": "^2.0.0",
     "express-rate-limit": "^8.1.0",
     "framer-motion": "^12.23.22",
     "helmet": "^8.1.0",
