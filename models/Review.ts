@@ -1,4 +1,20 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Model } from 'mongoose';
+
+// Review methods interface
+interface IReviewMethods {
+  canBeEdited(userId: mongoose.Types.ObjectId): boolean;
+  canBeRespondedTo(userId: mongoose.Types.ObjectId): boolean;
+  isVisible(): boolean;
+  getHelpfulnessScore(): number;
+}
+
+// Review statics interface
+interface IReviewModel extends Model<IReview, {}, IReviewMethods> {
+  findForUser(userId: mongoose.Types.ObjectId, reviewType?: 'seller' | 'buyer'): Promise<IReview[]>;
+  calculateAverageRating(userId: mongoose.Types.ObjectId, reviewType?: 'seller' | 'buyer'): Promise<any>;
+  findForItem(itemId: mongoose.Types.ObjectId): Promise<IReview[]>;
+  canReviewOrder(orderId: mongoose.Types.ObjectId, reviewerId: mongoose.Types.ObjectId, revieweeId: mongoose.Types.ObjectId): Promise<boolean>;
+}
 
 export interface IReview extends Document {
   // What is being reviewed
@@ -222,7 +238,7 @@ ReviewSchema.methods = {
 // Statics
 ReviewSchema.statics = {
   // Find reviews for a user (seller or buyer)
-  async findForUser(userId: mongoose.Types.ObjectId, reviewType?: 'seller' | 'buyer') {
+  async findForUser(this: IReviewModel, userId: mongoose.Types.ObjectId, reviewType?: 'seller' | 'buyer') {
     const query: any = {
       revieweeId: userId,
       isPublished: true,
@@ -234,7 +250,7 @@ ReviewSchema.statics = {
   },
   
   // Calculate average rating for a user
-  async calculateAverageRating(userId: mongoose.Types.ObjectId, reviewType?: 'seller' | 'buyer') {
+  async calculateAverageRating(this: IReviewModel, userId: mongoose.Types.ObjectId, reviewType?: 'seller' | 'buyer') {
     const match: any = {
       revieweeId: userId,
       isPublished: true,
@@ -266,7 +282,7 @@ ReviewSchema.statics = {
   },
   
   // Find reviews for an item
-  async findForItem(itemId: mongoose.Types.ObjectId) {
+  async findForItem(this: IReviewModel, itemId: mongoose.Types.ObjectId) {
     return this.find({
       itemId,
       isPublished: true,
@@ -276,6 +292,7 @@ ReviewSchema.statics = {
   
   // Check if user can review an order
   async canReviewOrder(
+    this: IReviewModel,
     orderId: mongoose.Types.ObjectId,
     reviewerId: mongoose.Types.ObjectId,
     revieweeId: mongoose.Types.ObjectId
@@ -289,7 +306,7 @@ ReviewSchema.statics = {
   },
 };
 
-const Review = mongoose.models.Review || mongoose.model<IReview>('Review', ReviewSchema);
+const Review = (mongoose.models.Review || mongoose.model<IReview, IReviewModel>('Review', ReviewSchema)) as IReviewModel;
 
 export default Review;
 

@@ -1,4 +1,25 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Model } from 'mongoose';
+
+// Offer methods interface
+interface IOfferMethods {
+  isActive(): boolean;
+  isExpired(): boolean;
+  getDiscountPercentage(): number;
+  accept(responseMessage?: string): Promise<void>;
+  decline(responseMessage?: string): Promise<void>;
+  counter(counterAmount: number, counterMessage?: string): Promise<void>;
+  withdraw(): Promise<void>;
+}
+
+// Offer statics interface
+interface IOfferModel extends Model<IOffer, {}, IOfferMethods> {
+  findActiveForItem(itemId: mongoose.Types.ObjectId): Promise<IOffer[]>;
+  findByBuyer(buyerId: mongoose.Types.ObjectId, status?: string): Promise<IOffer[]>;
+  findBySeller(sellerId: mongoose.Types.ObjectId, status?: string): Promise<IOffer[]>;
+  hasActiveOffer(itemId: mongoose.Types.ObjectId, buyerId: mongoose.Types.ObjectId): Promise<boolean>;
+  expireOldOffers(): Promise<any>;
+  getHighestOffer(itemId: mongoose.Types.ObjectId): Promise<IOffer | null>;
+}
 
 export interface IOffer extends Document {
   // What is being offered on
@@ -212,7 +233,7 @@ OfferSchema.methods = {
 // Statics
 OfferSchema.statics = {
   // Find active offers for an item
-  async findActiveForItem(itemId: mongoose.Types.ObjectId) {
+  async findActiveForItem(this: IOfferModel, itemId: mongoose.Types.ObjectId) {
     return this.find({
       itemId,
       status: 'pending',
@@ -221,21 +242,21 @@ OfferSchema.statics = {
   },
   
   // Find offers for a buyer
-  async findByBuyer(buyerId: mongoose.Types.ObjectId, status?: string) {
+  async findByBuyer(this: IOfferModel, buyerId: mongoose.Types.ObjectId, status?: string) {
     const query: any = { buyerId };
     if (status) query.status = status;
     return this.find(query).sort({ createdAt: -1 });
   },
   
   // Find offers for a seller
-  async findBySeller(sellerId: mongoose.Types.ObjectId, status?: string) {
+  async findBySeller(this: IOfferModel, sellerId: mongoose.Types.ObjectId, status?: string) {
     const query: any = { sellerId };
     if (status) query.status = status;
     return this.find(query).sort({ createdAt: -1 });
   },
   
   // Check if buyer has active offer on item
-  async hasActiveOffer(itemId: mongoose.Types.ObjectId, buyerId: mongoose.Types.ObjectId): Promise<boolean> {
+  async hasActiveOffer(this: IOfferModel, itemId: mongoose.Types.ObjectId, buyerId: mongoose.Types.ObjectId): Promise<boolean> {
     const offer = await this.findOne({
       itemId,
       buyerId,
@@ -246,7 +267,7 @@ OfferSchema.statics = {
   },
   
   // Expire old offers (to be run by cron job)
-  async expireOldOffers() {
+  async expireOldOffers(this: IOfferModel) {
     return this.updateMany(
       {
         status: 'pending',
@@ -259,7 +280,7 @@ OfferSchema.statics = {
   },
   
   // Get highest active offer for an item
-  async getHighestOffer(itemId: mongoose.Types.ObjectId) {
+  async getHighestOffer(this: IOfferModel, itemId: mongoose.Types.ObjectId) {
     const offers = await this.find({
       itemId,
       status: 'pending',
@@ -270,7 +291,7 @@ OfferSchema.statics = {
   },
 };
 
-const Offer = mongoose.models.Offer || mongoose.model<IOffer>('Offer', OfferSchema);
+const Offer = (mongoose.models.Offer || mongoose.model<IOffer, IOfferModel>('Offer', OfferSchema)) as IOfferModel;
 
 export default Offer;
 

@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Model } from 'mongoose';
 
 // Stripe details subdocument
 export interface IStripeDetails {
@@ -8,6 +8,21 @@ export interface IStripeDetails {
   payoutId?: string;
   fee_cents: number; // Stripe processing fee
   net_cents: number; // Amount after Stripe fee
+}
+
+// Transaction methods interface
+interface ITransactionMethods {
+  isComplete(): boolean;
+  isFailed(): boolean;
+  getPlatformRevenue(): number;
+  getSellerEarnings(): number;
+}
+
+// Transaction statics interface  
+interface ITransactionModel extends Model<ITransaction, {}, ITransactionMethods> {
+  createPayment(orderId: mongoose.Types.ObjectId, buyerId: mongoose.Types.ObjectId, sellerId: mongoose.Types.ObjectId, amount_cents: number, platformFee_cents: number, stripeFee_cents: number): Promise<ITransaction>;
+  findByOrder(orderId: mongoose.Types.ObjectId): Promise<ITransaction[]>;
+  calculatePlatformRevenue(startDate?: Date, endDate?: Date): Promise<number>;
 }
 
 export interface ITransaction extends Document {
@@ -205,6 +220,7 @@ TransactionSchema.methods = {
 TransactionSchema.statics = {
   // Create payment transaction
   async createPayment(
+    this: ITransactionModel,
     orderId: mongoose.Types.ObjectId,
     buyerId: mongoose.Types.ObjectId,
     sellerId: mongoose.Types.ObjectId,
@@ -228,12 +244,12 @@ TransactionSchema.statics = {
   },
   
   // Find transactions by order
-  async findByOrder(orderId: mongoose.Types.ObjectId) {
+  async findByOrder(this: ITransactionModel, orderId: mongoose.Types.ObjectId) {
     return this.find({ orderId }).sort({ createdAt: -1 });
   },
   
   // Calculate total revenue for platform
-  async calculatePlatformRevenue(startDate?: Date, endDate?: Date) {
+  async calculatePlatformRevenue(this: ITransactionModel, startDate?: Date, endDate?: Date) {
     const match: any = { status: 'completed', type: 'payment' };
     if (startDate) match.createdAt = { $gte: startDate };
     if (endDate) match.createdAt = { ...match.createdAt, $lte: endDate };
@@ -247,7 +263,7 @@ TransactionSchema.statics = {
   },
 };
 
-const Transaction = mongoose.models.Transaction || mongoose.model<ITransaction>('Transaction', TransactionSchema);
+const Transaction = (mongoose.models.Transaction || mongoose.model<ITransaction, ITransactionModel>('Transaction', TransactionSchema)) as ITransactionModel;
 
 export default Transaction;
 

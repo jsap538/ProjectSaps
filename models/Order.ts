@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Model } from 'mongoose';
 
 // Shipping address subdocument
 export interface IOrderAddress {
@@ -42,6 +42,21 @@ export interface IRefundInfo {
   requestedAt: Date;
   processedAt?: Date;
   processedBy?: mongoose.Types.ObjectId; // Admin user ID
+}
+
+// Order methods interface
+interface IOrderMethods {
+  canBeCancelled(): boolean;
+  canBeShipped(): boolean;
+  canBeRefunded(): boolean;
+  getSellerPayout(): number;
+}
+
+// Order statics interface
+interface IOrderModel extends Model<IOrder, {}, IOrderMethods> {
+  generateOrderNumber(): Promise<string>;
+  findByBuyer(buyerId: mongoose.Types.ObjectId, filters?: any): Promise<IOrder[]>;
+  findBySeller(sellerId: mongoose.Types.ObjectId, filters?: any): Promise<IOrder[]>;
 }
 
 export interface IOrder extends Document {
@@ -390,24 +405,24 @@ OrderSchema.methods = {
 // Statics
 OrderSchema.statics = {
   // Generate unique order number
-  async generateOrderNumber(): Promise<string> {
+  async generateOrderNumber(this: IOrderModel): Promise<string> {
     const date = new Date().toISOString().split('T')[0].replace(/-/g, '');
     const random = Math.random().toString(36).substring(2, 6).toUpperCase();
     return `SAPS-${date}-${random}`;
   },
   
   // Find orders by buyer
-  async findByBuyer(buyerId: mongoose.Types.ObjectId, filters = {}) {
+  async findByBuyer(this: IOrderModel, buyerId: mongoose.Types.ObjectId, filters = {}) {
     return this.find({ buyerId, ...filters }).sort({ createdAt: -1 });
   },
   
   // Find orders by seller
-  async findBySeller(sellerId: mongoose.Types.ObjectId, filters = {}) {
+  async findBySeller(this: IOrderModel, sellerId: mongoose.Types.ObjectId, filters = {}) {
     return this.find({ sellerId, ...filters }).sort({ createdAt: -1 });
   },
 };
 
-const Order = mongoose.models.Order || mongoose.model<IOrder>('Order', OrderSchema);
+const Order = (mongoose.models.Order || mongoose.model<IOrder, IOrderModel>('Order', OrderSchema)) as IOrderModel;
 
 export default Order;
 

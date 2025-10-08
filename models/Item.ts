@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Model } from 'mongoose';
 
 // Image subdocument
 export interface IItemImage {
@@ -22,6 +22,20 @@ export interface IItemStats {
   favorites: number; // Count of users who watchlisted
   timesShared: number;
   clicks: number;
+}
+
+// Item methods interface
+interface IItemMethods {
+  isAvailable(): boolean;
+  getMainImageUrl(): string | null;
+  getTotalPrice(): number;
+  isOfferAcceptable(offerAmount: number): boolean;
+}
+
+// Item statics interface
+interface IItemModel extends Model<IItem, {}, IItemMethods> {
+  findAvailable(filters?: any): Promise<IItem[]>;
+  findBySeller(sellerId: mongoose.Types.ObjectId): Promise<IItem[]>;
 }
 
 export interface IItem extends Document {
@@ -365,7 +379,7 @@ ItemSchema.methods = {
 // Statics
 ItemSchema.statics = {
   // Find available items
-  async findAvailable(filters = {}) {
+  async findAvailable(this: IItemModel, filters = {}) {
     return this.find({
       isActive: true,
       isApproved: true,
@@ -375,11 +389,11 @@ ItemSchema.statics = {
   },
   
   // Find by seller
-  async findBySeller(sellerId: mongoose.Types.ObjectId) {
+  async findBySeller(this: IItemModel, sellerId: mongoose.Types.ObjectId) {
     return this.find({ sellerId }).sort({ createdAt: -1 });
   },
 };
 
-const Item = mongoose.models.Item || mongoose.model<IItem>('Item', ItemSchema);
+const Item = (mongoose.models.Item || mongoose.model<IItem, IItemModel>('Item', ItemSchema)) as IItemModel;
 
 export default Item;

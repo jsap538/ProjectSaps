@@ -1,9 +1,27 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Model } from 'mongoose';
 
 // Action link subdocument (where notification should redirect)
 export interface INotificationAction {
   label: string; // e.g., "View Order", "Reply", "View Item"
   url: string; // Relative URL in the app
+}
+
+// Notification methods interface
+interface INotificationMethods {
+  markAsRead(): Promise<void>;
+  markAsUnread(): Promise<void>;
+  archive(): Promise<void>;
+  unarchive(): Promise<void>;
+}
+
+// Notification statics interface
+interface INotificationModel extends Model<INotification, {}, INotificationMethods> {
+  createNotification(data: Partial<INotification>): Promise<INotification>;
+  findForUser(userId: mongoose.Types.ObjectId, options?: any): Promise<INotification[]>;
+  countUnreadForUser(userId: mongoose.Types.ObjectId): Promise<number>;
+  markAllAsReadForUser(userId: mongoose.Types.ObjectId): Promise<any>;
+  deleteOldNotifications(daysOld?: number): Promise<any>;
+  notifyUser(userId: mongoose.Types.ObjectId, type: string, title: string, message: string, options?: any): Promise<INotification>;
 }
 
 export interface INotification extends Document {
@@ -241,12 +259,13 @@ NotificationSchema.methods = {
 // Statics
 NotificationSchema.statics = {
   // Create notification
-  async createNotification(data: Partial<INotification>) {
+  async createNotification(this: INotificationModel, data: Partial<INotification>) {
     return this.create(data);
   },
   
   // Find user's notifications
   async findForUser(
+    this: INotificationModel,
     userId: mongoose.Types.ObjectId,
     options: {
       unreadOnly?: boolean;
@@ -272,7 +291,7 @@ NotificationSchema.statics = {
   },
   
   // Count unread notifications for user
-  async countUnreadForUser(userId: mongoose.Types.ObjectId): Promise<number> {
+  async countUnreadForUser(this: INotificationModel, userId: mongoose.Types.ObjectId): Promise<number> {
     return this.countDocuments({
       userId,
       isRead: false,
@@ -281,7 +300,7 @@ NotificationSchema.statics = {
   },
   
   // Mark all as read for user
-  async markAllAsReadForUser(userId: mongoose.Types.ObjectId) {
+  async markAllAsReadForUser(this: INotificationModel, userId: mongoose.Types.ObjectId) {
     return this.updateMany(
       {
         userId,
@@ -297,7 +316,7 @@ NotificationSchema.statics = {
   },
   
   // Delete old notifications (cleanup job)
-  async deleteOldNotifications(daysOld: number = 90) {
+  async deleteOldNotifications(this: INotificationModel, daysOld: number = 90) {
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - daysOld);
     
@@ -309,6 +328,7 @@ NotificationSchema.statics = {
   
   // Send notification to user (helper method)
   async notifyUser(
+    this: INotificationModel,
     userId: mongoose.Types.ObjectId,
     type: string,
     title: string,
@@ -341,7 +361,7 @@ NotificationSchema.statics = {
   },
 };
 
-const Notification = mongoose.models.Notification || mongoose.model<INotification>('Notification', NotificationSchema);
+const Notification = (mongoose.models.Notification || mongoose.model<INotification, INotificationModel>('Notification', NotificationSchema)) as INotificationModel;
 
 export default Notification;
 

@@ -216,6 +216,7 @@ MessageSchema.statics = {
   
   // Find conversation between two users
   async findConversation(
+    this: IMessageModel,
     userId1: mongoose.Types.ObjectId,
     userId2: mongoose.Types.ObjectId,
     itemId?: mongoose.Types.ObjectId
@@ -228,7 +229,7 @@ MessageSchema.statics = {
   },
   
   // Find all conversations for a user
-  async findUserConversations(userId: mongoose.Types.ObjectId) {
+  async findUserConversations(this: IMessageModel, userId: mongoose.Types.ObjectId) {
     // Get all unique conversations
     const conversations = await this.aggregate([
       {
@@ -260,7 +261,7 @@ MessageSchema.statics = {
   },
   
   // Count unread messages for user
-  async countUnreadForUser(userId: mongoose.Types.ObjectId): Promise<number> {
+  async countUnreadForUser(this: IMessageModel, userId: mongoose.Types.ObjectId): Promise<number> {
     return this.countDocuments({
       recipientId: userId,
       isRead: false,
@@ -269,7 +270,7 @@ MessageSchema.statics = {
   },
   
   // Mark all messages in conversation as read
-  async markConversationAsRead(conversationId: string, userId: mongoose.Types.ObjectId) {
+  async markConversationAsRead(this: IMessageModel, conversationId: string, userId: mongoose.Types.ObjectId) {
     return this.updateMany(
       {
         conversationId,
