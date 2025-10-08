@@ -41,7 +41,7 @@ export async function GET(
     }
 
     // Increment view count (fire and forget)
-    Item.findByIdAndUpdate(resolvedParams.id, { $inc: { views: 1 } }).catch(console.error);
+    Item.findByIdAndUpdate(resolvedParams.id, { $inc: { 'stats.views': 1 } }).catch(console.error);
 
     return NextResponse.json(
       {
@@ -87,7 +87,7 @@ export async function PUT(
     await connectDB();
 
     // Check if user owns this item
-    const item = await Item.findById(resolvedParams.id).populate('sellerId');
+    const item = await Item.findById(resolvedParams.id);
     if (!item) {
       return NextResponse.json(
         { error: 'Item not found' },
@@ -95,7 +95,9 @@ export async function PUT(
       );
     }
 
-    if (item.sellerId.clerkId !== userId) {
+    // Get the user to verify ownership
+    const user = await User.findOne({ clerkId: userId });
+    if (!user || !item.sellerId.equals(user._id)) {
       return NextResponse.json(
         { error: 'Forbidden' },
         { status: 403, headers: corsHeaders }
@@ -174,7 +176,7 @@ export async function DELETE(
     await connectDB();
 
     // Check if user owns this item
-    const item = await Item.findById(resolvedParams.id).populate('sellerId');
+    const item = await Item.findById(resolvedParams.id);
     if (!item) {
       return NextResponse.json(
         { error: 'Item not found' },
@@ -182,7 +184,9 @@ export async function DELETE(
       );
     }
 
-    if (item.sellerId.clerkId !== userId) {
+    // Get the user to verify ownership
+    const user = await User.findOne({ clerkId: userId });
+    if (!user || !item.sellerId.equals(user._id)) {
       return NextResponse.json(
         { error: 'Forbidden' },
         { status: 403, headers: corsHeaders }
