@@ -217,51 +217,45 @@ TransactionSchema.methods = {
 };
 
 // Statics
-TransactionSchema.statics = {
-  // Create payment transaction
-  async createPayment(
-    this: ITransactionModel,
-    orderId: mongoose.Types.ObjectId,
-    buyerId: mongoose.Types.ObjectId,
-    sellerId: mongoose.Types.ObjectId,
-    amount_cents: number,
-    platformFee_cents: number,
-    stripeFee_cents: number
-  ) {
-    return this.create({
-      orderId,
-      buyerId,
-      sellerId,
-      type: 'payment',
-      amount_cents,
-      platformFee_cents,
-      stripeFee_cents,
-      netAmount_cents: amount_cents - platformFee_cents - stripeFee_cents,
-      currency: 'USD',
-      description: `Payment for order ${orderId}`,
-      status: 'pending',
-    });
-  },
+TransactionSchema.static('createPayment', async function(
+  orderId: mongoose.Types.ObjectId,
+  buyerId: mongoose.Types.ObjectId,
+  sellerId: mongoose.Types.ObjectId,
+  amount_cents: number,
+  platformFee_cents: number,
+  stripeFee_cents: number
+) {
+  return this.create({
+    orderId,
+    buyerId,
+    sellerId,
+    type: 'payment',
+    amount_cents,
+    platformFee_cents,
+    stripeFee_cents,
+    netAmount_cents: amount_cents - platformFee_cents - stripeFee_cents,
+    currency: 'USD',
+    description: `Payment for order ${orderId}`,
+    status: 'pending',
+  });
+});
+
+TransactionSchema.static('findByOrder', async function(orderId: mongoose.Types.ObjectId) {
+  return this.find({ orderId }).sort({ createdAt: -1 });
+});
+
+TransactionSchema.static('calculatePlatformRevenue', async function(startDate?: Date, endDate?: Date) {
+  const match: any = { status: 'completed', type: 'payment' };
+  if (startDate) match.createdAt = { $gte: startDate };
+  if (endDate) match.createdAt = { ...match.createdAt, $lte: endDate };
   
-  // Find transactions by order
-  async findByOrder(this: ITransactionModel, orderId: mongoose.Types.ObjectId) {
-    return this.find({ orderId }).sort({ createdAt: -1 });
-  },
+  const result = await this.aggregate([
+    { $match: match },
+    { $group: { _id: null, total: { $sum: '$platformFee_cents' } } },
+  ]);
   
-  // Calculate total revenue for platform
-  async calculatePlatformRevenue(this: ITransactionModel, startDate?: Date, endDate?: Date) {
-    const match: any = { status: 'completed', type: 'payment' };
-    if (startDate) match.createdAt = { $gte: startDate };
-    if (endDate) match.createdAt = { ...match.createdAt, $lte: endDate };
-    
-    const result = await this.aggregate([
-      { $match: match },
-      { $group: { _id: null, total: { $sum: '$platformFee_cents' } } },
-    ]);
-    
-    return result[0]?.total || 0;
-  },
-};
+  return result[0]?.total || 0;
+});
 
 const Transaction = (mongoose.models.Transaction || mongoose.model<ITransaction, ITransactionModel>('Transaction', TransactionSchema)) as ITransactionModel;
 

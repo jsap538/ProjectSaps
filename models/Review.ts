@@ -236,75 +236,68 @@ ReviewSchema.methods = {
 };
 
 // Statics
-ReviewSchema.statics = {
-  // Find reviews for a user (seller or buyer)
-  async findForUser(this: IReviewModel, userId: mongoose.Types.ObjectId, reviewType?: 'seller' | 'buyer') {
-    const query: any = {
-      revieweeId: userId,
-      isPublished: true,
-      isHidden: false,
-    };
-    if (reviewType) query.reviewType = reviewType;
-    
-    return this.find(query).sort({ createdAt: -1 });
-  },
+ReviewSchema.static('findForUser', async function(userId: mongoose.Types.ObjectId, reviewType?: 'seller' | 'buyer') {
+  const query: any = {
+    revieweeId: userId,
+    isPublished: true,
+    isHidden: false,
+  };
+  if (reviewType) query.reviewType = reviewType;
   
-  // Calculate average rating for a user
-  async calculateAverageRating(this: IReviewModel, userId: mongoose.Types.ObjectId, reviewType?: 'seller' | 'buyer') {
-    const match: any = {
-      revieweeId: userId,
-      isPublished: true,
-      isHidden: false,
-    };
-    if (reviewType) match.reviewType = reviewType;
-    
-    const result = await this.aggregate([
-      { $match: match },
-      {
-        $group: {
-          _id: null,
-          averageRating: { $avg: '$rating' },
-          totalReviews: { $sum: 1 },
-          averageCommunication: { $avg: '$communicationRating' },
-          averageAccuracy: { $avg: '$accuracyRating' },
-          averageShipping: { $avg: '$shippingRating' },
-        },
+  return this.find(query).sort({ createdAt: -1 });
+});
+
+ReviewSchema.static('calculateAverageRating', async function(userId: mongoose.Types.ObjectId, reviewType?: 'seller' | 'buyer') {
+  const match: any = {
+    revieweeId: userId,
+    isPublished: true,
+    isHidden: false,
+  };
+  if (reviewType) match.reviewType = reviewType;
+  
+  const result = await this.aggregate([
+    { $match: match },
+    {
+      $group: {
+        _id: null,
+        averageRating: { $avg: '$rating' },
+        totalReviews: { $sum: 1 },
+        averageCommunication: { $avg: '$communicationRating' },
+        averageAccuracy: { $avg: '$accuracyRating' },
+        averageShipping: { $avg: '$shippingRating' },
       },
-    ]);
-    
-    return result[0] || {
-      averageRating: 0,
-      totalReviews: 0,
-      averageCommunication: 0,
-      averageAccuracy: 0,
-      averageShipping: 0,
-    };
-  },
+    },
+  ]);
   
-  // Find reviews for an item
-  async findForItem(this: IReviewModel, itemId: mongoose.Types.ObjectId) {
-    return this.find({
-      itemId,
-      isPublished: true,
-      isHidden: false,
-    }).sort({ createdAt: -1 });
-  },
-  
-  // Check if user can review an order
-  async canReviewOrder(
-    this: IReviewModel,
-    orderId: mongoose.Types.ObjectId,
-    reviewerId: mongoose.Types.ObjectId,
-    revieweeId: mongoose.Types.ObjectId
-  ): Promise<boolean> {
-    const existing = await this.findOne({
-      orderId,
-      reviewerId,
-      revieweeId,
-    });
-    return !existing;
-  },
-};
+  return result[0] || {
+    averageRating: 0,
+    totalReviews: 0,
+    averageCommunication: 0,
+    averageAccuracy: 0,
+    averageShipping: 0,
+  };
+});
+
+ReviewSchema.static('findForItem', async function(itemId: mongoose.Types.ObjectId) {
+  return this.find({
+    itemId,
+    isPublished: true,
+    isHidden: false,
+  }).sort({ createdAt: -1 });
+});
+
+ReviewSchema.static('canReviewOrder', async function(
+  orderId: mongoose.Types.ObjectId,
+  reviewerId: mongoose.Types.ObjectId,
+  revieweeId: mongoose.Types.ObjectId
+): Promise<boolean> {
+  const existing = await this.findOne({
+    orderId,
+    reviewerId,
+    revieweeId,
+  });
+  return !existing;
+});
 
 const Review = (mongoose.models.Review || mongoose.model<IReview, IReviewModel>('Review', ReviewSchema)) as IReviewModel;
 

@@ -207,85 +207,76 @@ MessageSchema.methods = {
 };
 
 // Statics
-MessageSchema.statics = {
-  // Generate conversation ID between two users
-  generateConversationId(userId1: mongoose.Types.ObjectId, userId2: mongoose.Types.ObjectId): string {
-    const ids = [userId1.toString(), userId2.toString()].sort();
-    return ids.join('-');
-  },
+MessageSchema.static('generateConversationId', function(userId1: mongoose.Types.ObjectId, userId2: mongoose.Types.ObjectId): string {
+  const ids = [userId1.toString(), userId2.toString()].sort();
+  return ids.join('-');
+});
+
+MessageSchema.static('findConversation', async function(
+  userId1: mongoose.Types.ObjectId,
+  userId2: mongoose.Types.ObjectId,
+  itemId?: mongoose.Types.ObjectId
+) {
+  const conversationId = this.generateConversationId(userId1, userId2);
+  const query: any = { conversationId, isDeleted: false };
+  if (itemId) query.itemId = itemId;
   
-  // Find conversation between two users
-  async findConversation(
-    this: IMessageModel,
-    userId1: mongoose.Types.ObjectId,
-    userId2: mongoose.Types.ObjectId,
-    itemId?: mongoose.Types.ObjectId
-  ) {
-    const conversationId = this.generateConversationId(userId1, userId2);
-    const query: any = { conversationId, isDeleted: false };
-    if (itemId) query.itemId = itemId;
-    
-    return this.find(query).sort({ createdAt: 1 });
-  },
-  
-  // Find all conversations for a user
-  async findUserConversations(this: IMessageModel, userId: mongoose.Types.ObjectId) {
-    // Get all unique conversations
-    const conversations = await this.aggregate([
-      {
-        $match: {
-          $or: [{ senderId: userId }, { recipientId: userId }],
-          isDeleted: false,
-        },
+  return this.find(query).sort({ createdAt: 1 });
+});
+
+MessageSchema.static('findUserConversations', async function(userId: mongoose.Types.ObjectId) {
+  const conversations = await this.aggregate([
+    {
+      $match: {
+        $or: [{ senderId: userId }, { recipientId: userId }],
+        isDeleted: false,
       },
-      { $sort: { createdAt: -1 } },
-      {
-        $group: {
-          _id: '$conversationId',
-          lastMessage: { $first: '$$ROOT' },
-          unreadCount: {
-            $sum: {
-              $cond: [
-                { $and: [{ $eq: ['$recipientId', userId] }, { $eq: ['$isRead', false] }] },
-                1,
-                0,
-              ],
-            },
+    },
+    { $sort: { createdAt: -1 } },
+    {
+      $group: {
+        _id: '$conversationId',
+        lastMessage: { $first: '$$ROOT' },
+        unreadCount: {
+          $sum: {
+            $cond: [
+              { $and: [{ $eq: ['$recipientId', userId] }, { $eq: ['$isRead', false] }] },
+              1,
+              0,
+            ],
           },
         },
       },
-      { $sort: { 'lastMessage.createdAt': -1 } },
-    ]);
-    
-    return conversations;
-  },
+    },
+    { $sort: { 'lastMessage.createdAt': -1 } },
+  ]);
   
-  // Count unread messages for user
-  async countUnreadForUser(this: IMessageModel, userId: mongoose.Types.ObjectId): Promise<number> {
-    return this.countDocuments({
+  return conversations;
+});
+
+MessageSchema.static('countUnreadForUser', async function(userId: mongoose.Types.ObjectId): Promise<number> {
+  return this.countDocuments({
+    recipientId: userId,
+    isRead: false,
+    isDeleted: false,
+  });
+});
+
+MessageSchema.static('markConversationAsRead', async function(conversationId: string, userId: mongoose.Types.ObjectId) {
+  return this.updateMany(
+    {
+      conversationId,
       recipientId: userId,
       isRead: false,
-      isDeleted: false,
-    });
-  },
-  
-  // Mark all messages in conversation as read
-  async markConversationAsRead(this: IMessageModel, conversationId: string, userId: mongoose.Types.ObjectId) {
-    return this.updateMany(
-      {
-        conversationId,
-        recipientId: userId,
-        isRead: false,
+    },
+    {
+      $set: {
+        isRead: true,
+        readAt: new Date(),
       },
-      {
-        $set: {
-          isRead: true,
-          readAt: new Date(),
-        },
-      }
-    );
-  },
-};
+    }
+  );
+});
 
 const Message = (mongoose.models.Message || mongoose.model<IMessage, IMessageModel>('Message', MessageSchema)) as IMessageModel;
 

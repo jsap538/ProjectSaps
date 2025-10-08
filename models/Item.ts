@@ -377,22 +377,18 @@ ItemSchema.methods = {
 };
 
 // Statics
-ItemSchema.statics = {
-  // Find available items
-  async findAvailable(this: IItemModel, filters = {}) {
-    return this.find({
-      isActive: true,
-      isApproved: true,
-      isSold: false,
-      ...filters,
-    });
-  },
-  
-  // Find by seller
-  async findBySeller(this: IItemModel, sellerId: mongoose.Types.ObjectId) {
-    return this.find({ sellerId }).sort({ createdAt: -1 });
-  },
-};
+ItemSchema.static('findAvailable', async function(filters = {}) {
+  return this.find({
+    isActive: true,
+    isApproved: true,
+    isSold: false,
+    ...filters,
+  });
+});
+
+ItemSchema.static('findBySeller', async function(sellerId: mongoose.Types.ObjectId) {
+  return this.find({ sellerId }).sort({ createdAt: -1 });
+});
 
 const Item = (mongoose.models.Item || mongoose.model<IItem, IItemModel>('Item', ItemSchema)) as IItemModel;
 

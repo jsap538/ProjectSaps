@@ -257,109 +257,99 @@ NotificationSchema.methods = {
 };
 
 // Statics
-NotificationSchema.statics = {
-  // Create notification
-  async createNotification(this: INotificationModel, data: Partial<INotification>) {
-    return this.create(data);
-  },
+NotificationSchema.static('createNotification', async function(data: Partial<INotification>) {
+  return this.create(data);
+});
+
+NotificationSchema.static('findForUser', async function(
+  userId: mongoose.Types.ObjectId,
+  options: {
+    unreadOnly?: boolean;
+    includeArchived?: boolean;
+    limit?: number;
+    skip?: number;
+  } = {}
+) {
+  const query: any = { userId };
   
-  // Find user's notifications
-  async findForUser(
-    this: INotificationModel,
-    userId: mongoose.Types.ObjectId,
-    options: {
-      unreadOnly?: boolean;
-      includeArchived?: boolean;
-      limit?: number;
-      skip?: number;
-    } = {}
-  ) {
-    const query: any = { userId };
-    
-    if (options.unreadOnly) {
-      query.isRead = false;
-    }
-    
-    if (!options.includeArchived) {
-      query.isArchived = false;
-    }
-    
-    return this.find(query)
-      .sort({ createdAt: -1 })
-      .limit(options.limit || 50)
-      .skip(options.skip || 0);
-  },
+  if (options.unreadOnly) {
+    query.isRead = false;
+  }
   
-  // Count unread notifications for user
-  async countUnreadForUser(this: INotificationModel, userId: mongoose.Types.ObjectId): Promise<number> {
-    return this.countDocuments({
+  if (!options.includeArchived) {
+    query.isArchived = false;
+  }
+  
+  return this.find(query)
+    .sort({ createdAt: -1 })
+    .limit(options.limit || 50)
+    .skip(options.skip || 0);
+});
+
+NotificationSchema.static('countUnreadForUser', async function(userId: mongoose.Types.ObjectId): Promise<number> {
+  return this.countDocuments({
+    userId,
+    isRead: false,
+    isArchived: false,
+  });
+});
+
+NotificationSchema.static('markAllAsReadForUser', async function(userId: mongoose.Types.ObjectId) {
+  return this.updateMany(
+    {
       userId,
       isRead: false,
-      isArchived: false,
-    });
-  },
-  
-  // Mark all as read for user
-  async markAllAsReadForUser(this: INotificationModel, userId: mongoose.Types.ObjectId) {
-    return this.updateMany(
-      {
-        userId,
-        isRead: false,
+    },
+    {
+      $set: {
+        isRead: true,
+        readAt: new Date(),
       },
-      {
-        $set: {
-          isRead: true,
-          readAt: new Date(),
-        },
-      }
-    );
-  },
+    }
+  );
+});
+
+NotificationSchema.static('deleteOldNotifications', async function(daysOld: number = 90) {
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - daysOld);
   
-  // Delete old notifications (cleanup job)
-  async deleteOldNotifications(this: INotificationModel, daysOld: number = 90) {
-    const cutoffDate = new Date();
-    cutoffDate.setDate(cutoffDate.getDate() - daysOld);
-    
-    return this.deleteMany({
-      createdAt: { $lt: cutoffDate },
-      isArchived: true,
-    });
-  },
-  
-  // Send notification to user (helper method)
-  async notifyUser(
-    this: INotificationModel,
-    userId: mongoose.Types.ObjectId,
-    type: string,
-    title: string,
-    message: string,
-    options: {
-      priority?: 'low' | 'normal' | 'high' | 'urgent';
-      action?: INotificationAction;
-      relatedOrder?: mongoose.Types.ObjectId;
-      relatedItem?: mongoose.Types.ObjectId;
-      relatedUser?: mongoose.Types.ObjectId;
-      relatedOffer?: mongoose.Types.ObjectId;
-      relatedMessage?: mongoose.Types.ObjectId;
-      icon?: string;
-    } = {}
-  ) {
-    return this.create({
-      userId,
-      type,
-      title,
-      message,
-      priority: options.priority || 'normal',
-      action: options.action,
-      relatedOrder: options.relatedOrder,
-      relatedItem: options.relatedItem,
-      relatedUser: options.relatedUser,
-      relatedOffer: options.relatedOffer,
-      relatedMessage: options.relatedMessage,
-      icon: options.icon,
-    });
-  },
-};
+  return this.deleteMany({
+    createdAt: { $lt: cutoffDate },
+    isArchived: true,
+  });
+});
+
+NotificationSchema.static('notifyUser', async function(
+  userId: mongoose.Types.ObjectId,
+  type: string,
+  title: string,
+  message: string,
+  options: {
+    priority?: 'low' | 'normal' | 'high' | 'urgent';
+    action?: INotificationAction;
+    relatedOrder?: mongoose.Types.ObjectId;
+    relatedItem?: mongoose.Types.ObjectId;
+    relatedUser?: mongoose.Types.ObjectId;
+    relatedOffer?: mongoose.Types.ObjectId;
+    relatedMessage?: mongoose.Types.ObjectId;
+    icon?: string;
+  } = {}
+) {
+  return this.create({
+    userId,
+    type,
+    title,
+    message,
+    priority: options.priority || 'normal',
+    action: options.action,
+    relatedOrder: options.relatedOrder,
+    relatedItem: options.relatedItem,
+    relatedUser: options.relatedUser,
+    relatedOffer: options.relatedOffer,
+    relatedMessage: options.relatedMessage,
+    icon: options.icon,
+  });
+});
 
 const Notification = (mongoose.models.Notification || mongoose.model<INotification, INotificationModel>('Notification', NotificationSchema)) as INotificationModel;
 

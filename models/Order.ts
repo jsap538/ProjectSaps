@@ -403,24 +403,19 @@ OrderSchema.methods = {
 };
 
 // Statics
-OrderSchema.statics = {
-  // Generate unique order number
-  async generateOrderNumber(this: IOrderModel): Promise<string> {
-    const date = new Date().toISOString().split('T')[0].replace(/-/g, '');
-    const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-    return `SAPS-${date}-${random}`;
-  },
-  
-  // Find orders by buyer
-  async findByBuyer(this: IOrderModel, buyerId: mongoose.Types.ObjectId, filters = {}) {
-    return this.find({ buyerId, ...filters }).sort({ createdAt: -1 });
-  },
-  
-  // Find orders by seller
-  async findBySeller(this: IOrderModel, sellerId: mongoose.Types.ObjectId, filters = {}) {
-    return this.find({ sellerId, ...filters }).sort({ createdAt: -1 });
-  },
-};
+OrderSchema.static('generateOrderNumber', async function(): Promise<string> {
+  const date = new Date().toISOString().split('T')[0].replace(/-/g, '');
+  const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return `SAPS-${date}-${random}`;
+});
+
+OrderSchema.static('findByBuyer', async function(buyerId: mongoose.Types.ObjectId, filters = {}) {
+  return this.find({ buyerId, ...filters }).sort({ createdAt: -1 });
+});
+
+OrderSchema.static('findBySeller', async function(sellerId: mongoose.Types.ObjectId, filters = {}) {
+  return this.find({ sellerId, ...filters }).sort({ createdAt: -1 });
+});
 
 const Order = (mongoose.models.Order || mongoose.model<IOrder, IOrderModel>('Order', OrderSchema)) as IOrderModel;
 
