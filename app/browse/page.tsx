@@ -303,10 +303,10 @@ export default function BrowsePage() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-8 lg:flex-row lg:gap-12">
+        <div className="flex flex-col gap-8 lg:flex-row lg:gap-12 lg:items-start">
           {/* Filters Sidebar */}
           <aside className="lg:w-96 lg:flex-shrink-0">
-            <div className="sticky top-24 bg-graphite/60 border border-porcelain/10 shadow-soft rounded-xl overflow-hidden">
+            <div className="sticky top-4 bg-graphite/60 border border-porcelain/10 shadow-soft rounded-xl overflow-hidden">
               <div className="lg:hidden p-4 border-b border-porcelain/10">
                 <button
                   onClick={() => setShowFilters(!showFilters)}
