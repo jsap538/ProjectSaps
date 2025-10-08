@@ -163,7 +163,7 @@ MessageSchema.index({ itemId: 1, createdAt: -1 }); // Item-related messages
 MessageSchema.methods = {
   // Check if message is visible to user
   isVisibleTo(userId: mongoose.Types.ObjectId): boolean {
-    if (this.isDeleted && this.deletedBy?.some(id => id.equals(userId))) {
+    if (this.isDeleted && this.deletedBy?.some((id: mongoose.Types.ObjectId) => id.equals(userId))) {
       return false;
     }
     return this.senderId.equals(userId) || this.recipientId.equals(userId);
