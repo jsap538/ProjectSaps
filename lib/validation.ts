@@ -51,7 +51,8 @@ export const itemSchema = z.object({
   width_cm: z.number()
     .positive('Width must be positive')
     .max(50, 'Width too large')
-    .optional(),
+    .optional()
+    .nullable(),
   location: z.string()
     .min(1, 'Location is required')
     .max(50, 'Location name too long')

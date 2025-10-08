@@ -73,10 +73,21 @@ export default function SellFormPage() {
         return;
       }
 
-      const itemData = {
+      // Prepare item data, excluding zero values for optional fields
+      const itemData: any = {
         ...formData,
         images: images,
       };
+      
+      // Remove width_cm if it's 0 (optional field)
+      if (itemData.width_cm === 0) {
+        delete itemData.width_cm;
+      }
+      
+      // Remove material if empty (optional field)
+      if (!itemData.material || itemData.material.trim() === '') {
+        delete itemData.material;
+      }
 
       const response = await fetch('/api/items', {
         method: 'POST',

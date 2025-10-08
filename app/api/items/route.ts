@@ -165,19 +165,42 @@ export const POST = withRateLimit(rateLimiters.createItem, async (request: NextR
       isMain: index === 0,
     }));
     
-    // Create new item
-    const item = new Item({
-      ...itemData,
-      images, // Use the converted images
+    // Convert width_cm to dimensions object
+    const dimensions: any = {};
+    if (itemData.width_cm && itemData.width_cm > 0) {
+      dimensions.width_cm = itemData.width_cm;
+    }
+    
+    // Prepare the new item data
+    const newItemData: any = {
+      title: itemData.title,
+      description: itemData.description,
+      brand: itemData.brand,
+      price_cents: itemData.price_cents,
+      shipping_cents: itemData.shipping_cents,
+      images,
+      condition: itemData.condition,
+      category: itemData.category,
+      color: itemData.color,
+      location: itemData.location,
       sellerId: user._id,
       isActive: true,
-      isApproved: false, // Items need approval
+      isApproved: false,
       isSold: false,
-    });
+      dimensions,
+    };
+    
+    // Add optional fields if present
+    if (itemData.material) {
+      newItemData.material = itemData.material;
+    }
+    
+    // Create new item
+    const item = new Item(newItemData);
 
     const savedItem = await item.save();
     const populatedItem = await Item.findById(savedItem._id)
-      .populate('sellerId', 'firstName lastName rating totalSales')
+      .populate('sellerId', 'firstName lastName stats')
       .lean();
 
     return NextResponse.json(
