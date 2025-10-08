@@ -11,8 +11,14 @@ interface UserProfile {
   lastName: string;
   username?: string;
   isSeller: boolean;
-  rating: number;
-  totalSales: number;
+  stats?: {
+    averageRating: number;
+    totalSold: number;
+    totalListings: number;
+    totalPurchased: number;
+    totalRevenue: number;
+    totalReviews: number;
+  };
   createdAt: string;
 }
 
