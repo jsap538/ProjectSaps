@@ -345,7 +345,7 @@ ItemSchema.methods = {
   
   // Get main image URL
   getMainImageUrl(): string | null {
-    const main = this.images.find(img => img.isMain);
+    const main = this.images.find((img: IItemImage) => img.isMain);
     return main ? main.url : (this.images[0]?.url || null);
   },
   
