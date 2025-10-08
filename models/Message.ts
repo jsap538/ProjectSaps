@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Model } from 'mongoose';
 
 // Attachment subdocument
 export interface IMessageAttachment {
@@ -6,6 +6,22 @@ export interface IMessageAttachment {
   url: string;
   filename: string;
   size_bytes: number;
+}
+
+// Message methods interface
+interface IMessageMethods {
+  isVisibleTo(userId: mongoose.Types.ObjectId): boolean;
+  markAsRead(): Promise<void>;
+  deleteForUser(userId: mongoose.Types.ObjectId): Promise<void>;
+}
+
+// Message statics interface
+interface IMessageModel extends Model<IMessage, {}, IMessageMethods> {
+  generateConversationId(userId1: mongoose.Types.ObjectId, userId2: mongoose.Types.ObjectId): string;
+  findConversation(userId1: mongoose.Types.ObjectId, userId2: mongoose.Types.ObjectId, itemId?: mongoose.Types.ObjectId): Promise<IMessage[]>;
+  findUserConversations(userId: mongoose.Types.ObjectId): Promise<any[]>;
+  countUnreadForUser(userId: mongoose.Types.ObjectId): Promise<number>;
+  markConversationAsRead(conversationId: string, userId: mongoose.Types.ObjectId): Promise<any>;
 }
 
 export interface IMessage extends Document {
@@ -270,7 +286,7 @@ MessageSchema.statics = {
   },
 };
 
-const Message = mongoose.models.Message || mongoose.model<IMessage>('Message', MessageSchema);
+const Message = (mongoose.models.Message || mongoose.model<IMessage, IMessageModel>('Message', MessageSchema)) as IMessageModel;
 
 export default Message;
 
