@@ -193,8 +193,8 @@ export default function ProfilePage() {
                   </div>
                   {profile.isSeller ? (
                     <div className="text-sm text-nickel">
-                      <div>Rating: <span className="text-titanium font-medium">{profile.rating.toFixed(1)}/5.0</span></div>
-                      <div>Total Sales: <span className="text-titanium font-medium">{profile.totalSales}</span></div>
+                      <div>Rating: <span className="text-titanium font-medium">{(profile.stats?.averageRating || 0).toFixed(1)}/5.0</span></div>
+                      <div>Total Sales: <span className="text-titanium font-medium">{profile.stats?.totalSold || 0}</span></div>
                     </div>
                   ) : (
                     <p className="text-sm text-nickel">

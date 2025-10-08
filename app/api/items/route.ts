@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
     // Execute queries in parallel
     const [items, total] = await Promise.all([
       Item.find(filter)
-        .populate('sellerId', 'firstName lastName rating totalSales')
+        .populate('sellerId', 'firstName lastName stats')
         .sort(sort)
         .skip(skip)
         .limit(filters.limit || 12)

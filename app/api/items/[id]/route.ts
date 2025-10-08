@@ -30,7 +30,7 @@ export async function GET(
       isActive: true,
       isApproved: true,
     })
-      .populate('sellerId', 'firstName lastName rating totalSales')
+      .populate('sellerId', 'firstName lastName stats')
       .lean();
 
     if (!item) {
