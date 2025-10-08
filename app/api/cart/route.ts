@@ -25,16 +25,19 @@ export async function GET() {
       user.cart.map(async (cartItem: ICartItem) => {
         const item = await Item.findById(cartItem.itemId);
         return {
-          itemId: cartItem.itemId,
+          itemId: cartItem.itemId.toString(),
           quantity: cartItem.quantity,
           addedAt: cartItem.addedAt,
           item: item ? {
-            _id: item._id.toString(),
+            _id: String(item._id),
             title: item.title,
             brand: item.brand,
             price_cents: item.price_cents,
             images: item.images,
             condition: item.condition,
+            isActive: item.isActive,
+            isApproved: item.isApproved,
+            isSold: item.isSold,
           } : null,
         };
       })
@@ -82,7 +85,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if item is already in cart
-    const existingCartItem = user.cart.find((cartItem: ICartItem) => cartItem.itemId === itemId);
+    const existingCartItem = user.cart.find((cartItem: ICartItem) => cartItem.itemId.toString() === itemId);
     
     if (existingCartItem) {
       return NextResponse.json({ 
@@ -94,7 +97,7 @@ export async function POST(request: NextRequest) {
         itemId,
         quantity,
         addedAt: new Date(),
-      });
+      } as ICartItem);
     }
 
     await user.save();
@@ -140,7 +143,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Remove item from cart
-    user.cart = user.cart.filter((cartItem: ICartItem) => cartItem.itemId !== itemId);
+    user.cart = user.cart.filter((cartItem: ICartItem) => cartItem.itemId.toString() !== itemId);
     await user.save();
 
     return NextResponse.json({

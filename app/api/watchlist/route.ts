@@ -3,6 +3,7 @@ import { auth } from '@clerk/nextjs/server';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import Item from '@/models/Item';
+import mongoose from 'mongoose';
 
 // GET /api/watchlist - Get user's watchlist
 export async function GET() {
@@ -22,17 +23,20 @@ export async function GET() {
 
     // Get full item details for watchlist items
     const watchlistItems = await Promise.all(
-      user.watchlist.map(async (itemId: string) => {
+      user.watchlist.map(async (itemId: mongoose.Types.ObjectId) => {
         const item = await Item.findById(itemId);
         if (!item) return null;
         
         return {
-          _id: item._id.toString(),
+          _id: String(item._id),
           title: item.title,
           brand: item.brand,
           price_cents: item.price_cents,
           images: item.images,
           condition: item.condition,
+          isActive: item.isActive,
+          isApproved: item.isApproved,
+          isSold: item.isSold,
           createdAt: item.createdAt,
         };
       })
@@ -83,7 +87,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if item is already in watchlist
-    if (user.watchlist.includes(itemId)) {
+    const isInWatchlist = user.watchlist.some((id: mongoose.Types.ObjectId) => id.toString() === itemId);
+    
+    if (isInWatchlist) {
       return NextResponse.json({ 
         success: true, 
         message: 'Item already in watchlist',
@@ -92,7 +98,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Add item to watchlist
-    user.watchlist.push(itemId);
+    user.watchlist.push(new mongoose.Types.ObjectId(itemId));
     await user.save();
 
     return NextResponse.json({
@@ -132,7 +138,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Remove item from watchlist
-    user.watchlist = user.watchlist.filter((id: string) => id !== itemId);
+    user.watchlist = user.watchlist.filter((id: mongoose.Types.ObjectId) => id.toString() !== itemId);
     await user.save();
 
     return NextResponse.json({
