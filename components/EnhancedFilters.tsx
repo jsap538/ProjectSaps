@@ -184,7 +184,7 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
             <div
               className="absolute top-1 w-4 h-4 bg-titanium rounded-full cursor-pointer shadow-md slider-handle"
               style={{
-                left: `calc(${Math.max(0, ((filters.priceRange.min - 0) / (100000 - 0)) * 100)}% - 8px)`,
+                left: `calc(${Math.max(0, ((filters.priceRange.min - 0) / (100000 - 0)) * 100)}% - 6px)`,
                 zIndex: 10
               }}
               onMouseDown={(e) => {
@@ -220,7 +220,7 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
             <div
               className="absolute top-1 w-4 h-4 bg-titanium rounded-full cursor-pointer shadow-md slider-handle"
               style={{
-                left: `calc(${Math.max(0, (((filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max) - 0) / (100000 - 0)) * 100)}% - 8px)`,
+                left: `calc(${Math.max(0, (((filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max) - 0) / (100000 - 0)) * 100)}% - 6px)`,
                 zIndex: 10
               }}
               onMouseDown={(e) => {
