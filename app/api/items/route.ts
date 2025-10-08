@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
         sort.price_cents = -1;
         break;
       case 'views':
-        sort.views = -1;
+        sort['stats.views'] = -1;
         break;
       case 'newest':
       default:
@@ -158,13 +158,21 @@ export const POST = withRateLimit(rateLimiters.createItem, async (request: NextR
 
     const itemData = validation.data!;
     
+    // Convert images from string array to new structure
+    const images = itemData.images.map((url: string, index: number) => ({
+      url,
+      order: index,
+      isMain: index === 0,
+    }));
+    
     // Create new item
     const item = new Item({
       ...itemData,
+      images, // Use the converted images
       sellerId: user._id,
       isActive: true,
       isApproved: false, // Items need approval
-      views: 0,
+      isSold: false,
     });
 
     const savedItem = await item.save();
