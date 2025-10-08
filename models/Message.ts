@@ -217,7 +217,8 @@ MessageSchema.static('findConversation', async function(
   userId2: mongoose.Types.ObjectId,
   itemId?: mongoose.Types.ObjectId
 ) {
-  const conversationId = this.generateConversationId(userId1, userId2);
+  const ids = [userId1.toString(), userId2.toString()].sort();
+  const conversationId = ids.join('-');
   const query: any = { conversationId, isDeleted: false };
   if (itemId) query.itemId = itemId;
   
