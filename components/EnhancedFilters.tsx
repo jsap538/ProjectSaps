@@ -174,7 +174,7 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
               <div 
                 className="absolute h-2 bg-titanium/60 rounded-full"
                 style={{
-                  left: `calc(${Math.max(0, ((filters.priceRange.min - 0) / (100000 - 0)) * 100)}% + 6px)`,
+                  left: `calc(${Math.max(0, ((filters.priceRange.min - 0) / (100000 - 0)) * 100)}% + 4px)`,
                   width: `calc(${Math.min(100, (((filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max) - filters.priceRange.min) / (100000 - 0)) * 100)}% - 12px)`
                 }}
               />
@@ -184,7 +184,7 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
             <div
               className="absolute top-1 w-4 h-4 bg-titanium rounded-full cursor-pointer shadow-md slider-handle"
               style={{
-                left: `calc(${Math.max(0, ((filters.priceRange.min - 0) / (100000 - 0)) * 100)}% - 6px)`,
+                left: `calc(${Math.max(0, ((filters.priceRange.min - 0) / (100000 - 0)) * 100)}% - 4px)`,
                 zIndex: 10
               }}
               onMouseDown={(e) => {
