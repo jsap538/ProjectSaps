@@ -175,7 +175,7 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
                 className="absolute h-2 bg-titanium/60 rounded-full"
                 style={{
                   left: `calc(${Math.max(0, ((filters.priceRange.min - 0) / (100000 - 0)) * 100)}% + 4px)`,
-                  width: `calc(${Math.min(100, (((filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max) - filters.priceRange.min) / (100000 - 0)) * 100)}% - 8px)`
+                  width: `calc(${Math.min(100, (((filters.priceRange.max === Infinity ? 100000 : filters.priceRange.max) - filters.priceRange.min) / (100000 - 0)) * 100)}% - 6px)`
                 }}
               />
             </div>
