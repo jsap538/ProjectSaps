@@ -3,13 +3,14 @@
 import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import type { IItemImage } from "@/types";
 
 interface Item {
   _id: string;
   title: string;
   brand: string;
   price_cents: number;
-  images?: string[];
+  images?: IItemImage[];
   condition: string;
   category: string;
   color: string;

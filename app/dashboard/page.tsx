@@ -12,7 +12,9 @@ interface Item {
   condition: string;
   isApproved: boolean;
   isActive: boolean;
-  views: number;
+  stats: {
+    views: number;
+  };
   createdAt: string;
 }
 
@@ -153,7 +155,7 @@ export default function DashboardPage() {
             </div>
             <p className="text-sm font-medium text-nickel mb-2">Total Views</p>
             <p className="text-3xl font-semibold text-porcelain">
-              {items.reduce((sum, item) => sum + item.views, 0)}
+              {items.reduce((sum, item) => sum + item.stats.views, 0)}
             </p>
           </div>
         </div>
@@ -221,7 +223,7 @@ export default function DashboardPage() {
                         <span>•</span>
                         <span>{item.condition}</span>
                         <span>•</span>
-                        <span>{item.views} views</span>
+                        <span>{item.stats.views} views</span>
                         <span>•</span>
                         <span className={`px-3 py-1 rounded-xl text-xs font-medium ${
                           item.isApproved 
