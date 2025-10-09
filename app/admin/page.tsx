@@ -193,7 +193,7 @@ export default function AdminPage() {
                   <div className="w-32 h-32 rounded-lg bg-gray-200 flex items-center justify-center overflow-hidden">
                     {item.images && item.images.length > 0 ? (
                       <img
-                        src={item.images[0]}
+                        src={item.images[0].url}
                         alt={item.title}
                         className="w-full h-full object-cover"
                       />

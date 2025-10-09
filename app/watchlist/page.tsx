@@ -138,7 +138,7 @@ export default function WatchlistPage() {
               <Link href={`/items/${item._id}`} className="block">
                 <div className="relative aspect-[4/5] bg-ink mb-4 overflow-hidden rounded-xl">
                   <Image
-                    src={item.images?.[0] || 'https://placehold.co/400x500/0B0C0E/F5F6F7?text=No+Image'}
+                    src={item.images?.[0]?.url || 'https://placehold.co/400x500/0B0C0E/F5F6F7?text=No+Image'}
                     alt={item.title}
                     fill
                     className="object-cover transition-transform duration-sap group-hover:scale-[1.02]"

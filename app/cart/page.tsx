@@ -134,7 +134,7 @@ export default function CartPage() {
                     {/* Item Image */}
                     <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-xl bg-ink">
                       <Image
-                        src={cartItem.item?.images?.[0] || 'https://placehold.co/200x200/0B0C0E/F5F6F7?text=No+Image'}
+                        src={cartItem.item?.images?.[0]?.url || 'https://placehold.co/200x200/0B0C0E/F5F6F7?text=No+Image'}
                         alt={cartItem.item?.title || 'Item'}
                         fill
                         className="object-cover"
