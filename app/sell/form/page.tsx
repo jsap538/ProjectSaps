@@ -53,10 +53,24 @@ export default function SellFormPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name.includes('_cents') ? parseInt(value) || 0 : value
-    }));
+    
+    // Convert numeric fields properly
+    if (name === 'width_cm') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: parseFloat(value) || 0
+      }));
+    } else if (name.includes('_cents')) {
+      setFormData(prev => ({
+        ...prev,
+        [name]: parseInt(value) || 0
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleImagesChange = (newImages: string[]) => {
@@ -73,6 +87,49 @@ export default function SellFormPage() {
       // Validate that at least one image is uploaded
       if (images.length === 0) {
         setError('Please upload at least one image');
+        setLoading(false);
+        return;
+      }
+
+      // Validate all required fields
+      if (!formData.title.trim()) {
+        setError('Please enter an item title');
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.description.trim() || formData.description.length < 10) {
+        setError('Please enter a description (at least 10 characters)');
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.brand) {
+        setError('Please select a brand');
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.category) {
+        setError('Please select a category (tie, belt, cufflinks, or pocket-square)');
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.condition) {
+        setError('Please select the item condition');
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.color.trim()) {
+        setError('Please enter the item color');
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.location.trim()) {
+        setError('Please enter your location');
         setLoading(false);
         return;
       }
@@ -116,7 +173,22 @@ export default function SellFormPage() {
       if (!response.ok) {
         // Show detailed validation errors if available
         if (result.details && Array.isArray(result.details)) {
-          throw new Error(result.details.join(', '));
+          // Translate technical errors to user-friendly messages
+          const userFriendlyErrors = result.details.map((err: string) => {
+            if (err.includes('title')) return 'Title: Please check the title format';
+            if (err.includes('description')) return 'Description: Must be 10-2000 characters';
+            if (err.includes('brand')) return 'Brand: Please select a valid brand';
+            if (err.includes('category')) return 'Category: Please select tie, belt, cufflinks, or pocket-square';
+            if (err.includes('condition')) return 'Condition: Please select an item condition';
+            if (err.includes('color')) return 'Color: Please enter a valid color name';
+            if (err.includes('price_cents')) return 'Price: Must be between $1.00 and $10,000.00';
+            if (err.includes('shipping_cents')) return 'Shipping: Must be between $0.00 and $20.00';
+            if (err.includes('width_cm')) return 'Width: Must be a valid number';
+            if (err.includes('location')) return 'Location: Please enter your location';
+            if (err.includes('images')) return 'Images: Please upload 1-10 images';
+            return err; // Fallback to original error
+          });
+          throw new Error(userFriendlyErrors.join('\n'));
         }
         throw new Error(result.error || 'Failed to create listing');
       }
@@ -372,7 +444,7 @@ export default function SellFormPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Material
+                  Material <span className="text-gray-400 text-xs">(Optional)</span>
                 </label>
                 <input
                   type="text"
@@ -387,15 +459,20 @@ export default function SellFormPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Width (cm)
+                  Width (cm) <span className="text-gray-400 text-xs">(Optional)</span>
                 </label>
                 <input
-                  type="number"
+                  type="text"
+                  inputMode="decimal"
                   name="width_cm"
                   value={formData.width_cm || ''}
-                  onChange={handleInputChange}
-                  min="0"
-                  max="50"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Only allow numbers and decimal point
+                    if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                      handleInputChange(e);
+                    }
+                  }}
                   className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-700 dark:bg-[#151821] dark:text-white"
                   placeholder="8"
                 />
@@ -436,7 +513,17 @@ export default function SellFormPage() {
           {/* Error Message */}
           {error && (
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-              <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
+              <div className="flex items-start gap-3">
+                <svg className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-red-800 dark:text-red-300 mb-1">Please fix the following:</p>
+                  {error.split('\n').map((err, idx) => (
+                    <p key={idx} className="text-red-600 dark:text-red-400 text-sm">{err}</p>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
 
