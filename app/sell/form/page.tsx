@@ -25,6 +25,10 @@ export default function SellFormPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [images, setImages] = useState<string[]>([]);
+  
+  // Separate state for price display values to avoid cursor jumping
+  const [priceDisplay, setPriceDisplay] = useState("");
+  const [shippingDisplay, setShippingDisplay] = useState("5.99");
 
   const [formData, setFormData] = useState<FormData>({
     title: "",
@@ -69,6 +73,13 @@ export default function SellFormPage() {
       // Validate that at least one image is uploaded
       if (images.length === 0) {
         setError('Please upload at least one image');
+        setLoading(false);
+        return;
+      }
+
+      // Validate price
+      if (formData.price_cents < 100) {
+        setError('Price must be at least $1.00');
         setLoading(false);
         return;
       }
@@ -248,14 +259,25 @@ export default function SellFormPage() {
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     name="price_cents"
-                    value={formData.price_cents ? (formData.price_cents / 100).toFixed(2) : ''}
-                    onChange={(e) => setFormData(prev => ({ ...prev, price_cents: Math.round(parseFloat(e.target.value) * 100) || 0 }))}
+                    value={priceDisplay}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // Allow only numbers and decimal point
+                      if (value === '' || /^\d*\.?\d{0,2}$/.test(value)) {
+                        setPriceDisplay(value);
+                      }
+                    }}
+                    onBlur={(e) => {
+                      const value = parseFloat(e.target.value) || 0;
+                      setFormData(prev => ({ ...prev, price_cents: Math.round(value * 100) }));
+                      if (value > 0) {
+                        setPriceDisplay(value.toFixed(2));
+                      }
+                    }}
                     required
-                    min="1"
-                    max="10000"
-                    step="0.01"
                     className="w-full rounded-lg border border-gray-300 bg-white pl-8 pr-4 py-3 text-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-700 dark:bg-[#151821] dark:text-white"
                     placeholder="0.00"
                   />
@@ -270,13 +292,27 @@ export default function SellFormPage() {
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     name="shipping_cents"
-                    value={formData.shipping_cents ? (formData.shipping_cents / 100).toFixed(2) : ''}
-                    onChange={(e) => setFormData(prev => ({ ...prev, shipping_cents: Math.round(parseFloat(e.target.value) * 100) || 0 }))}
-                    min="0"
-                    max="20"
-                    step="0.01"
+                    value={shippingDisplay}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // Allow only numbers and decimal point
+                      if (value === '' || /^\d*\.?\d{0,2}$/.test(value)) {
+                        setShippingDisplay(value);
+                      }
+                    }}
+                    onBlur={(e) => {
+                      const value = parseFloat(e.target.value) || 0;
+                      setFormData(prev => ({ ...prev, shipping_cents: Math.round(value * 100) }));
+                      if (value > 0) {
+                        setShippingDisplay(value.toFixed(2));
+                      } else {
+                        setShippingDisplay("5.99");
+                        setFormData(prev => ({ ...prev, shipping_cents: 599 }));
+                      }
+                    }}
                     className="w-full rounded-lg border border-gray-300 bg-white pl-8 pr-4 py-3 text-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-700 dark:bg-[#151821] dark:text-white"
                     placeholder="5.99"
                   />
