@@ -183,11 +183,11 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
                     {item.color}
                   </dd>
                 </div>
-                {item.width_cm && (
+                {item.dimensions?.width_cm && (
                   <div className="flex justify-between border-b border-porcelain/10 pb-3">
                     <dt className="text-sm text-nickel">Width</dt>
                     <dd className="text-sm font-medium text-porcelain">
-                      {item.width_cm} cm
+                      {item.dimensions.width_cm} cm
                     </dd>
                   </div>
                 )}
