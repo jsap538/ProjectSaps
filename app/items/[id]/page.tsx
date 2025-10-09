@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useState, useEffect, use } from "react";
 import type { IItem } from "@/types";
 import { useCart } from "@/contexts/CartContext";
+import { ItemDetailSkeleton } from "@/components/Skeletons";
+import ImageLightbox from "@/components/ImageLightbox";
 
 export default function ItemPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
@@ -12,6 +14,8 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
   const { addToCart, removeFromCart, isInCart, isItemLoading } = useCart();
 
   useEffect(() => {
@@ -54,11 +58,8 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-[#1a1d24] flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading item...</p>
-        </div>
+      <div className="min-h-screen bg-ink">
+        <ItemDetailSkeleton />
       </div>
     );
   }
@@ -107,31 +108,48 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
         <div className="grid gap-8 lg:grid-cols-2">
           {/* Images */}
           <div className="space-y-4">
-            <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-onyx ring-1 ring-porcelain/10">
+            <button
+              onClick={() => {
+                setLightboxIndex(0);
+                setLightboxOpen(true);
+              }}
+              className="relative aspect-square w-full overflow-hidden rounded-2xl bg-onyx ring-1 ring-porcelain/10 cursor-zoom-in hover:ring-2 hover:ring-titanium transition-all group"
+            >
               <Image
                 src={item.images?.[0]?.url || 'https://placehold.co/800x800/0B0C0E/F5F6F7?text=No+Image'}
                 alt={item.title}
                 fill
-                className="object-cover"
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
                 priority
                 unoptimized
               />
-            </div>
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 rounded-full p-2">
+                  <svg className="h-6 w-6 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                  </svg>
+                </div>
+              </div>
+            </button>
             {item.images && item.images.length > 1 && (
               <div className="grid grid-cols-4 gap-4">
                 {item.images.slice(1).map((img, idx: number) => (
-                  <div
+                  <button
                     key={idx}
-                    className="relative aspect-square cursor-pointer overflow-hidden rounded-xl bg-onyx ring-1 ring-porcelain/10 transition hover:ring-2 hover:ring-titanium"
+                    onClick={() => {
+                      setLightboxIndex(idx + 1);
+                      setLightboxOpen(true);
+                    }}
+                    className="relative aspect-square cursor-pointer overflow-hidden rounded-xl bg-onyx ring-1 ring-porcelain/10 transition hover:ring-2 hover:ring-titanium group"
                   >
                     <Image
                       src={img.url}
                       alt={`${item.title} ${idx + 2}`}
                       fill
-                      className="object-cover"
+                      className="object-cover group-hover:scale-110 transition-transform duration-300"
                       unoptimized
                     />
-                  </div>
+                  </button>
                 ))}
               </div>
             )}
@@ -294,6 +312,15 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
           <p className="leading-relaxed text-nickel text-body">{item.description}</p>
         </div>
       </div>
+
+      {/* Image Lightbox */}
+      {lightboxOpen && item.images && (
+        <ImageLightbox
+          images={item.images}
+          initialIndex={lightboxIndex}
+          onClose={() => setLightboxOpen(false)}
+        />
+      )}
     </div>
   );
 }

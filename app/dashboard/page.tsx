@@ -3,6 +3,8 @@
 import { useUser } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { DashboardStatSkeleton, DashboardItemSkeleton } from "@/components/Skeletons";
+import { EmptyDashboard } from "@/components/EmptyStates";
 
 interface Item {
   _id: string;
@@ -180,9 +182,10 @@ export default function DashboardPage() {
           </div>
 
           {loading ? (
-            <div className="p-8 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-titanium mx-auto"></div>
-              <p className="mt-4 text-nickel">Loading items...</p>
+            <div className="divide-y divide-porcelain/10">
+              {[...Array(5)].map((_, i) => (
+                <DashboardItemSkeleton key={i} />
+              ))}
             </div>
           ) : error ? (
             <div className="p-8 text-center">
@@ -195,14 +198,8 @@ export default function DashboardPage() {
               </button>
             </div>
           ) : items.length === 0 ? (
-            <div className="p-8 text-center">
-              <p className="text-nickel mb-4">No items yet</p>
-              <Link
-                href="/sell"
-                className="text-titanium hover:text-porcelain transition-colors duration-sap"
-              >
-                List your first item
-              </Link>
+            <div className="p-8">
+              <EmptyDashboard />
             </div>
           ) : (
             <div className="divide-y divide-porcelain/10">

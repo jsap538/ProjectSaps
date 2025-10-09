@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { CartProvider } from "@/contexts/CartContext";
 import { WatchlistProvider } from "@/contexts/WatchlistContext";
+import { ToastProvider } from "@/contexts/ToastContext";
 import { ClerkProvider } from '@clerk/nextjs';
 
 export const metadata: Metadata = {
@@ -26,13 +27,15 @@ export default function RootLayout({
                      <html lang="en" suppressHydrationWarning>
                        <body className="antialiased bg-ink text-porcelain" suppressHydrationWarning>
                   <ThemeProvider>
-                    <CartProvider>
-                      <WatchlistProvider>
-                        <Navbar />
-                        <main className="min-h-screen">{children}</main>
-                        <Footer />
-                      </WatchlistProvider>
-                    </CartProvider>
+                    <ToastProvider>
+                      <CartProvider>
+                        <WatchlistProvider>
+                          <Navbar />
+                          <main className="min-h-screen">{children}</main>
+                          <Footer />
+                        </WatchlistProvider>
+                      </CartProvider>
+                    </ToastProvider>
                   </ThemeProvider>
                 </body>
               </html>

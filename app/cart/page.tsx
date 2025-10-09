@@ -7,11 +7,15 @@ import Link from "next/link";
 import { useState } from "react";
 import { PrimaryButton, GhostButton } from "@/components/Buttons";
 import BrandMark from "@/components/BrandMark";
+import { CartItemSkeleton } from "@/components/Skeletons";
+import { EmptyCart } from "@/components/EmptyStates";
+import { useToast } from "@/contexts/ToastContext";
 
 export default function CartPage() {
   const { cart, cartCount, isLoading, removeFromCart, getTotalPrice, clearCart } = useCart();
   const { isSignedIn } = useUser();
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
+  const toast = useToast();
 
   const handleRemoveItem = async (itemId: string) => {
     console.log('handleRemoveItem called with:', itemId); // Debug log
@@ -19,7 +23,7 @@ export default function CartPage() {
     
     if (!itemId) {
       console.error('No itemId provided to handleRemoveItem');
-      alert('Error: No item ID provided');
+      toast.error('Error: No item ID provided');
       return;
     }
     
@@ -67,10 +71,14 @@ export default function CartPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-ink flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-titanium mx-auto"></div>
-          <p className="mt-4 text-nickel">Loading cart...</p>
+      <div className="min-h-screen bg-ink">
+        <div className="mx-auto max-w-7xl px-6 py-16">
+          <h1 className="text-3xl font-bold text-porcelain mb-8">Your Cart</h1>
+          <div className="space-y-4">
+            {[...Array(3)].map((_, i) => (
+              <CartItemSkeleton key={i} />
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -80,20 +88,7 @@ export default function CartPage() {
     return (
       <div className="min-h-screen bg-ink">
         <div className="mx-auto max-w-7xl px-6 py-24">
-          <div className="text-center">
-            <BrandMark className="h-16 w-16 text-titanium mx-auto mb-6" />
-            <h1 className="text-4xl font-semibold text-porcelain mb-4 text-display">
-              Your Cart is Empty
-            </h1>
-            <p className="text-nickel mb-8 text-body">
-              Add some premium accessories to get started.
-            </p>
-            <Link href="/browse">
-              <PrimaryButton>
-                Start Shopping
-              </PrimaryButton>
-            </Link>
-          </div>
+          <EmptyCart />
         </div>
       </div>
     );
@@ -128,11 +123,11 @@ export default function CartPage() {
                 return (
                 <div
                   key={cartItem.itemId}
-                  className="rounded-2xl border border-porcelain/10 bg-graphite/60 p-6 shadow-subtle"
+                  className="rounded-2xl border border-porcelain/10 bg-graphite/60 p-4 sm:p-6 shadow-subtle"
                 >
-                  <div className="flex gap-6">
+                  <div className="flex gap-4 sm:gap-6">
                     {/* Item Image */}
-                    <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-xl bg-ink">
+                    <Link href={`/items/${cartItem.itemId}`} className="relative h-20 w-20 sm:h-24 sm:w-24 flex-shrink-0 overflow-hidden rounded-xl bg-ink">
                       <Image
                         src={cartItem.item?.images?.[0]?.url || 'https://placehold.co/200x200/0B0C0E/F5F6F7?text=No+Image'}
                         alt={cartItem.item?.title || 'Item'}
@@ -140,26 +135,26 @@ export default function CartPage() {
                         className="object-cover"
                         unoptimized
                       />
-                    </div>
+                    </Link>
 
                     {/* Item Details */}
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between">
-                        <div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                        <div className="min-w-0 flex-1">
                           <Link href={`/items/${cartItem.itemId}`}>
-                            <h3 className="text-lg font-semibold text-porcelain hover:text-titanium transition-colors duration-sap cursor-pointer">
+                            <h3 className="text-base sm:text-lg font-semibold text-porcelain hover:text-titanium transition-colors duration-sap cursor-pointer truncate">
                               {cartItem.item?.title || 'Item'}
                             </h3>
                           </Link>
-                          <p className="text-nickel">{cartItem.item?.brand}</p>
-                          <p className="text-sm text-nickel">Condition: {cartItem.item?.condition}</p>
+                          <p className="text-sm text-nickel truncate">{cartItem.item?.brand}</p>
+                          <p className="text-xs sm:text-sm text-nickel">Condition: {cartItem.item?.condition}</p>
                         </div>
                         
-                        <div className="text-right">
-                          <p className="text-xl font-semibold text-titanium">
+                        <div className="text-left sm:text-right flex-shrink-0">
+                          <p className="text-lg sm:text-xl font-semibold text-titanium">
                             ${((cartItem.item?.price_cents || 0) / 100).toFixed(2)}
                           </p>
-                          <p className="text-sm text-nickel">
+                          <p className="text-xs sm:text-sm text-nickel">
                             ${(((cartItem.item?.price_cents || 0) * cartItem.quantity) / 100).toFixed(2)} total
                           </p>
                         </div>

@@ -7,6 +7,8 @@ import Image from "next/image";
 import { Heart, Trash2 } from "lucide-react";
 import { PrimaryButton, GhostButton } from "@/components/Buttons";
 import BrandMark from "@/components/BrandMark";
+import { WatchlistItemSkeleton } from "@/components/Skeletons";
+import { EmptyWatchlist } from "@/components/EmptyStates";
 
 export default function WatchlistPage() {
   const { isSignedIn, isLoaded } = useUser();
@@ -60,10 +62,14 @@ export default function WatchlistPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-ink flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-titanium mx-auto"></div>
-          <p className="mt-4 text-nickel">Loading watchlist...</p>
+      <div className="min-h-screen bg-ink">
+        <div className="mx-auto max-w-7xl px-6 py-16">
+          <h1 className="text-3xl font-bold text-porcelain mb-8">Your Watchlist</h1>
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
+            {[...Array(8)].map((_, i) => (
+              <WatchlistItemSkeleton key={i} />
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -93,20 +99,7 @@ export default function WatchlistPage() {
     return (
       <div className="min-h-screen bg-ink">
         <div className="mx-auto max-w-7xl px-6 py-24">
-          <div className="text-center">
-            <BrandMark className="h-16 w-16 text-titanium mx-auto mb-6" />
-            <h1 className="text-4xl font-semibold text-porcelain mb-4 text-display">
-              Your Watchlist is Empty
-            </h1>
-            <p className="text-nickel mb-8 text-body">
-              Start watching items you're interested in. You'll be notified of price changes and availability.
-            </p>
-            <Link href="/browse">
-              <PrimaryButton>
-                Start Watching
-              </PrimaryButton>
-            </Link>
-          </div>
+          <EmptyWatchlist />
         </div>
       </div>
     );

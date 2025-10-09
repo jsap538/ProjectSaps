@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
 import type { IItemImage } from '@/types';
+import { useToast } from '@/contexts/ToastContext';
 
 interface CartItem {
   itemId: string;
@@ -39,6 +40,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingItems, setLoadingItems] = useState<Set<string>>(new Set());
   const { isSignedIn } = useUser();
+  const toast = useToast();
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
@@ -70,14 +72,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = async (itemId: string, quantity: number = 1) => {
     if (!isSignedIn) {
-      alert('Please sign in to add items to cart');
+      toast.warning('Please sign in to add items to cart');
       return;
     }
 
     // Check if item is already in cart
     const existingItem = cart.find(item => item.itemId === itemId);
     if (existingItem) {
-      alert('This item is already in your cart. Each item is unique in our marketplace.');
+      toast.info('This item is already in your cart');
       return;
     }
 
@@ -97,12 +99,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (data.success) {
         // Fetch full cart details after adding
         await fetchCart();
+        toast.success('Item added to cart');
       } else {
-        alert(data.error || 'Failed to add item to cart');
+        toast.error(data.error || 'Failed to add item to cart');
       }
     } catch (error) {
       console.error('Error adding to cart:', error);
-      alert('Failed to add item to cart');
+      toast.error('Failed to add item to cart');
     } finally {
       // Remove loading for this specific item
       setLoadingItems(prev => {
@@ -120,7 +123,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     
     if (!itemId) {
       console.error('No itemId provided to removeFromCart');
-      alert('Error: No item ID provided');
+      toast.error('Error: No item ID provided');
       return;
     }
 
@@ -139,13 +142,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (data.success) {
         // Optimistically remove item from cart
         setCart(prevCart => prevCart.filter(item => item.itemId !== itemId));
+        toast.success('Item removed from cart');
       } else {
         console.error('Failed to remove item:', data.error);
-        alert(data.error || 'Failed to remove item from cart');
+        toast.error(data.error || 'Failed to remove item from cart');
       }
     } catch (error) {
       console.error('Error removing from cart:', error);
-      alert('Failed to remove item from cart');
+      toast.error('Failed to remove item from cart');
     } finally {
       setIsLoading(false);
     }
@@ -166,7 +170,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       await addToCart(itemId, quantity);
     } catch (error) {
       console.error('Error updating quantity:', error);
-      alert('Failed to update quantity');
+      toast.error('Failed to update quantity');
     } finally {
       setIsLoading(false);
     }
@@ -183,7 +187,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error) {
       console.error('Error clearing cart:', error);
-      alert('Failed to clear cart');
+      toast.error('Failed to clear cart');
     } finally {
       setIsLoading(false);
     }

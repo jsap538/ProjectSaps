@@ -143,20 +143,20 @@ export default function SellFormPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#1a1d24]">
-      <div className="mx-auto max-w-4xl px-6 py-10">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 py-6 sm:py-10">
         {/* Header */}
-        <div className="mb-10">
-          <h1 className="text-3xl font-bold text-dark md:text-4xl dark:text-white">
+        <div className="mb-8 sm:mb-10">
+          <h1 className="text-2xl sm:text-3xl font-bold text-dark md:text-4xl dark:text-white">
             List New Item
           </h1>
-          <p className="mt-3 text-gray-600 dark:text-gray-400">
+          <p className="mt-2 sm:mt-3 text-sm sm:text-base text-gray-600 dark:text-gray-400">
             Create a listing for your premium accessory
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
           {/* Basic Information */}
-          <div className="bg-white dark:bg-[#1f2329] rounded-2xl p-8 shadow-sm ring-1 ring-gray-200 dark:ring-gray-800">
+          <div className="bg-white dark:bg-[#1f2329] rounded-xl sm:rounded-2xl p-4 sm:p-8 shadow-sm ring-1 ring-gray-200 dark:ring-gray-800">
             <h2 className="text-xl font-semibold text-dark dark:text-white mb-6">
               Basic Information
             </h2>
@@ -235,7 +235,7 @@ export default function SellFormPage() {
           </div>
 
           {/* Pricing */}
-          <div className="bg-white dark:bg-[#1f2329] rounded-2xl p-8 shadow-sm ring-1 ring-gray-200 dark:ring-gray-800">
+          <div className="bg-white dark:bg-[#1f2329] rounded-xl sm:rounded-2xl p-4 sm:p-8 shadow-sm ring-1 ring-gray-200 dark:ring-gray-800">
             <h2 className="text-xl font-semibold text-dark dark:text-white mb-6">
               Pricing
             </h2>
@@ -287,7 +287,7 @@ export default function SellFormPage() {
           </div>
 
           {/* Condition & Details */}
-          <div className="bg-white dark:bg-[#1f2329] rounded-2xl p-8 shadow-sm ring-1 ring-gray-200 dark:ring-gray-800">
+          <div className="bg-white dark:bg-[#1f2329] rounded-xl sm:rounded-2xl p-4 sm:p-8 shadow-sm ring-1 ring-gray-200 dark:ring-gray-800">
             <h2 className="text-xl font-semibold text-dark dark:text-white mb-6">
               Condition & Details
             </h2>
@@ -377,7 +377,7 @@ export default function SellFormPage() {
           </div>
 
           {/* Images */}
-          <div className="bg-white dark:bg-[#1f2329] rounded-2xl p-8 shadow-sm ring-1 ring-gray-200 dark:ring-gray-800">
+          <div className="bg-white dark:bg-[#1f2329] rounded-xl sm:rounded-2xl p-4 sm:p-8 shadow-sm ring-1 ring-gray-200 dark:ring-gray-800">
             <h2 className="text-xl font-semibold text-dark dark:text-white mb-6">
               Photos
             </h2>
@@ -398,18 +398,18 @@ export default function SellFormPage() {
           )}
 
           {/* Submit Button */}
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <button
               type="button"
               onClick={() => router.back()}
-              className="flex-1 rounded-xl border border-gray-300 px-6 py-4 text-base font-semibold text-dark transition hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-gray-700 dark:text-white dark:hover:border-primary"
+              className="w-full sm:flex-1 rounded-xl border border-gray-300 px-6 py-3 sm:py-4 text-sm sm:text-base font-semibold text-dark transition hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-gray-700 dark:text-white dark:hover:border-primary"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 rounded-xl bg-primary px-6 py-4 text-base font-semibold text-white shadow-lg shadow-primary/30 transition hover:bg-primary-dark hover:shadow-xl hover:shadow-primary/40 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:flex-1 rounded-xl bg-primary px-6 py-3 sm:py-4 text-sm sm:text-base font-semibold text-white shadow-lg shadow-primary/30 transition hover:bg-primary-dark hover:shadow-xl hover:shadow-primary/40 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Creating Listing...' : 'Create Listing'}
             </button>

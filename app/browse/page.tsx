@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import ProductCard from "@/components/ProductCard";
 import EnhancedFilters from "@/components/EnhancedFilters";
+import { ProductCardSkeleton } from "@/components/Skeletons";
+import { EmptyBrowse } from "@/components/EmptyStates";
 import type { IItem } from "@/types";
 
 interface FilterState {
@@ -245,15 +247,8 @@ export default function BrowsePage() {
           <div className="flex-1 min-w-0">
             {loading ? (
               <div className="grid grid-cols-2 gap-6 md:grid-cols-3">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="animate-pulse bg-graphite/60 border border-porcelain/10 shadow-subtle p-4 rounded-xl">
-                    <div className="aspect-[4/5] bg-onyx mb-4 rounded-lg"></div>
-                    <div className="space-y-2">
-                      <div className="h-4 bg-onyx rounded w-3/4"></div>
-                      <div className="h-4 bg-onyx rounded w-1/2"></div>
-                      <div className="h-4 bg-onyx rounded w-2/3"></div>
-                    </div>
-                  </div>
+                {[...Array(9)].map((_, i) => (
+                  <ProductCardSkeleton key={i} />
                 ))}
               </div>
             ) : error ? (
@@ -275,11 +270,7 @@ export default function BrowsePage() {
                 ))}
               </div>
             ) : (
-              <div className="bg-graphite/60 border border-porcelain/10 shadow-subtle p-16 text-center rounded-xl">
-                <p className="text-lg text-nickel">
-                  No items match your filters. Try adjusting your search.
-                </p>
-              </div>
+              <EmptyBrowse />
             )}
           </div>
         </div>

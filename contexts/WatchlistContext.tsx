@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useUser } from '@clerk/nextjs';
 import type { IItemImage } from '@/types';
+import { useToast } from '@/contexts/ToastContext';
 
 interface WatchlistItem {
   _id: string;
@@ -34,6 +35,7 @@ export const WatchlistProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadingItems, setLoadingItems] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string | null>(null);
+  const toast = useToast();
 
   const fetchWatchlist = async () => {
     if (!isSignedIn) {
@@ -70,7 +72,7 @@ export const WatchlistProvider = ({ children }: { children: ReactNode }) => {
 
   const addToWatchlist = async (itemId: string) => {
     if (!isSignedIn) {
-      setError('Please sign in to add items to your watchlist.');
+      toast.warning('Please sign in to add items to your watchlist');
       return;
     }
     
@@ -89,12 +91,13 @@ export const WatchlistProvider = ({ children }: { children: ReactNode }) => {
       if (data.success) {
         // Fetch full watchlist to get complete item details
         await fetchWatchlist();
+        toast.success('Added to watchlist');
       } else {
         throw new Error(data.error || 'Failed to add item to watchlist');
       }
     } catch (err: any) {
       console.error('Error adding to watchlist:', err);
-      setError(err.message);
+      toast.error(err.message || 'Failed to add to watchlist');
     } finally {
       // Remove loading for this specific item
       setLoadingItems(prev => {
@@ -107,7 +110,7 @@ export const WatchlistProvider = ({ children }: { children: ReactNode }) => {
 
   const removeFromWatchlist = async (itemId: string) => {
     if (!isSignedIn) {
-      setError('Please sign in to modify your watchlist.');
+      toast.warning('Please sign in to modify your watchlist');
       return;
     }
     
@@ -126,12 +129,13 @@ export const WatchlistProvider = ({ children }: { children: ReactNode }) => {
       if (data.success) {
         // Optimistically remove from watchlist
         setWatchlist(prevWatchlist => prevWatchlist.filter(item => item._id !== itemId));
+        toast.success('Removed from watchlist');
       } else {
         throw new Error(data.error || 'Failed to remove item from watchlist');
       }
     } catch (err: any) {
       console.error('Error removing from watchlist:', err);
-      setError(err.message);
+      toast.error(err.message || 'Failed to remove from watchlist');
     } finally {
       // Remove loading for this specific item
       setLoadingItems(prev => {
