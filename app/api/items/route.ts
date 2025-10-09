@@ -147,9 +147,12 @@ export const POST = withRateLimit(rateLimiters.createItem, async (request: NextR
     }
 
     const body = await request.json();
+    console.log('Received item data:', body); // Debug log
+    
     const validation = sanitizeAndValidate(itemSchema, body);
     
     if (!validation.success) {
+      console.error('Validation failed:', validation.errors); // Debug log
       return NextResponse.json(
         { error: 'Validation failed', details: validation.errors },
         { status: 400, headers: corsHeaders }

@@ -19,14 +19,14 @@ export const itemSchema = z.object({
   title: z.string()
     .min(1, 'Title is required')
     .max(100, 'Title too long')
-    .regex(/^[a-zA-Z0-9\s\-&.,()]+$/, 'Title contains invalid characters'),
+    .regex(/^[a-zA-Z0-9\s\-&.,()'"]+$/, 'Title contains invalid characters'),
   description: z.string()
     .min(10, 'Description must be at least 10 characters')
-    .max(1000, 'Description too long'),
+    .max(2000, 'Description too long'),
   brand: z.string()
     .min(1, 'Brand is required')
     .max(50, 'Brand name too long')
-    .regex(/^[a-zA-Z0-9\s\-&.,()]+$/, 'Brand contains invalid characters'),
+    .regex(/^[a-zA-Z0-9\s\-&.,()'"]+$/, 'Brand contains invalid characters'),
   price_cents: z.number()
     .int('Price must be an integer')
     .min(100, 'Minimum price is $1.00')

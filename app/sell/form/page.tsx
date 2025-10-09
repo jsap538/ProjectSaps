@@ -100,6 +100,8 @@ export default function SellFormPage() {
         delete itemData.material;
       }
 
+      console.log('Submitting item data:', itemData); // Debug log
+
       const response = await fetch('/api/items', {
         method: 'POST',
         headers: {
@@ -109,8 +111,13 @@ export default function SellFormPage() {
       });
 
       const result = await response.json();
+      console.log('API response:', result); // Debug log
 
       if (!response.ok) {
+        // Show detailed validation errors if available
+        if (result.details && Array.isArray(result.details)) {
+          throw new Error(result.details.join(', '));
+        }
         throw new Error(result.error || 'Failed to create listing');
       }
 
@@ -198,7 +205,7 @@ export default function SellFormPage() {
                   value={formData.description}
                   onChange={handleInputChange}
                   required
-                  maxLength={1000}
+                  maxLength={2000}
                   rows={4}
                   className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-700 dark:bg-[#151821] dark:text-white"
                   placeholder="Describe the item's features, condition, and any notable details..."
