@@ -20,28 +20,35 @@ export async function GET() {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Get full item details for cart items
-    const cartItems = await Promise.all(
-      user.cart.map(async (cartItem: ICartItem) => {
-        const item = await Item.findById(cartItem.itemId);
-        return {
-          itemId: cartItem.itemId.toString(),
-          quantity: cartItem.quantity,
-          addedAt: cartItem.addedAt,
-          item: item ? {
-            _id: String(item._id),
-            title: item.title,
-            brand: item.brand,
-            price_cents: item.price_cents,
-            images: item.images,
-            condition: item.condition,
-            isActive: item.isActive,
-            isApproved: item.isApproved,
-            isSold: item.isSold,
-          } : null,
-        };
-      })
+    // Optimize: Fetch all cart items in a single query instead of N queries
+    const itemIds = user.cart.map((cartItem: ICartItem) => cartItem.itemId);
+    const items = await Item.find({ _id: { $in: itemIds } }).lean();
+    
+    // Create a Map for O(1) lookup
+    const itemMap = new Map(
+      items.map(item => [item._id.toString(), item])
     );
+    
+    // Map cart items with their full details
+    const cartItems = user.cart.map((cartItem: ICartItem) => {
+      const item = itemMap.get(cartItem.itemId.toString());
+      return {
+        itemId: cartItem.itemId.toString(),
+        quantity: cartItem.quantity,
+        addedAt: cartItem.addedAt,
+        item: item ? {
+          _id: String(item._id),
+          title: item.title,
+          brand: item.brand,
+          price_cents: item.price_cents,
+          images: item.images,
+          condition: item.condition,
+          isActive: item.isActive,
+          isApproved: item.isApproved,
+          isSold: item.isSold,
+        } : null,
+      };
+    });
 
     return NextResponse.json({
       success: true,
