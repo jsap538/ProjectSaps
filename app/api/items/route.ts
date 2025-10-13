@@ -57,9 +57,10 @@ export async function GET(request: NextRequest) {
     if (filters.color) filter.color = new RegExp(filters.color, 'i');
     
     if (filters.minPrice || filters.maxPrice) {
-      filter.price_cents = {};
-      if (filters.minPrice) filter.price_cents.$gte = filters.minPrice * 100; // Convert dollars to cents
-      if (filters.maxPrice) filter.price_cents.$lte = filters.maxPrice * 100; // Convert dollars to cents
+      const priceFilter: { $gte?: number; $lte?: number } = {};
+      if (filters.minPrice) priceFilter.$gte = filters.minPrice * 100; // Convert dollars to cents
+      if (filters.maxPrice) priceFilter.$lte = filters.maxPrice * 100; // Convert dollars to cents
+      filter.price_cents = priceFilter;
     }
 
     if (filters.search) {
