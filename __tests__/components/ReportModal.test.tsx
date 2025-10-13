@@ -49,7 +49,7 @@ describe('ReportModal Component', () => {
   it('should allow selecting a reason', () => {
     renderModal();
 
-    const counterfe itOption = screen.getByLabelText(/Counterfeit or Fake Item/i).closest('label');
+    const counterfeitOption = screen.getByLabelText(/Counterfeit or Fake Item/i).closest('label');
     fireEvent.click(counterfeitOption!);
 
     const radioButton = screen.getByRole('radio', { name: /counterfeit/i }) as HTMLInputElement;

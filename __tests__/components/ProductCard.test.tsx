@@ -61,8 +61,9 @@ describe('ProductCard Component', () => {
   it('should have clickable link to item detail page', () => {
     renderWithProviders(<ProductCard item={mockItem} />);
 
-    const link = screen.getByRole('link');
-    expect(link).toHaveAttribute('href', '/items/123');
+    const links = screen.getAllByRole('link');
+    expect(links[0]).toHaveAttribute('href', '/items/123');
+    expect(links.length).toBeGreaterThan(0);
   });
 
   it('should display Add to Cart button', () => {
