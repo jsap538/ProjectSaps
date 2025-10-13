@@ -25,13 +25,7 @@ const nextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   
-  // Optimize bundle
-  swcMinify: true,
-  
-  // Optimize fonts
-  optimizeFonts: true,
-  
-  // Reduce bundle size
+  // Reduce bundle size (tree-shake lucide-react icons)
   modularizeImports: {
     'lucide-react': {
       transform: 'lucide-react/dist/esm/icons/{{member}}',

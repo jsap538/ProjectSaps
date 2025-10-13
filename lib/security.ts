@@ -67,12 +67,37 @@ export function withSecurity(handler: (request: NextRequest, ...args: unknown[])
     const _url = request.url;
     const userAgent = request.headers.get('user-agent') || '';
     
-    // Block suspicious user agents
-    const suspiciousPatterns = [
-      /bot/i, /crawler/i, /spider/i, /scraper/i
+    // Whitelist legitimate bots/crawlers for SEO
+    const legitimateBots = [
+      /googlebot/i,
+      /bingbot/i,
+      /yandex/i,
+      /baiduspider/i,
+      /duckduckbot/i,
+      /slurp/i, // Yahoo
+      /twitterbot/i,
+      /facebookexternalhit/i,
+      /linkedinbot/i,
+      /whatsapp/i,
+      /applebot/i,
     ];
     
-    if (suspiciousPatterns.some(pattern => pattern.test(userAgent))) {
+    const isLegitimateBot = legitimateBots.some(pattern => pattern.test(userAgent));
+    
+    // Only block malicious scrapers, not legitimate bots
+    const maliciousPatterns = [
+      /scrapy/i,
+      /selenium/i,
+      /phantomjs/i,
+      /headless/i,
+      /python-requests/i,
+      /curl/i,
+      /wget/i,
+      /axios/i, // Raw axios without proper user agent
+    ];
+    
+    // Allow legitimate bots, block suspicious ones
+    if (!isLegitimateBot && maliciousPatterns.some(pattern => pattern.test(userAgent))) {
       return NextResponse.json(
         { error: 'Access denied' },
         { status: 403 }
