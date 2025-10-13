@@ -34,8 +34,16 @@ const customJestConfig = {
     },
   },
   testMatch: [
-    '**/__tests__/**/*.[jt]s?(x)',
-    '**/?(*.)+(spec|test).[jt]s?(x)',
+    '**/__tests__/unit/**/*.[jt]s?(x)',
+  ],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/__tests__/integration/',
+    '/__tests__/models/',
+    '/__tests__/api/',
+    '/__tests__/features/',
+    '/__tests__/security/',
+    '/__tests__/utils/',
   ],
 }
 

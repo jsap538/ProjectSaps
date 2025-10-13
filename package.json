@@ -8,9 +8,13 @@
     "start": "next start",
     "lint": "next lint",
     "migrate-db": "ts-node scripts/migrate-database.ts",
-    "test": "jest --watch",
-    "test:ci": "jest --ci",
-    "test:coverage": "jest --coverage"
+    "test": "npm run test:unit",
+    "test:unit": "jest --watch",
+    "test:unit:ci": "jest --ci",
+    "test:integration": "jest --config jest.integration.config.js --runInBand",
+    "test:integration:ci": "jest --config jest.integration.config.js --runInBand --ci",
+    "test:all": "npm run test:unit:ci && npm run test:integration:ci",
+    "test:coverage": "jest --coverage && jest --config jest.integration.config.js --coverage --runInBand"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.33.3",

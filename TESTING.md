@@ -1,8 +1,8 @@
-# SAPS Marketplace - Comprehensive Test Suite
+# SAPS Marketplace - Test Suite
 
 ## Overview
 
-Complete test coverage for all critical functionality with extensive edge case testing.
+Two-tiered test approach: Fast unit tests for components/validation, and integration tests for database operations.
 
 ## Installation
 
@@ -13,17 +13,23 @@ npm install
 This installs:
 - Jest (test runner)
 - React Testing Library (component testing)
-- MongoDB Memory Server (in-memory database)
+- MongoDB Memory Server (integration testing)
 - Testing utilities and type definitions
 
 ## Running Tests
 
 ```bash
-# Watch mode (development)
+# Unit tests only (fast, recommended for development)
 npm test
 
-# Single run (CI)
-npm run test:ci
+# Unit tests (CI mode)
+npm run test:unit:ci
+
+# Integration tests (MongoDB - slower)
+npm run test:integration:ci
+
+# All tests (unit + integration)
+npm run test:all
 
 # With coverage report
 npm run test:coverage
