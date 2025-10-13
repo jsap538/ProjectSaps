@@ -1,0 +1,18 @@
+# Don't deploy test files
+__tests__
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+coverage
+jest.config.js
+jest.setup.js
+
+# Don't deploy documentation
+*.md
+!README.md
+
+# Don't deploy development files
+.env.local
+.env.development
+
