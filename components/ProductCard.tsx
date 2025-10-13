@@ -85,8 +85,11 @@ export default function ProductCard({ item }: ProductCardProps) {
             alt={item.title}
             fill
             className="object-cover transition-transform duration-sap group-hover:scale-[1.02]"
-            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-            unoptimized
+            sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 300px"
+            quality={85}
+            loading="lazy"
+            placeholder="blur"
+            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mM8dPjwfwAHggKqQy8YmgAAAABJRU5ErkJggg=="
           />
           
           {/* Condition badge */}

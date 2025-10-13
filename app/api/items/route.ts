@@ -91,14 +91,15 @@ export async function GET(request: NextRequest) {
 
     const skip = ((filters.page || 1) - 1) * (filters.limit || 12);
     
-    // Execute queries in parallel
+    // Execute queries in parallel with optimized projection
     const [items, total] = await Promise.all([
       Item.find(filter)
-        .populate('sellerId', 'firstName lastName stats')
+        .select('title brand price_cents shipping_cents images condition category color isActive isApproved isSold stats createdAt')
+        .populate('sellerId', 'firstName lastName stats.averageRating stats.totalReviews')
         .sort(sort)
         .skip(skip)
         .limit(filters.limit || 12)
-        .lean(),
+        .lean({ virtuals: false, getters: false }),
       Item.countDocuments(filter)
     ]);
 
