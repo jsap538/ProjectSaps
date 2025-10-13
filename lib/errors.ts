@@ -81,13 +81,18 @@ export function handleApiError(error: unknown): NextResponse {
   
   // Handle known ApiError instances
   if (error instanceof ApiError) {
+    const response: any = {
+      success: false,
+      error: error.code,
+      message: error.message,
+    };
+    
+    if (error.details) {
+      response.details = error.details;
+    }
+    
     return NextResponse.json(
-      {
-        success: false,
-        error: error.code,
-        message: error.message,
-        ...(error.details && { details: error.details }),
-      },
+      response,
       { 
         status: error.statusCode,
         headers: corsHeaders,
@@ -132,13 +137,18 @@ export function handleApiError(error: unknown): NextResponse {
   // Don't expose internal error details in production
   const isProduction = process.env.NODE_ENV === 'production';
   
+  const response: any = {
+    success: false,
+    error: ErrorCode.INTERNAL_ERROR,
+    message: isProduction ? 'Internal server error' : message,
+  };
+  
+  if (!isProduction && error) {
+    response.details = error;
+  }
+  
   return NextResponse.json(
-    {
-      success: false,
-      error: ErrorCode.INTERNAL_ERROR,
-      message: isProduction ? 'Internal server error' : message,
-      ...((!isProduction && error) && { details: error }),
-    },
+    response,
     { 
       status: 500,
       headers: corsHeaders,
@@ -176,12 +186,17 @@ export function successResponse<T>(
   message?: string,
   status: number = 200
 ): NextResponse {
+  const response: any = {
+    success: true,
+    data,
+  };
+  
+  if (message) {
+    response.message = message;
+  }
+  
   return NextResponse.json(
-    {
-      success: true,
-      data,
-      ...(message && { message }),
-    },
+    response,
     { 
       status,
       headers: corsHeaders,
