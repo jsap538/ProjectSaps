@@ -77,6 +77,7 @@ export default function OptimizedImage({
         <Image
           {...imageProps}
           fill
+          alt={alt}
           style={{ objectFit: 'cover' }}
         />
         {isLoading && (
@@ -90,6 +91,7 @@ export default function OptimizedImage({
     <div className="relative" style={{ width, height }}>
       <Image
         {...imageProps}
+        alt={alt}
         width={width}
         height={height}
       />
