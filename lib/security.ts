@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { headers } from 'next/headers';
+// import { headers } from 'next/headers';
 
 // Security headers configuration
 export const securityHeaders = {
@@ -54,8 +54,8 @@ export function validateFileUpload(file: File): { isValid: boolean; error?: stri
 }
 
 // Security middleware for API routes
-export function withSecurity(handler: Function) {
-  return async (request: NextRequest, ...args: any[]) => {
+export function withSecurity(handler: (request: NextRequest, ...args: unknown[]) => Promise<NextResponse>) {
+  return async (request: NextRequest, ...args: unknown[]) => {
     const response = NextResponse.next();
     
     // Add security headers
@@ -64,7 +64,7 @@ export function withSecurity(handler: Function) {
     });
 
     // Check for suspicious patterns in request
-    const url = request.url;
+    const _url = request.url;
     const userAgent = request.headers.get('user-agent') || '';
     
     // Block suspicious user agents

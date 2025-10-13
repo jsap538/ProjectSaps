@@ -3,7 +3,7 @@
 import { useUser } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { DashboardStatSkeleton, DashboardItemSkeleton } from "@/components/Skeletons";
+import { DashboardItemSkeleton } from "@/components/Skeletons";
 import { EmptyDashboard } from "@/components/EmptyStates";
 
 interface Item {

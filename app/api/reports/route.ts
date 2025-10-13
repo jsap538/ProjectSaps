@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
       { status: 201, headers: corsHeaders }
     );
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error creating report:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
@@ -161,7 +161,7 @@ export async function GET(request: NextRequest) {
       { headers: corsHeaders }
     );
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error fetching reports:', error);
     return NextResponse.json(
       { error: 'Internal server error' },

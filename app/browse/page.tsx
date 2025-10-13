@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import ProductCard from "@/components/ProductCard";
 import EnhancedFilters from "@/components/EnhancedFilters";
 import { ProductCardSkeleton } from "@/components/Skeletons";
@@ -46,11 +46,7 @@ export default function BrowsePage() {
     sortBy: 'Newest First'
   });
 
-  useEffect(() => {
-    fetchItems();
-  }, [appliedFilters, searchQuery]);
-
-  const fetchItems = async () => {
+  const fetchItems = useCallback(async () => {
     try {
       setLoading(true);
       
@@ -118,7 +114,11 @@ export default function BrowsePage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [appliedFilters, searchQuery]);
+
+  useEffect(() => {
+    fetchItems();
+  }, [fetchItems]);
 
   const handleFiltersChange = (newFilters: FilterState) => {
     setTempFilters(newFilters);
@@ -128,7 +128,7 @@ export default function BrowsePage() {
     setAppliedFilters(tempFilters);
   };
 
-  const clearFilters = () => {
+  const _clearFilters = () => {
     const clearedFilters: FilterState = {
       brands: [],
       colors: [],

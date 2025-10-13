@@ -37,11 +37,11 @@ export async function GET(request: NextRequest) {
       minPrice: queryParams.minPrice ? parseInt(queryParams.minPrice) : undefined,
       maxPrice: queryParams.maxPrice ? parseInt(queryParams.maxPrice) : undefined,
       search: queryParams.search,
-      sortBy: (queryParams.sortBy as any) || 'newest',
+      sortBy: (queryParams.sortBy as string) || 'newest',
     };
 
     // Build filter object
-    const filter: any = {
+    const filter: Record<string, unknown> = {
       isActive: true,
       isApproved: true,
     };
@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Build sort object
-    const sort: any = {};
+    const sort: Record<string, 1 | -1> = {};
     switch (filters.sortBy) {
       case 'price_cents':
         sort.price_cents = 1;
@@ -114,7 +114,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(response, { headers: corsHeaders });
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error fetching items:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
@@ -225,7 +225,7 @@ export const POST = withRateLimit(rateLimiters.createItem, async (request: NextR
       { status: 201, headers: corsHeaders }
     );
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error creating item:', error);
     return NextResponse.json(
       { error: 'Internal server error' },

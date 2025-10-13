@@ -142,7 +142,7 @@ export default function SellFormPage() {
       }
 
       // Prepare item data, excluding zero values for optional fields
-      const itemData: any = {
+      const itemData: Record<string, unknown> = {
         ...formData,
         images: images,
       };

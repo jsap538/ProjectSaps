@@ -127,7 +127,7 @@ export class ApiCache {
   /**
    * Clear cache for specific endpoint
    */
-  clearEndpoint(endpoint: string): void {
+  clearEndpoint(_endpoint: string): void {
     // This is a simplified implementation
     // In production, you'd want to use a more sophisticated key matching
     this.cache.clear();
@@ -142,7 +142,7 @@ export const apiCache = new ApiCache();
 /**
  * Utility function to debounce cache operations
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {

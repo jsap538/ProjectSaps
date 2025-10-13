@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -27,7 +27,7 @@ export default function ImageLightbox({ images, initialIndex = 0, onClose }: Ima
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentIndex, onClose]);
+  }, [currentIndex, onClose, goToNext, goToPrevious]);
 
   // Prevent body scroll when lightbox is open
   useEffect(() => {
@@ -37,13 +37,13 @@ export default function ImageLightbox({ images, initialIndex = 0, onClose }: Ima
     };
   }, []);
 
-  const goToNext = () => {
+  const goToNext = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % images.length);
-  };
+  }, [images.length]);
 
-  const goToPrevious = () => {
+  const goToPrevious = useCallback(() => {
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
+  }, [images.length]);
 
   const sortedImages = [...images].sort((a, b) => a.order - b.order);
 

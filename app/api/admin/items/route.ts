@@ -6,7 +6,7 @@ import User from '@/models/User';
 import { corsHeaders } from '@/lib/security';
 
 // GET /api/admin/items - Get all items for admin review
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const { userId } = await auth();
   
   if (!userId) {

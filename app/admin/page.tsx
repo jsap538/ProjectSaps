@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import type { IItemImage } from "@/types";
 
 interface Item {
@@ -25,11 +26,32 @@ interface Item {
   };
 }
 
+interface Report {
+  _id: string;
+  itemId: {
+    _id: string;
+    title: string;
+    brand: string;
+    images?: IItemImage[];
+    isActive: boolean;
+  };
+  reporterId: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+  reason: string;
+  description?: string;
+  status: string;
+  priority: string;
+  createdAt: string;
+}
+
 export default function AdminPage() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
   const [items, setItems] = useState<Item[]>([]);
-  const [reports, setReports] = useState<any[]>([]);
+  const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedTab, setSelectedTab] = useState<'pending' | 'approved' | 'rejected' | 'reports'>('pending');
@@ -65,7 +87,7 @@ export default function AdminPage() {
       } else {
         setIsAdmin(false);
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Error checking admin status:', err);
       setIsAdmin(false);
     }
@@ -88,7 +110,7 @@ export default function AdminPage() {
       } else {
         throw new Error(data.error || 'Failed to fetch items');
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Error fetching items:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -109,7 +131,7 @@ export default function AdminPage() {
       } else {
         throw new Error(data.error || 'Failed to fetch reports');
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Error fetching reports:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -126,7 +148,7 @@ export default function AdminPage() {
         throw new Error('Failed to approve item');
       }
       fetchItems(); // Refresh the list
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Error approving item:', err);
       setError(err instanceof Error ? err.message : 'Failed to approve item');
     }
@@ -141,7 +163,7 @@ export default function AdminPage() {
         throw new Error('Failed to reject item');
       }
       fetchItems(); // Refresh the list
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Error rejecting item:', err);
       setError(err instanceof Error ? err.message : 'Failed to reject item');
     }
@@ -158,7 +180,7 @@ export default function AdminPage() {
         throw new Error('Failed to resolve report');
       }
       fetchReports(); // Refresh the reports list
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Error resolving report:', err);
       setError(err instanceof Error ? err.message : 'Failed to resolve report');
     }
@@ -317,16 +339,17 @@ export default function AdminPage() {
           /* Reports List */
           reports.length > 0 ? (
             <div className="space-y-4">
-              {reports.map((report: any) => (
+              {reports.map((report) => (
                 <div key={report._id} className="bg-white border-2 border-red-200 shadow-sm p-6">
                   <div className="flex gap-6">
                     {/* Item Image */}
-                    <div className="w-32 h-32 rounded-lg bg-gray-200 flex items-center justify-center overflow-hidden">
+                    <div className="relative w-32 h-32 rounded-lg bg-gray-200 flex items-center justify-center overflow-hidden">
                       {report.itemId?.images && report.itemId.images.length > 0 ? (
-                        <img
+                        <Image
                           src={report.itemId.images[0].url}
                           alt={report.itemId.title}
-                          className="w-full h-full object-cover"
+                          fill
+                          className="object-cover"
                         />
                       ) : (
                         <span className="text-gray-400 text-sm">No Image</span>
@@ -406,12 +429,13 @@ export default function AdminPage() {
               <div key={item._id} className="bg-white border border-gray-300 shadow-sm p-6">
                 <div className="flex gap-6">
                   {/* Item Image */}
-                  <div className="w-32 h-32 rounded-lg bg-gray-200 flex items-center justify-center overflow-hidden">
+                  <div className="relative w-32 h-32 rounded-lg bg-gray-200 flex items-center justify-center overflow-hidden">
                     {item.images && item.images.length > 0 ? (
-                      <img
+                      <Image
                         src={item.images[0].url}
                         alt={item.title}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                     ) : (
                       <span className="text-gray-400 text-sm">No Image</span>

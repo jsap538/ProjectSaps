@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import SearchableDropdown from './SearchableDropdown';
-import { BRANDS, COLORS, MATERIALS, SIZES, CONDITIONS, CATEGORIES, PRICE_RANGES, SORT_OPTIONS } from '@/data/filterData';
+import { BRANDS, COLORS, MATERIALS, SIZES, CONDITIONS, CATEGORIES, SORT_OPTIONS } from '@/data/filterData';
 
 interface FilterState {
   brands: string[];
@@ -39,7 +39,7 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
     }
   }, [initialFilters]);
 
-  const updateFilter = (key: keyof FilterState, value: any) => {
+  const updateFilter = (key: keyof FilterState, value: FilterState[keyof FilterState]) => {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
     onFiltersChange(newFilters);

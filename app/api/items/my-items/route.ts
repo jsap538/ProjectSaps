@@ -7,7 +7,7 @@ import { withRateLimit, rateLimiters } from '@/lib/rate-limit';
 import { corsHeaders } from '@/lib/security';
 
 // GET /api/items/my-items - Get current user's items
-export const GET = withRateLimit(rateLimiters.general, async (request: NextRequest) => {
+export const GET = withRateLimit(rateLimiters.general, async (_request: NextRequest) => {
   try {
     const { userId } = await auth();
     

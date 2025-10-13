@@ -3,7 +3,6 @@ import { auth } from '@clerk/nextjs/server';
 import connectDB from '@/lib/mongodb';
 import Item from '@/models/Item';
 import User from '@/models/User';
-import { withRateLimit, rateLimiters } from '@/lib/rate-limit';
 import { sanitizeAndValidate, updateItemSchema } from '@/lib/validation';
 import { isValidObjectId } from '@/lib/security';
 import { corsHeaders } from '@/lib/security';
@@ -114,10 +113,10 @@ export async function PUT(
       );
     }
 
-    const { id, ...updateData } = validation.data!; // Remove ID from update data
+    const { id: _id, ...updateData } = validation.data!; // Remove ID from update data
 
     // Prepare update object with proper typing
-    const updateObject: any = { ...updateData, updatedAt: new Date() };
+    const updateObject: Record<string, unknown> = { ...updateData, updatedAt: new Date() };
 
     // If item was approved and we're updating, it needs re-approval
     if (item.isApproved) {

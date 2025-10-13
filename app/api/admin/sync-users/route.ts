@@ -4,7 +4,7 @@ import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import { corsHeaders } from '@/lib/security';
 
-export async function POST(req: NextRequest) {
+export async function POST(_req: NextRequest) {
   const { userId } = await auth();
   
   if (!userId) {

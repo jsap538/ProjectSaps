@@ -45,7 +45,7 @@ export async function POST(req: Request) {
         'svix-signature': svix_signature,
       });
       console.log('Webhook verification successful');
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Error verifying webhook:', err);
       return new Response('Webhook verification failed', { status: 400 });
     }
@@ -90,7 +90,7 @@ export async function POST(req: Request) {
 
       console.log('User created successfully:', newUser._id);
       return new Response('User created', { status: 200 });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error creating user:', error);
       if (error instanceof Error) {
         console.error('Error details:', error.message, error.stack);
@@ -115,7 +115,7 @@ export async function POST(req: Request) {
 
       console.log('User updated:', id);
       return new Response('User updated', { status: 200 });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error updating user:', error);
       return new Response('Error updating user', { status: 500 });
     }
@@ -128,7 +128,7 @@ export async function POST(req: Request) {
       await User.findOneAndDelete({ clerkId: id });
       console.log('User deleted:', id);
       return new Response('User deleted', { status: 200 });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error deleting user:', error);
       return new Response('Error deleting user', { status: 500 });
     }

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, useCallback } from "react";
 import type { IItem } from "@/types";
 import { useCart } from "@/contexts/CartContext";
 import { ItemDetailSkeleton } from "@/components/Skeletons";
@@ -10,9 +10,21 @@ import ImageLightbox from "@/components/ImageLightbox";
 import ReportModal from "@/components/ReportModal";
 import { Flag } from "lucide-react";
 
+interface PopulatedItem extends Omit<IItem, 'sellerId'> {
+  sellerId: {
+    _id: string;
+    firstName?: string;
+    lastName?: string;
+    stats?: {
+      totalSold?: number;
+      averageRating?: number;
+    };
+  };
+}
+
 export default function ItemPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
-  const [item, setItem] = useState<IItem | null>(null);
+  const [item, setItem] = useState<PopulatedItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
@@ -21,11 +33,7 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const { addToCart, removeFromCart, isInCart, isItemLoading } = useCart();
 
-  useEffect(() => {
-    fetchItem();
-  }, [resolvedParams.id]);
-
-  const fetchItem = async () => {
+  const fetchItem = useCallback(async () => {
     try {
       const response = await fetch(`/api/items/${resolvedParams.id}`);
       if (!response.ok) {
@@ -42,7 +50,11 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
     } finally {
       setLoading(false);
     }
-  };
+  }, [resolvedParams.id]);
+
+  useEffect(() => {
+    fetchItem();
+  }, [fetchItem]);
 
   const handleCartToggle = async () => {
     if (!item) return;
@@ -227,10 +239,10 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
               <div className="flex items-center justify-between">
                 <div>
                   <div className="font-medium text-porcelain">
-                     {(item.sellerId as any)?.firstName || 'Unknown'} {(item.sellerId as any)?.lastName || 'Seller'}
+                     {item.sellerId?.firstName || 'Unknown'} {item.sellerId?.lastName || 'Seller'}
                   </div>
                   <div className="text-sm text-nickel">
-                    {(item.sellerId as any)?.stats?.totalSold || 0} sales
+                    {item.sellerId?.stats?.totalSold || 0} sales
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
@@ -242,7 +254,7 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
                   <span className="font-semibold text-porcelain">
-                     {((item.sellerId as any)?.stats?.averageRating || 0).toFixed(1)}
+                     {(item.sellerId?.stats?.averageRating || 0).toFixed(1)}
                   </span>
                 </div>
               </div>

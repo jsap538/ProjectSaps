@@ -42,7 +42,7 @@ export async function GET() {
       success: true,
       data: watchlistItems,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching watchlist:', error);
     return NextResponse.json(
       { error: 'Failed to fetch watchlist' },
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
       message: 'Item added to watchlist',
       data: user.watchlist,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error adding to watchlist:', error);
     return NextResponse.json(
       { error: 'Failed to add item to watchlist' },
@@ -154,7 +154,7 @@ export async function DELETE(request: NextRequest) {
       message: 'Item removed from watchlist',
       data: user.watchlist,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error removing from watchlist:', error);
     return NextResponse.json(
       { error: 'Failed to remove item from watchlist' },

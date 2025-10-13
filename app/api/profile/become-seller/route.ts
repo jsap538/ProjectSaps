@@ -6,7 +6,7 @@ import { withRateLimit, rateLimiters } from '@/lib/rate-limit';
 import { corsHeaders } from '@/lib/security';
 
 // POST /api/profile/become-seller - Make user a seller
-export const POST = withRateLimit(rateLimiters.general, async (request: NextRequest) => {
+export const POST = withRateLimit(rateLimiters.general, async (_request: NextRequest) => {
   try {
     const { userId } = await auth();
     

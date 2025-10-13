@@ -6,7 +6,7 @@ import { withRateLimit, rateLimiters } from '@/lib/rate-limit';
 import { corsHeaders } from '@/lib/security';
 
 // GET /api/profile - Get current user's profile
-export const GET = withRateLimit(rateLimiters.general, async (request: NextRequest) => {
+export const GET = withRateLimit(rateLimiters.general, async (_request: NextRequest) => {
   try {
     const { userId } = await auth();
     

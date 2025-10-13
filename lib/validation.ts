@@ -130,7 +130,7 @@ export function validateInput<T>(schema: z.ZodSchema<T>, data: unknown): {
 }
 
 // Sanitize and validate helper
-export function sanitizeAndValidate<T>(schema: z.ZodSchema<T>, data: any): {
+export function sanitizeAndValidate<T>(schema: z.ZodSchema<T>, data: unknown): {
   success: boolean;
   data?: T;
   errors?: string[];
@@ -148,7 +148,7 @@ export function sanitizeAndValidate<T>(schema: z.ZodSchema<T>, data: any): {
   if (!result.success && result.errors) {
     return {
       success: false,
-      errors: result.errors?.issues.map((err: any) => `${err.path.join('.')}: ${err.message}`) || []
+      errors: result.errors?.issues.map((err) => `${err.path.join('.')}: ${err.message}`) || []
     };
   }
 

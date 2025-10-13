@@ -29,7 +29,7 @@ export default function ProductCard({ item }: ProductCardProps) {
 
   const isInCart = cart.some(cartItem => cartItem.itemId === item._id);
 
-  const handleAddToCart = async (e: React.MouseEvent) => {
+  const _handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     

@@ -52,7 +52,7 @@ export class RateLimiter {
     
     const clientId = this.getClientId(request);
     const now = Date.now();
-    const windowStart = now - this.config.windowMs;
+    const _windowStart = now - this.config.windowMs;
 
     if (!store[clientId] || store[clientId].resetTime < now) {
       store[clientId] = {
@@ -109,9 +109,9 @@ export const rateLimiters = {
 // Middleware helper
 export function withRateLimit(
   rateLimiter: RateLimiter,
-  handler: (request: NextRequest, ...args: any[]) => Promise<Response>
+  handler: (request: NextRequest, ...args: unknown[]) => Promise<Response>
 ) {
-  return async (request: NextRequest, ...args: any[]): Promise<Response> => {
+  return async (request: NextRequest, ...args: unknown[]): Promise<Response> => {
     const result = rateLimiter.check(request);
 
     if (!result.allowed) {

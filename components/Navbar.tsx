@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { UserButton, useUser } from "@clerk/nextjs";
-import { Search, ShoppingBag, Menu, X, Heart } from "lucide-react";
+import { ShoppingBag, Menu, X, Heart } from "lucide-react";
 import BrandMark from "./BrandMark";
 import { useCart } from "@/contexts/CartContext";
 import { useWatchlist } from "@/contexts/WatchlistContext";
@@ -24,7 +24,7 @@ export default function Navbar() {
     }
   }, [isSignedIn, user]);
 
-  const checkAdminStatus = async () => {
+  const _checkAdminStatus = async () => {
     try {
       const response = await fetch('/api/user/profile');
       if (response.ok) {
