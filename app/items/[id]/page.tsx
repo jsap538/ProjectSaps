@@ -7,6 +7,8 @@ import type { IItem } from "@/types";
 import { useCart } from "@/contexts/CartContext";
 import { ItemDetailSkeleton } from "@/components/Skeletons";
 import ImageLightbox from "@/components/ImageLightbox";
+import ReportModal from "@/components/ReportModal";
+import { Flag } from "lucide-react";
 
 export default function ItemPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
@@ -16,6 +18,7 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [reportModalOpen, setReportModalOpen] = useState(false);
   const { addToCart, removeFromCart, isInCart, isItemLoading } = useCart();
 
   useEffect(() => {
@@ -303,6 +306,17 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
                 <span>Secure Payment</span>
               </div>
             </div>
+
+            {/* Report Item Button */}
+            <div className="mt-6 text-center">
+              <button
+                onClick={() => setReportModalOpen(true)}
+                className="text-sm text-nickel hover:text-red-400 transition-colors duration-sap inline-flex items-center gap-1.5"
+              >
+                <Flag className="h-4 w-4" />
+                Report this item
+              </button>
+            </div>
           </div>
         </div>
 
@@ -319,6 +333,19 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
           images={item.images}
           initialIndex={lightboxIndex}
           onClose={() => setLightboxOpen(false)}
+        />
+      )}
+
+      {/* Report Modal */}
+      {reportModalOpen && (
+        <ReportModal
+          itemId={item._id}
+          itemTitle={item.title}
+          onClose={() => setReportModalOpen(false)}
+          onReported={() => {
+            // Optionally refresh item or show message
+            fetchItem();
+          }}
         />
       )}
     </div>

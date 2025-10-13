@@ -174,6 +174,13 @@ export const POST = withRateLimit(rateLimiters.createItem, async (request: NextR
       dimensions.width_cm = itemData.width_cm;
     }
     
+    // Hybrid Approval Logic
+    // Auto-approve for verified sellers with good track record
+    const shouldAutoApprove = 
+      user.isVerified && 
+      user.stats.totalSold >= 5 && 
+      user.stats.averageRating >= 4.5;
+    
     // Prepare the new item data
     const newItemData: any = {
       title: itemData.title,
@@ -188,7 +195,7 @@ export const POST = withRateLimit(rateLimiters.createItem, async (request: NextR
       location: itemData.location,
       sellerId: user._id,
       isActive: true,
-      isApproved: false,
+      isApproved: shouldAutoApprove, // Auto-approve trusted sellers
       isSold: false,
       dimensions,
     };
@@ -210,7 +217,10 @@ export const POST = withRateLimit(rateLimiters.createItem, async (request: NextR
       {
         success: true,
         data: populatedItem,
-        message: 'Item created successfully. It will be reviewed before going live.',
+        message: shouldAutoApprove 
+          ? 'Item created and approved! Your listing is now live.' 
+          : 'Item created successfully. It will be reviewed before going live.',
+        autoApproved: shouldAutoApprove,
       },
       { status: 201, headers: corsHeaders }
     );

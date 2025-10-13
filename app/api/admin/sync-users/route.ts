@@ -1,10 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
+import { corsHeaders } from '@/lib/security';
 
 export async function POST(req: NextRequest) {
+  const { userId } = await auth();
+  
+  if (!userId) {
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401, headers: corsHeaders });
+  }
+
+  await connectDB();
+
   try {
-    await connectDB();
+    // Verify user is an admin
+    const currentUser = await User.findOne({ clerkId: userId });
+    if (!currentUser) {
+      return NextResponse.json({ success: false, error: 'User not found' }, { status: 404, headers: corsHeaders });
+    }
+
+    if (!currentUser.isAdmin) {
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Access denied. Administrator privileges required.' 
+      }, { status: 403, headers: corsHeaders });
+    }
 
     // Get all users from database
     const existingUsers = await User.find({}).select('clerkId email');
@@ -46,8 +67,7 @@ export async function POST(req: NextRequest) {
           lastName: userData.lastName,
           isSeller: false,
           isAdmin: false,
-          rating: 0,
-          totalSales: 0,
+          // stats object created automatically by schema defaults
         });
         
         syncedUsers.push(newUser);

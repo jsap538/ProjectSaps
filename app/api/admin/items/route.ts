@@ -16,10 +16,17 @@ export async function GET(request: NextRequest) {
   await connectDB();
   
   try {
-    // For now, allow any authenticated user to view admin items
+    // Verify user is an admin
     const user = await User.findOne({ clerkId: userId });
     if (!user) {
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404, headers: corsHeaders });
+    }
+
+    if (!user.isAdmin) {
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Access denied. Administrator privileges required.' 
+      }, { status: 403, headers: corsHeaders });
     }
 
     // Get all items with seller information

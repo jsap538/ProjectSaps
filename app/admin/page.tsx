@@ -28,15 +28,47 @@ export default function AdminPage() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
   const [items, setItems] = useState<Item[]>([]);
+  const [reports, setReports] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedTab, setSelectedTab] = useState<'pending' | 'approved' | 'rejected'>('pending');
+  const [selectedTab, setSelectedTab] = useState<'pending' | 'approved' | 'rejected' | 'reports'>('pending');
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
+  // Check admin status first
   useEffect(() => {
     if (isLoaded && user) {
-      fetchItems();
+      checkAdminStatus();
     }
-  }, [isLoaded, user, selectedTab]);
+  }, [isLoaded, user]);
+
+  // Fetch items only if admin
+  useEffect(() => {
+    if (isAdmin) {
+      if (selectedTab === 'reports') {
+        fetchReports();
+      } else {
+        fetchItems();
+      }
+    }
+  }, [isAdmin, selectedTab]);
+
+  const checkAdminStatus = async () => {
+    try {
+      const response = await fetch('/api/profile');
+      if (!response.ok) {
+        throw new Error('Failed to fetch profile');
+      }
+      const data = await response.json();
+      if (data.success && data.data.isAdmin) {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    } catch (err) {
+      console.error('Error checking admin status:', err);
+      setIsAdmin(false);
+    }
+  };
 
   const fetchItems = async () => {
     try {
@@ -57,6 +89,27 @@ export default function AdminPage() {
       }
     } catch (err) {
       console.error('Error fetching items:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchReports = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/reports?status=pending');
+      if (!response.ok) {
+        throw new Error('Failed to fetch reports');
+      }
+      const data = await response.json();
+      if (data.success) {
+        setReports(data.data || []);
+      } else {
+        throw new Error(data.error || 'Failed to fetch reports');
+      }
+    } catch (err) {
+      console.error('Error fetching reports:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
@@ -93,13 +146,86 @@ export default function AdminPage() {
     }
   };
 
+  const resolveReport = async (reportId: string, action: string, notes?: string) => {
+    try {
+      const response = await fetch(`/api/reports/${reportId}/resolve`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, adminNotes: notes }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to resolve report');
+      }
+      fetchReports(); // Refresh the reports list
+    } catch (err) {
+      console.error('Error resolving report:', err);
+      setError(err instanceof Error ? err.message : 'Failed to resolve report');
+    }
+  };
 
-  if (!isLoaded) {
+
+  if (!isLoaded || isAdmin === null) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            Sign In Required
+          </h1>
+          <p className="text-gray-600 mb-6">
+            Please sign in to access the admin panel.
+          </p>
+          <Link
+            href="/sign-in"
+            className="inline-block bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition"
+          >
+            Sign In
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (isAdmin === false) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <div className="mb-6">
+            <svg className="h-24 w-24 text-red-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            Access Denied
+          </h1>
+          <p className="text-gray-600 mb-8">
+            You do not have administrator privileges to access this page. 
+            Please contact support if you believe this is an error.
+          </p>
+          <div className="flex gap-4 justify-center">
+            <Link
+              href="/"
+              className="inline-block bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition"
+            >
+              Go Home
+            </Link>
+            <Link
+              href="/browse"
+              className="inline-block border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition"
+            >
+              Browse Items
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -145,6 +271,7 @@ export default function AdminPage() {
                 { key: 'pending', label: 'Pending Review', count: items.filter(item => !item.isApproved).length },
                 { key: 'approved', label: 'Approved', count: items.filter(item => item.isApproved).length },
                 { key: 'rejected', label: 'Rejected', count: 0 },
+                { key: 'reports', label: 'Reported Items', count: reports.length },
               ].map((tab) => (
                 <button
                   key={tab.key}
@@ -169,7 +296,7 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* Items List */}
+        {/* Content */}
         {loading ? (
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
@@ -185,6 +312,93 @@ export default function AdminPage() {
               </div>
             ))}
           </div>
+        ) : selectedTab === 'reports' ? (
+          /* Reports List */
+          reports.length > 0 ? (
+            <div className="space-y-4">
+              {reports.map((report: any) => (
+                <div key={report._id} className="bg-white border-2 border-red-200 shadow-sm p-6">
+                  <div className="flex gap-6">
+                    {/* Item Image */}
+                    <div className="w-32 h-32 rounded-lg bg-gray-200 flex items-center justify-center overflow-hidden">
+                      {report.itemId?.images && report.itemId.images.length > 0 ? (
+                        <img
+                          src={report.itemId.images[0].url}
+                          alt={report.itemId.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-gray-400 text-sm">No Image</span>
+                      )}
+                    </div>
+
+                    {/* Report Details */}
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <h3 className="text-xl font-medium text-gray-900">
+                            {report.itemId?.title || 'Deleted Item'}
+                          </h3>
+                          <p className="text-gray-600">
+                            {report.itemId?.brand} • {report.itemId?.isActive ? 'Active' : 'Inactive'}
+                          </p>
+                        </div>
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          report.priority === 'urgent' ? 'bg-red-100 text-red-800' :
+                          report.priority === 'high' ? 'bg-orange-100 text-orange-800' :
+                          'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {report.priority.toUpperCase()}
+                        </span>
+                      </div>
+                      
+                      <div className="bg-red-50 border border-red-200 p-3 rounded-lg mb-4">
+                        <p className="text-sm font-medium text-red-900 mb-1">
+                          Reason: {report.reason.charAt(0).toUpperCase() + report.reason.slice(1).replace('_', ' ')}
+                        </p>
+                        {report.description && (
+                          <p className="text-sm text-red-800">
+                            {report.description}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm text-gray-500">
+                          <p>Reported by: {report.reporterId?.firstName} {report.reporterId?.lastName}</p>
+                          <p>Date: {new Date(report.createdAt).toLocaleDateString()}</p>
+                        </div>
+
+                        <div className="flex gap-3">
+                          <button
+                            onClick={() => resolveReport(report._id, 'dismissed', 'No violation found')}
+                            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-sm hover:bg-gray-200 transition border border-gray-300"
+                          >
+                            Dismiss
+                          </button>
+                          <button
+                            onClick={() => {
+                              const notes = prompt('Enter moderation notes (optional):');
+                              resolveReport(report._id, 'item_removed', notes || 'Violation confirmed');
+                            }}
+                            className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-sm hover:bg-red-700 transition"
+                          >
+                            Remove Item
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white border border-gray-300 shadow-sm p-16 text-center">
+              <p className="text-lg text-gray-600">
+                No pending reports. Great job keeping the marketplace clean!
+              </p>
+            </div>
+          )
         ) : filteredItems.length > 0 ? (
           <div className="space-y-4">
             {filteredItems.map((item) => (
