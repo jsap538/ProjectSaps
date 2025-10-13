@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import connectDB from '@/lib/mongodb';
 import { User, Item, Order } from '@/models';
+import { ICartItem } from '@/models/User';
 import { withErrorHandling, ApiErrors, successResponse } from '@/lib/errors';
 import { corsHeaders } from '@/lib/security';
 
@@ -139,7 +140,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
   // await order.save();
 
   // Remove items from cart
-  user.cart = user.cart.filter(cartItem => 
+  user.cart = user.cart.filter((cartItem: ICartItem) => 
     !itemIds.includes(cartItem.itemId.toString())
   );
   await user.save();
