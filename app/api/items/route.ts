@@ -27,6 +27,11 @@ export async function GET(request: NextRequest) {
     }
 
     // Parse query parameters with defaults
+    const validSortOptions: readonly string[] = ['newest', 'price_cents', 'price_cents_desc', 'views'];
+    const sortBy: ItemFilters['sortBy'] = validSortOptions.includes(queryParams.sortBy || '') 
+      ? (queryParams.sortBy as ItemFilters['sortBy'])
+      : 'newest';
+
     const filters: ItemFilters = {
       page: parseInt(queryParams.page || '1'),
       limit: parseInt(queryParams.limit || '12'),
@@ -37,7 +42,7 @@ export async function GET(request: NextRequest) {
       minPrice: queryParams.minPrice ? parseInt(queryParams.minPrice) : undefined,
       maxPrice: queryParams.maxPrice ? parseInt(queryParams.maxPrice) : undefined,
       search: queryParams.search,
-      sortBy: (queryParams.sortBy as string) || 'newest',
+      sortBy,
     };
 
     // Build filter object
