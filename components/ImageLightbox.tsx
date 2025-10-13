@@ -13,6 +13,15 @@ interface ImageLightboxProps {
 export default function ImageLightbox({ images, initialIndex = 0, onClose }: ImageLightboxProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
+  // Navigation functions
+  const goToNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  }, [images.length]);
+
+  const goToPrevious = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+  }, [images.length]);
+
   // Handle keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -27,7 +36,7 @@ export default function ImageLightbox({ images, initialIndex = 0, onClose }: Ima
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentIndex, onClose, goToNext, goToPrevious]);
+  }, [onClose, goToNext, goToPrevious]);
 
   // Prevent body scroll when lightbox is open
   useEffect(() => {
@@ -36,14 +45,6 @@ export default function ImageLightbox({ images, initialIndex = 0, onClose }: Ima
       document.body.style.overflow = 'unset';
     };
   }, []);
-
-  const goToNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % images.length);
-  }, [images.length]);
-
-  const goToPrevious = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
-  }, [images.length]);
 
   const sortedImages = [...images].sort((a, b) => a.order - b.order);
 

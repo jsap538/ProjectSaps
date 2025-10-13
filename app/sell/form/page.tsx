@@ -153,7 +153,7 @@ export default function SellFormPage() {
       }
       
       // Remove material if empty (optional field)
-      if (!itemData.material || itemData.material.trim() === '') {
+      if (!itemData.material || (typeof itemData.material === 'string' && itemData.material.trim() === '')) {
         delete itemData.material;
       }
 
