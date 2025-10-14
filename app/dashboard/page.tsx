@@ -452,22 +452,7 @@ export default function DashboardPage() {
 
         {/* Listings Tab Content */}
         {activeTab === 'listings' && (
-          <>
-            {/* Actions */}
-            <div className="mb-8 text-center">
-              <Link
-                href="/sell"
-                className="inline-flex items-center px-8 py-4 bg-porcelain text-ink rounded-xl font-medium transition-transform duration-sap hover:-translate-y-px shadow-soft"
-              >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                List New Item
-              </Link>
-            </div>
-
-            {/* Items List */}
-            <div className="rounded-2xl border border-porcelain/10 bg-graphite/60 shadow-soft">
+          <div className="rounded-2xl border border-porcelain/10 bg-graphite/60 shadow-soft">
               <div className="px-8 py-6 border-b border-porcelain/10">
                 <h2 className="text-xl font-semibold text-porcelain">My Items</h2>
               </div>
@@ -542,7 +527,6 @@ export default function DashboardPage() {
                 </div>
               )}
             </div>
-          </>
         )}
       </div>
     </div>
