@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState, useEffect, use, useCallback } from "react";
 import type { IItem } from "@/types";
 import { useCart } from "@/contexts/CartContext";
@@ -28,10 +29,12 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [isBuyingNow, setIsBuyingNow] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const { addToCart, removeFromCart, isInCart, isItemLoading } = useCart();
+  const router = useRouter();
 
   const fetchItem = useCallback(async () => {
     try {
@@ -68,6 +71,22 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
       }
     } finally {
       setIsAddingToCart(false);
+    }
+  };
+
+  const handleBuyNow = async () => {
+    if (!item) return;
+    
+    setIsBuyingNow(true);
+    try {
+      // Add to cart if not already there
+      if (!isInCart(item._id)) {
+        await addToCart(item._id, 1);
+      }
+      // Navigate to checkout
+      router.push('/checkout');
+    } finally {
+      setIsBuyingNow(false);
     }
   };
 
@@ -136,7 +155,8 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-300"
                 priority
-                unoptimized
+                sizes="(max-width: 768px) 100vw, 50vw"
+                quality={90}
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 rounded-full p-2">
@@ -162,7 +182,8 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
                       alt={`${item.title} ${idx + 2}`}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-300"
-                      unoptimized
+                      sizes="150px"
+                      quality={85}
                     />
                   </button>
                 ))}
@@ -262,8 +283,12 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
 
             {/* CTA Buttons */}
             <div className="space-y-4">
-              <button className="w-full rounded-xl bg-porcelain text-ink px-6 py-4 text-base font-semibold shadow-soft transition-transform duration-sap hover:-translate-y-px hover:shadow-soft">
-                Buy Now - ${total}
+              <button
+                onClick={handleBuyNow}
+                disabled={isBuyingNow || !item.isActive || !item.isApproved || item.isSold}
+                className="w-full rounded-xl bg-porcelain text-ink px-6 py-4 text-base font-semibold shadow-soft transition-transform duration-sap hover:-translate-y-px hover:shadow-soft disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+              >
+                {isBuyingNow ? 'Processing...' : `Buy Now - $${total}`}
               </button>
               
               <div className="flex gap-3">

@@ -6,6 +6,7 @@ import {
   useStripe,
   useElements,
   PaymentElement,
+  AddressElement,
 } from '@stripe/react-stripe-js';
 
 interface CheckoutFormProps {
@@ -54,8 +55,15 @@ export default function CheckoutForm({ orderId }: CheckoutFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Shipping Address */}
+      <div>
+        <h3 className="text-porcelain font-medium mb-3">Shipping Address</h3>
+        <AddressElement options={{ mode: 'shipping' }} />
+      </div>
+
       {/* Payment Element */}
       <div>
+        <h3 className="text-porcelain font-medium mb-3">Payment Method</h3>
         <PaymentElement />
       </div>
 
