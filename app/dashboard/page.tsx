@@ -22,15 +22,24 @@ interface Item {
 
 export default function DashboardPage() {
   const { user, isLoaded } = useUser();
+  const [activeTab, setActiveTab] = useState<'listings' | 'purchases' | 'sales'>('listings');
   const [items, setItems] = useState<Item[]>([]);
+  const [purchases, setPurchases] = useState<any[]>([]);
+  const [sales, setSales] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isLoaded && user) {
-      fetchMyItems();
+      if (activeTab === 'listings') {
+        fetchMyItems();
+      } else if (activeTab === 'purchases') {
+        fetchPurchases();
+      } else if (activeTab === 'sales') {
+        fetchSales();
+      }
     }
-  }, [isLoaded, user]);
+  }, [isLoaded, user, activeTab]);
 
   const fetchMyItems = async () => {
     try {
@@ -54,6 +63,43 @@ export default function DashboardPage() {
     }
   };
 
+  const fetchPurchases = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/orders?role=buyer');
+      const data = await response.json();
+      
+      if (data.success) {
+        setPurchases(data.data || []);
+      } else {
+        throw new Error(data.error || 'Failed to fetch purchases');
+      }
+    } catch (err) {
+      console.error('Error fetching purchases:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchSales = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/orders?role=seller');
+      const data = await response.json();
+      
+      if (data.success) {
+        setSales(data.data || []);
+      } else {
+        throw new Error(data.error || 'Failed to fetch sales');
+      }
+    } catch (err) {
+      console.error('Error fetching sales:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const deleteItem = async (itemId: string) => {
     if (!confirm('Are you sure you want to delete this item?')) {
@@ -162,24 +208,61 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Actions */}
-        <div className="mb-16 text-center">
-          <Link
-            href="/sell"
-            className="inline-flex items-center px-8 py-4 bg-porcelain text-ink rounded-xl font-medium transition-transform duration-sap hover:-translate-y-px shadow-soft"
+        {/* Tabs */}
+        <div className="mb-8 flex items-center justify-center gap-4">
+          <button
+            onClick={() => setActiveTab('listings')}
+            className={`px-6 py-3 rounded-xl font-medium transition-all duration-sap ${
+              activeTab === 'listings'
+                ? 'bg-titanium/20 border border-titanium/30 text-titanium'
+                : 'bg-graphite/60 border border-porcelain/10 text-nickel hover:text-porcelain'
+            }`}
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            List New Item
-          </Link>
+            My Listings
+          </button>
+          <button
+            onClick={() => setActiveTab('purchases')}
+            className={`px-6 py-3 rounded-xl font-medium transition-all duration-sap ${
+              activeTab === 'purchases'
+                ? 'bg-titanium/20 border border-titanium/30 text-titanium'
+                : 'bg-graphite/60 border border-porcelain/10 text-nickel hover:text-porcelain'
+            }`}
+          >
+            Purchases
+          </button>
+          <button
+            onClick={() => setActiveTab('sales')}
+            className={`px-6 py-3 rounded-xl font-medium transition-all duration-sap ${
+              activeTab === 'sales'
+                ? 'bg-titanium/20 border border-titanium/30 text-titanium'
+                : 'bg-graphite/60 border border-porcelain/10 text-nickel hover:text-porcelain'
+            }`}
+          >
+            Sales
+          </button>
         </div>
 
-        {/* Items List */}
-        <div className="rounded-2xl border border-porcelain/10 bg-graphite/60 shadow-soft">
-          <div className="px-8 py-6 border-b border-porcelain/10">
-            <h2 className="text-xl font-semibold text-porcelain">My Items</h2>
+        {/* New Item Button */}
+        {activeTab === 'listings' && (
+          <div className="mb-8 text-center">
+            <Link
+              href="/sell"
+              className="inline-flex items-center px-8 py-4 bg-porcelain text-ink rounded-xl font-medium transition-transform duration-sap hover:-translate-y-px shadow-soft"
+            >
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              List New Item
+            </Link>
           </div>
+        )}
+
+        {/* Content based on active tab */}
+        {activeTab === 'listings' && (
+          <div className="rounded-2xl border border-porcelain/10 bg-graphite/60 shadow-soft">
+            <div className="px-8 py-6 border-b border-porcelain/10">
+              <h2 className="text-xl font-semibold text-porcelain">My Items</h2>
+            </div>
 
           {loading ? (
             <div className="divide-y divide-porcelain/10">
@@ -250,8 +333,141 @@ export default function DashboardPage() {
               ))}
             </div>
           )}
-        </div>
-      </div>
-    </div>
-  );
-}
+          </div>
+        )}
+
+        {/* Purchases Tab */}
+        {activeTab === 'purchases' && (
+          <div className="rounded-2xl border border-porcelain/10 bg-graphite/60 shadow-soft">
+            <div className="px-8 py-6 border-b border-porcelain/10">
+              <h2 className="text-xl font-semibold text-porcelain">My Purchases</h2>
+            </div>
+
+            {loading ? (
+              <div className="p-8 text-center">
+                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-titanium border-r-transparent"></div>
+              </div>
+            ) : purchases.length === 0 ? (
+              <div className="p-16 text-center">
+                <p className="text-nickel text-lg mb-4">No purchases yet</p>
+                <Link
+                  href="/browse"
+                  className="inline-flex px-6 py-3 bg-titanium/20 border border-titanium/30 text-titanium rounded-xl font-medium transition-all duration-sap hover:bg-titanium/30"
+                >
+                  Start Shopping
+                </Link>
+              </div>
+            ) : (
+              <div className="divide-y divide-porcelain/10">
+                {purchases.map((order) => (
+                  <div key={order._id} className="p-8">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <p className="text-porcelain font-semibold text-lg">{order.orderNumber}</p>
+                        <p className="text-nickel text-sm">{new Date(order.createdAt).toLocaleDateString()}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-porcelain font-semibold">${(order.total_cents / 100).toFixed(2)}</p>
+                        <p className={`text-sm px-3 py-1 rounded-lg inline-block ${
+                          order.status === 'delivered' ? 'bg-green-500/20 text-green-400' :
+                          order.status === 'shipped' ? 'bg-blue-500/20 text-blue-400' :
+                          order.status === 'cancelled' ? 'bg-red-500/20 text-red-400' :
+                          'bg-nickel/20 text-nickel'
+                        }`}>
+                          {order.status}
+                        </p>
+                      </div>
+                    </div>
+                    <Link
+                      href={`/orders/${order._id}`}
+                      className="text-titanium hover:text-porcelain text-sm font-medium transition-colors duration-sap"
+                    >
+                      View Order Details →
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Sales Tab */}
+        {activeTab === 'sales' && (
+          <div className="rounded-2xl border border-porcelain/10 bg-graphite/60 shadow-soft">
+            <div className="px-8 py-6 border-b border-porcelain/10">
+              <h2 className="text-xl font-semibold text-porcelain">My Sales</h2>
+            </div>
+
+            {loading ? (
+              <div className="p-8 text-center">
+                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-titanium border-r-transparent"></div>
+              </div>
+            ) : sales.length === 0 ? (
+              <div className="p-16 text-center">
+                <p className="text-nickel text-lg mb-4">No sales yet</p>
+                <Link
+                  href="/sell"
+                  className="inline-flex px-6 py-3 bg-titanium/20 border border-titanium/30 text-titanium rounded-xl font-medium transition-all duration-sap hover:bg-titanium/30"
+                >
+                  List an Item
+                </Link>
+              </div>
+            ) : (
+              <div className="divide-y divide-porcelain/10">
+                {sales.map((order) => (
+                  <div key={order._id} className="p-8">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <p className="text-porcelain font-semibold text-lg">{order.orderNumber}</p>
+                        <p className="text-nickel text-sm">
+                          Sold to {order.buyerId?.firstName} {order.buyerId?.lastName}
+                        </p>
+                        <p className="text-nickel text-xs">{new Date(order.createdAt).toLocaleDateString()}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-porcelain font-semibold">${((order.total_cents - order.serviceFee_cents) / 100).toFixed(2)}</p>
+                        <p className="text-xs text-nickel">Your payout</p>
+                        <p className={`text-sm px-3 py-1 rounded-lg inline-block mt-2 ${
+                          order.status === 'delivered' ? 'bg-green-500/20 text-green-400' :
+                          order.status === 'shipped' ? 'bg-blue-500/20 text-blue-400' :
+                          order.status === 'confirmed' ? 'bg-titanium/20 text-titanium' :
+                          'bg-nickel/20 text-nickel'
+                        }`}>
+                          {order.status}
+                        </p>
+                      </div>
+                    </div>
+                    <Link
+                      href={`/orders/${order._id}`}
+                      className="text-titanium hover:text-porcelain text-sm font-medium transition-colors duration-sap"
+                    >
+                      Manage Order →
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Listings Tab Content */}
+        {activeTab === 'listings' && (
+          <>
+            {/* Actions */}
+            <div className="mb-8 text-center">
+              <Link
+                href="/sell"
+                className="inline-flex items-center px-8 py-4 bg-porcelain text-ink rounded-xl font-medium transition-transform duration-sap hover:-translate-y-px shadow-soft"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                List New Item
+              </Link>
+            </div>
+
+            {/* Items List */}
+            <div className="rounded-2xl border border-porcelain/10 bg-graphite/60 shadow-soft">
+              <div className="px-8 py-6 border-b border-porcelain/10">
+                <h2 className="text-xl font-semibold text-porcelain">My Items</h2>
+              </div>
