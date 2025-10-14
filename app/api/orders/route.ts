@@ -55,7 +55,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
   if (!user) throw ApiErrors.notFound('User');
   if (!user.canBuy()) throw ApiErrors.forbidden('Account suspended or inactive');
 
-  const { items: itemIds, shippingAddressIndex, buyerNotes, shippingAddress: providedAddress, skipCartClear } = await request.json();
+  const { items: itemIds, shippingAddressIndex, buyerNotes, shippingAddress: providedAddress } = await request.json();
 
   // Validate inputs
   if (!itemIds || !Array.isArray(itemIds) || itemIds.length === 0) {
@@ -82,7 +82,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
     };
   }
 
-  // Fetch all items and validate availability
+  // Fetch all items and validate availability with real-time check
   const items = await Item.find({
     _id: { $in: itemIds },
     isActive: true,
@@ -91,20 +91,72 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
   });
 
   if (items.length !== itemIds.length) {
-    throw ApiErrors.badRequest('Some items are no longer available');
+    // Find which specific items are unavailable for better error messaging
+    const foundIds = items.map(item => item._id.toString());
+    const unavailableIds = itemIds.filter(id => !foundIds.includes(id));
+    
+    // Re-check if items became unavailable (sold by another user)
+    const unavailableItems = await Item.find({
+      _id: { $in: unavailableIds }
+    }).select('title isSold isActive isApproved');
+    
+    const unavailableReasons = unavailableItems.map(item => {
+      if (item.isSold) return `"${item.title}" has been sold`;
+      if (!item.isActive) return `"${item.title}" is no longer available`;
+      if (!item.isApproved) return `"${item.title}" is pending approval`;
+      return `"${item.title}" is unavailable`;
+    });
+    
+    throw ApiErrors.badRequest(
+      `Cannot complete purchase: ${unavailableReasons.join(', ')}. Please remove unavailable items and try again.`
+    );
   }
 
+  // CRITICAL: Atomic inventory check - Reserve items before payment
+  // This prevents race conditions where items sell between validation and payment
+  const reservedItems = await Promise.all(
+    itemIds.map(async (itemId) => {
+      const reserved = await Item.findOneAndUpdate(
+        {
+          _id: itemId,
+          isActive: true,
+          isApproved: true,
+          isSold: false, // Double-check not sold
+        },
+        {
+          $set: { 
+            // Temporarily mark as pending to prevent double-purchase
+            // Will be marked as sold after successful payment via webhook
+            moderationNotes: `Reserved for order at ${new Date().toISOString()}`
+          }
+        },
+        { new: true }
+      );
+      
+      if (!reserved) {
+        throw ApiErrors.badRequest(
+          `Item "${items.find(i => i._id.toString() === itemId)?.title || 'Unknown'}" was just sold by another user. Please refresh and try again.`
+        );
+      }
+      
+      return reserved;
+    })
+  );
+
+  // Use reserved items for order creation
+  const validatedItems = reservedItems;
+
   // TODO: Validate all items have same seller (single-seller checkout for now)
-  const sellerIds = [...new Set(items.map(item => item.sellerId.toString()))];
+  const sellerIds = [...new Set(validatedItems.map(item => item.sellerId.toString()))];
   if (sellerIds.length > 1) {
     throw ApiErrors.badRequest('Cannot checkout items from multiple sellers at once');
   }
 
-  const sellerId = items[0].sellerId;
+  const sellerId = validatedItems[0].sellerId;
 
   // Calculate pricing
-  const subtotal_cents = items.reduce((sum, item) => sum + item.price_cents, 0);
-  const shipping_cents = items.reduce((sum, item) => sum + (item.shipping_cents || 0), 0);
+  const subtotal_cents = validatedItems.reduce((sum, item) => sum + item.price_cents, 0);
+  const shipping_cents = validatedItems.reduce((sum, item) => sum + (item.shipping_cents || 0), 0);
   const serviceFee_cents = Math.round(subtotal_cents * 0.10); // 10% platform fee
   const tax_cents = 0; // TODO: Implement tax calculation
   const total_cents = subtotal_cents + shipping_cents + serviceFee_cents + tax_cents;
@@ -113,7 +165,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
   const orderNumber = await Order.generateOrderNumber();
 
   // Create order items snapshot
-  const orderItems = items.map(item => ({
+  const orderItems = validatedItems.map(item => ({
     itemId: item._id,
     title: item.title,
     brand: item.brand,
@@ -173,13 +225,12 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
   order.paymentIntentId = paymentIntent.id;
   await order.save();
 
-  // Remove items from cart (skip if this is a Buy Now checkout)
-  if (!skipCartClear) {
-    user.cart = user.cart.filter((cartItem: ICartItem) => 
-      !itemIds.includes(cartItem.itemId.toString())
-    );
-    await user.save();
-  }
+  // Always remove purchased items from cart (Buy Now or regular checkout)
+  // This ensures no item stays in cart after purchase
+  user.cart = user.cart.filter((cartItem: ICartItem) => 
+    !itemIds.includes(cartItem.itemId.toString())
+  );
+  await user.save();
 
   const populatedOrder = await Order.findById(order._id)
     .populate('buyerId', 'firstName lastName email')

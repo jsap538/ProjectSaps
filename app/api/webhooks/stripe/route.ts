@@ -151,7 +151,17 @@ async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
   order.cancellationReason = 'Payment failed';
   await order.save();
 
-  console.log(`❌ Order ${order.orderNumber} payment failed`);
+  // CRITICAL: Release reserved items back to marketplace
+  // Clear the reservation so items can be purchased by others
+  const itemIds = order.items.map((item: any) => item.itemId);
+  await Item.updateMany(
+    { _id: { $in: itemIds } },
+    {
+      $set: { moderationNotes: '' }, // Clear reservation
+    }
+  );
+
+  console.log(`❌ Order ${order.orderNumber} payment failed - items released back to marketplace`);
   // TODO: Send failure notification to buyer
 }
 
@@ -172,7 +182,16 @@ async function handlePaymentCanceled(paymentIntent: Stripe.PaymentIntent) {
   order.cancellationReason = 'Payment canceled';
   await order.save();
 
-  console.log(`🚫 Order ${order.orderNumber} payment canceled`);
+  // CRITICAL: Release reserved items back to marketplace
+  const itemIds = order.items.map((item: any) => item.itemId);
+  await Item.updateMany(
+    { _id: { $in: itemIds } },
+    {
+      $set: { moderationNotes: '' }, // Clear reservation
+    }
+  );
+
+  console.log(`🚫 Order ${order.orderNumber} payment canceled - items released back to marketplace`);
 }
 
 /**

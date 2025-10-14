@@ -34,13 +34,31 @@ export default function CheckoutPage() {
       // Use either Buy Now item or cart items
       const itemIds = buyNowItemId ? [buyNowItemId] : cart.map(item => item.itemId);
 
+      // Validate items are still available before creating payment intent
+      const validationPromises = itemIds.map(async (itemId) => {
+        const res = await fetch(`/api/items/${itemId}`);
+        const itemData = await res.json();
+        return { 
+          id: itemId, 
+          available: itemData.success && itemData.data.isActive && !itemData.data.isSold,
+          title: itemData.data?.title 
+        };
+      });
+
+      const validationResults = await Promise.all(validationPromises);
+      const unavailable = validationResults.filter(r => !r.available);
+      
+      if (unavailable.length > 0) {
+        const unavailableNames = unavailable.map(r => r.title).join(', ');
+        throw new Error(`The following items are no longer available: ${unavailableNames}. Please refresh and try again.`);
+      }
+
       const response = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           items: itemIds,
           shippingAddressIndex: 0, // TODO: Let user select
-          skipCartClear: !!buyNowItemId, // Don't clear cart for Buy Now purchases
         }),
       });
 
