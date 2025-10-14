@@ -92,7 +92,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
 
   if (items.length !== itemIds.length) {
     // Find which specific items are unavailable for better error messaging
-    const foundIds = items.map(item => item._id.toString());
+    const foundIds = items.map(item => String(item._id));
     const unavailableIds = itemIds.filter(id => !foundIds.includes(id));
     
     // Re-check if items became unavailable (sold by another user)
@@ -135,7 +135,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
       
       if (!reserved) {
         throw ApiErrors.badRequest(
-          `Item "${items.find(i => i._id.toString() === itemId)?.title || 'Unknown'}" was just sold by another user. Please refresh and try again.`
+          `Item "${items.find(i => String(i._id) === itemId)?.title || 'Unknown'}" was just sold by another user. Please refresh and try again.`
         );
       }
       
@@ -147,7 +147,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
   const validatedItems = reservedItems;
 
   // TODO: Validate all items have same seller (single-seller checkout for now)
-  const sellerIds = [...new Set(validatedItems.map(item => item.sellerId.toString()))];
+  const sellerIds = [...new Set(validatedItems.map(item => String(item.sellerId)))];
   if (sellerIds.length > 1) {
     throw ApiErrors.badRequest('Cannot checkout items from multiple sellers at once');
   }
