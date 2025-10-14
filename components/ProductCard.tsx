@@ -9,6 +9,7 @@ import { useWatchlist } from "@/contexts/WatchlistContext";
 import { useState } from "react";
 import { Heart, HeartOff } from "lucide-react";
 import type { IItemImage } from "@/types";
+import { useUser } from "@clerk/nextjs";
 
 interface ProductCardProps {
   item: {
@@ -18,6 +19,7 @@ interface ProductCardProps {
     price_cents: number;
     images?: IItemImage[];
     condition: string;
+    sellerId?: any;
   };
 }
 
@@ -28,8 +30,12 @@ export default function ProductCard({ item }: ProductCardProps) {
   const { addToWatchlist, removeFromWatchlist, isInWatchlist, isItemLoading: isWatchlistItemLoading } = useWatchlist();
   const [isAdding, setIsAdding] = useState(false);
   const [isWatchlistLoading, setIsWatchlistLoading] = useState(false);
+  const { user } = useUser();
 
   const isInCart = cart.some(cartItem => cartItem.itemId === item._id);
+  
+  // Check if this is the user's own item
+  const isOwnItem = user && item.sellerId?._id === user.id;
 
   const _handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -148,27 +154,38 @@ export default function ProductCard({ item }: ProductCardProps) {
       
       {/* Action Buttons */}
       <div className="p-4 pt-0 flex gap-2">
-        <button
-          onClick={handleCartToggle}
-          disabled={isAdding || isCartItemLoading(item._id)}
-          className={`flex-1 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-sap disabled:cursor-not-allowed ${
-            isInCart 
-              ? 'bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:border-red-500/40' 
-              : 'bg-titanium/10 border border-titanium/20 text-titanium hover:bg-titanium/20 hover:border-titanium/40 disabled:opacity-50'
-          }`}
-        >
-          {isInCart 
-            ? (isAdding || isCartItemLoading(item._id) ? 'Removing...' : 'Remove')
-            : (isAdding || isCartItemLoading(item._id) ? 'Adding...' : 'Add to Cart')
-          }
-        </button>
-        
-        <button
-          onClick={handleBuyNow}
-          className="flex-1 rounded-xl bg-porcelain text-ink px-3 py-2.5 text-sm font-semibold transition-transform duration-sap hover:-translate-y-px shadow-subtle"
-        >
-          View Details
-        </button>
+        {isOwnItem ? (
+          <button
+            onClick={handleBuyNow}
+            className="flex-1 rounded-xl bg-titanium/10 border border-titanium/20 text-titanium px-3 py-2.5 text-sm font-medium transition-all duration-sap hover:bg-titanium/20 hover:border-titanium/40"
+          >
+            Your Listing
+          </button>
+        ) : (
+          <>
+            <button
+              onClick={handleCartToggle}
+              disabled={isAdding || isCartItemLoading(item._id)}
+              className={`flex-1 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-sap disabled:cursor-not-allowed ${
+                isInCart 
+                  ? 'bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:border-red-500/40' 
+                  : 'bg-titanium/10 border border-titanium/20 text-titanium hover:bg-titanium/20 hover:border-titanium/40 disabled:opacity-50'
+              }`}
+            >
+              {isInCart 
+                ? (isAdding || isCartItemLoading(item._id) ? 'Removing...' : 'Remove')
+                : (isAdding || isCartItemLoading(item._id) ? 'Adding...' : 'Add to Cart')
+              }
+            </button>
+            
+            <button
+              onClick={handleBuyNow}
+              className="flex-1 rounded-xl bg-porcelain text-ink px-3 py-2.5 text-sm font-semibold transition-transform duration-sap hover:-translate-y-px shadow-subtle"
+            >
+              View Details
+            </button>
+          </>
+        )}
       </div>
     </motion.article>
   );

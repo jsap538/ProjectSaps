@@ -11,6 +11,7 @@ import ImageLightbox from "@/components/ImageLightbox";
 import ReportModal from "@/components/ReportModal";
 import CategoryAttributesDisplay from "@/components/CategoryAttributesDisplay";
 import { Flag } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
 interface PopulatedItem extends Omit<IItem, 'sellerId'> {
   sellerId: {
@@ -35,6 +36,7 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const { addToCart, removeFromCart, isInCart, isItemLoading } = useCart();
   const router = useRouter();
+  const { user } = useUser();
 
   const fetchItem = useCallback(async () => {
     try {
@@ -113,6 +115,9 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
   const price = (item.price_cents / 100).toFixed(2);
   const shipping = (item.shipping_cents / 100).toFixed(2);
   const total = ((item.price_cents + item.shipping_cents) / 100).toFixed(2);
+  
+  // Check if current user is the seller
+  const isOwnItem = user && item.sellerId?._id === user.id;
 
   return (
     <div className="min-h-screen bg-ink">
@@ -283,36 +288,48 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
             </div>
 
             {/* CTA Buttons */}
-            <div className="space-y-4">
-              <button
-                onClick={handleBuyNow}
-                disabled={!item.isActive || !item.isApproved || item.isSold}
-                className="w-full rounded-xl bg-porcelain text-ink px-6 py-4 text-base font-semibold shadow-soft transition-transform duration-sap hover:-translate-y-px hover:shadow-soft disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
-              >
-                {item.isSold ? 'Sold Out' : `Buy Now - $${total}`}
-              </button>
-              
-              <div className="flex gap-3">
-                <button
-                  onClick={handleCartToggle}
-                  disabled={isAddingToCart || isItemLoading(item._id)}
-                  className={`flex-1 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-sap disabled:cursor-not-allowed ${
-                    isInCart(item._id)
-                      ? 'bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:border-red-500/40'
-                      : 'bg-titanium/10 border border-titanium/20 text-titanium hover:bg-titanium/20 hover:border-titanium/40 disabled:opacity-50'
-                  }`}
+            {isOwnItem ? (
+              <div className="rounded-xl bg-titanium/10 border border-titanium/20 px-6 py-4 text-center">
+                <p className="text-titanium font-medium">This is your listing</p>
+                <Link
+                  href="/dashboard"
+                  className="text-sm text-nickel hover:text-porcelain transition-colors duration-sap mt-2 inline-block"
                 >
-                  {isInCart(item._id)
-                    ? (isAddingToCart || isItemLoading(item._id) ? 'Removing...' : 'Remove from Cart')
-                    : (isAddingToCart || isItemLoading(item._id) ? 'Adding...' : 'Add to Cart')
-                  }
+                  Manage in Dashboard →
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <button
+                  onClick={handleBuyNow}
+                  disabled={!item.isActive || !item.isApproved || item.isSold}
+                  className="w-full rounded-xl bg-porcelain text-ink px-6 py-4 text-base font-semibold shadow-soft transition-transform duration-sap hover:-translate-y-px hover:shadow-soft disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                >
+                  {item.isSold ? 'Sold Out' : `Buy Now - $${total}`}
                 </button>
                 
-                <button className="flex-1 rounded-xl bg-titanium/10 border border-titanium/20 px-4 py-3 text-sm font-medium text-titanium transition-all duration-sap hover:bg-titanium/20 hover:border-titanium/40">
-                  Make an Offer
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleCartToggle}
+                    disabled={isAddingToCart || isItemLoading(item._id)}
+                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-sap disabled:cursor-not-allowed ${
+                      isInCart(item._id)
+                        ? 'bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:border-red-500/40'
+                        : 'bg-titanium/10 border border-titanium/20 text-titanium hover:bg-titanium/20 hover:border-titanium/40 disabled:opacity-50'
+                    }`}
+                  >
+                    {isInCart(item._id)
+                      ? (isAddingToCart || isItemLoading(item._id) ? 'Removing...' : 'Remove from Cart')
+                      : (isAddingToCart || isItemLoading(item._id) ? 'Adding...' : 'Add to Cart')
+                    }
+                  </button>
+                  
+                  <button className="flex-1 rounded-xl bg-titanium/10 border border-titanium/20 px-4 py-3 text-sm font-medium text-titanium transition-all duration-sap hover:bg-titanium/20 hover:border-titanium/40">
+                    Make an Offer
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Trust Badges */}
             <div className="mt-8 flex items-center justify-center gap-6 text-xs text-nickel">

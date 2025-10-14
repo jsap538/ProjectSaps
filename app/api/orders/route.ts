@@ -162,6 +162,11 @@ export const POST = withRateLimit(rateLimiters.general, withErrorHandling(async 
 
   const sellerId = validatedItems[0].sellerId;
 
+  // SECURITY: Prevent sellers from buying their own items
+  if (String(sellerId) === String(user._id)) {
+    throw ApiErrors.badRequest('You cannot purchase your own items. Please remove them from your cart.');
+  }
+
   // Calculate pricing
   const subtotal_cents = validatedItems.reduce((sum, item) => sum + item.price_cents, 0);
   const shipping_cents = validatedItems.reduce((sum, item) => sum + (item.shipping_cents || 0), 0);

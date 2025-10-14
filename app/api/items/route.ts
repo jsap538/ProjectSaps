@@ -129,10 +129,10 @@ export async function GET(request: NextRequest) {
     
     // Add text score to projection if searching
     if (filters.search) {
-      queryBuilder.select('title brand price_cents shipping_cents images condition category color isActive isApproved isSold stats createdAt categoryAttributes score');
+      queryBuilder.select('title brand price_cents shipping_cents images condition category color isActive isApproved isSold stats createdAt categoryAttributes sellerId score');
       queryBuilder.select({ score: { $meta: 'textScore' } });
     } else {
-      queryBuilder.select('title brand price_cents shipping_cents images condition category color isActive isApproved isSold stats createdAt categoryAttributes');
+      queryBuilder.select('title brand price_cents shipping_cents images condition category color isActive isApproved isSold stats createdAt categoryAttributes sellerId');
     }
     
     const [items, total] = await Promise.all([

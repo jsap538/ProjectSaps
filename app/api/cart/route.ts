@@ -95,6 +95,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
+    // Prevent users from adding their own items to cart
+    if (String(item.sellerId) === String(user._id)) {
+      return NextResponse.json({ 
+        error: 'You cannot add your own items to your cart.' 
+      }, { status: 400 });
+    }
+
     // Check if item is already in cart
     const existingCartItem = user.cart.find((cartItem: ICartItem) => cartItem.itemId.toString() === itemId);
     
