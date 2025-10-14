@@ -5,7 +5,8 @@ import { User, Item, Order } from '@/models';
 import { ICartItem } from '@/models/User';
 import { withErrorHandling, ApiErrors, successResponse } from '@/lib/errors';
 import { corsHeaders } from '@/lib/security';
-import { stripe, calculatePlatformFee } from '@/lib/stripe';
+import { stripe } from '@/lib/stripe';
+import { calculatePlatformFee } from '@/lib/format';
 
 /**
  * GET /api/orders - Get user's orders (buyer or seller)
@@ -54,17 +55,31 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
   if (!user) throw ApiErrors.notFound('User');
   if (!user.canBuy()) throw ApiErrors.forbidden('Account suspended or inactive');
 
-  const { items: itemIds, shippingAddressIndex, buyerNotes } = await request.json();
+  const { items: itemIds, shippingAddressIndex, buyerNotes, shippingAddress: providedAddress } = await request.json();
 
   // Validate inputs
   if (!itemIds || !Array.isArray(itemIds) || itemIds.length === 0) {
     throw ApiErrors.badRequest('At least one item is required');
   }
 
-  // Get shipping address
-  const shippingAddress = user.addresses[shippingAddressIndex ?? user.defaultShippingAddressIndex ?? 0];
+  // Get shipping address from user's saved addresses or use provided address
+  let shippingAddress = user.addresses[shippingAddressIndex ?? user.defaultShippingAddressIndex ?? 0];
+  
+  // If no saved address, use the provided address from checkout form
+  if (!shippingAddress && providedAddress) {
+    shippingAddress = providedAddress;
+  }
+  
+  // If still no address, create a default one (will be updated during checkout)
   if (!shippingAddress) {
-    throw ApiErrors.badRequest('Shipping address is required');
+    shippingAddress = {
+      fullName: `${user.firstName} ${user.lastName}`,
+      street1: 'To be collected during checkout',
+      city: 'TBD',
+      state: 'TBD',
+      postalCode: '00000',
+      country: 'US',
+    };
   }
 
   // Fetch all items and validate availability
