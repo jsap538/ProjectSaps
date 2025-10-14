@@ -3,6 +3,7 @@ import { auth } from '@clerk/nextjs/server';
 import connectDB from '@/lib/mongodb';
 import User, { ICartItem } from '@/models/User';
 import Item from '@/models/Item';
+import { sanitizeObjectId } from '@/lib/security';
 
 // GET /api/cart - Get user's cart
 export async function GET() {
@@ -72,10 +73,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { itemId, quantity = 1 } = await request.json();
+    const { itemId: rawItemId, quantity = 1 } = await request.json();
 
+    // SECURITY: Sanitize itemId to prevent NoSQL injection
+    const itemId = sanitizeObjectId(rawItemId);
     if (!itemId) {
-      return NextResponse.json({ error: 'Item ID is required' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid Item ID' }, { status: 400 });
     }
 
     await connectDB();
@@ -135,11 +138,13 @@ export async function DELETE(request: NextRequest) {
     const body = await request.json();
     console.log('DELETE request body:', body); // Debug log
     
-    const { itemId } = body;
+    const { itemId: rawItemId } = body;
 
+    // SECURITY: Sanitize itemId to prevent NoSQL injection
+    const itemId = sanitizeObjectId(rawItemId);
     if (!itemId) {
-      console.error('No itemId in request body:', body);
-      return NextResponse.json({ error: 'Item ID is required' }, { status: 400 });
+      console.error('Invalid itemId in request body:', body);
+      return NextResponse.json({ error: 'Invalid Item ID' }, { status: 400 });
     }
 
     await connectDB();

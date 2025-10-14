@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import connectDB from '@/lib/mongodb';
 import { User, Item, Report } from '@/models';
-import { corsHeaders } from '@/lib/security';
+import { corsHeaders, sanitizeObjectId } from '@/lib/security';
 
 // POST /api/reports - Create a new report
 export async function POST(request: NextRequest) {
@@ -26,12 +26,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { itemId, reason, description } = await request.json();
+    const { itemId: rawItemId, reason, description } = await request.json();
 
-    // Validate inputs
+    // SECURITY: Sanitize itemId to prevent NoSQL injection
+    const itemId = sanitizeObjectId(rawItemId);
     if (!itemId) {
       return NextResponse.json(
-        { error: 'Item ID is required' },
+        { error: 'Invalid Item ID' },
         { status: 400, headers: corsHeaders }
       );
     }

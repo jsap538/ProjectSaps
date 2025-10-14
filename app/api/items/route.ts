@@ -5,7 +5,7 @@ import Item from '@/models/Item';
 import User from '@/models/User';
 import { withRateLimit, rateLimiters } from '@/lib/rate-limit';
 import { sanitizeAndValidate, itemSchema } from '@/lib/validation';
-import { corsHeaders } from '@/lib/security';
+import { corsHeaders, sanitizeSearchQuery } from '@/lib/security';
 import { apiCache } from '@/lib/cache';
 import type { IItem, ItemFilters, ApiResponse } from '@/types';
 
@@ -34,14 +34,14 @@ export async function GET(request: NextRequest) {
 
     const filters: ItemFilters = {
       page: parseInt(queryParams.page || '1'),
-      limit: parseInt(queryParams.limit || '12'),
+      limit: Math.min(parseInt(queryParams.limit || '12'), 50), // Cap at 50 to prevent abuse
       category: queryParams.category,
       brand: queryParams.brand,
       condition: queryParams.condition,
       color: queryParams.color,
       minPrice: queryParams.minPrice ? parseInt(queryParams.minPrice) : undefined,
       maxPrice: queryParams.maxPrice ? parseInt(queryParams.maxPrice) : undefined,
-      search: queryParams.search,
+      search: queryParams.search ? sanitizeSearchQuery(queryParams.search) : undefined,
       sortBy,
     };
 

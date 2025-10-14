@@ -28,13 +28,33 @@ export const rateLimitConfig = {
   legacyHeaders: false,
 };
 
-// Input sanitization
+// Input sanitization - Prevents XSS attacks
 export function sanitizeInput(input: string): string {
+  if (typeof input !== 'string') {
+    return '';
+  }
+  
   return input
     .trim()
     .replace(/[<>]/g, '') // Remove potential HTML tags
     .replace(/javascript:/gi, '') // Remove javascript: protocol
-    .replace(/on\w+\s*=/gi, ''); // Remove event handlers
+    .replace(/on\w+\s*=/gi, '') // Remove event handlers
+    .replace(/data:/gi, '') // Remove data: protocol
+    .replace(/vbscript:/gi, ''); // Remove vbscript: protocol
+}
+
+// Sanitize search query to prevent injection and XSS
+export function sanitizeSearchQuery(query: string): string {
+  if (typeof query !== 'string') {
+    return '';
+  }
+  
+  return query
+    .trim()
+    .slice(0, 200) // Limit length to prevent DoS
+    .replace(/[<>'"]/g, '') // Remove HTML/JS injection characters
+    .replace(/\$/g, '') // Remove MongoDB operators
+    .replace(/\\/g, ''); // Remove escape characters
 }
 
 // Validate file upload
@@ -108,9 +128,30 @@ export function withSecurity(handler: (request: NextRequest, ...args: unknown[])
   };
 }
 
-// Validate MongoDB ObjectId
+// Validate MongoDB ObjectId - CRITICAL for preventing NoSQL injection
 export function isValidObjectId(id: string): boolean {
+  // Only accept strings, reject objects (prevents injection attacks)
+  if (typeof id !== 'string') {
+    return false;
+  }
   return /^[0-9a-fA-F]{24}$/.test(id);
+}
+
+// Sanitize ObjectId - Safe wrapper for database queries
+export function sanitizeObjectId(id: any): string | null {
+  // Reject non-string inputs (prevents NoSQL injection via objects)
+  if (typeof id !== 'string') {
+    console.warn('Security: Rejected non-string ObjectId:', typeof id);
+    return null;
+  }
+  
+  // Validate format
+  if (!isValidObjectId(id)) {
+    console.warn('Security: Rejected invalid ObjectId format:', id);
+    return null;
+  }
+  
+  return id;
 }
 
 // CORS configuration for API routes

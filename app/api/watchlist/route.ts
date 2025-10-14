@@ -4,6 +4,7 @@ import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import Item from '@/models/Item';
 import mongoose from 'mongoose';
+import { sanitizeObjectId } from '@/lib/security';
 
 // GET /api/watchlist - Get user's watchlist
 export async function GET() {
@@ -60,10 +61,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { itemId } = await request.json();
+    const { itemId: rawItemId } = await request.json();
 
+    // SECURITY: Sanitize itemId to prevent NoSQL injection
+    const itemId = sanitizeObjectId(rawItemId);
     if (!itemId) {
-      return NextResponse.json({ error: 'Item ID is required' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid Item ID' }, { status: 400 });
     }
 
     await connectDB();
@@ -122,10 +125,12 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { itemId } = await request.json();
+    const { itemId: rawItemId } = await request.json();
 
+    // SECURITY: Sanitize itemId to prevent NoSQL injection
+    const itemId = sanitizeObjectId(rawItemId);
     if (!itemId) {
-      return NextResponse.json({ error: 'Item ID is required' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid Item ID' }, { status: 400 });
     }
 
     await connectDB();

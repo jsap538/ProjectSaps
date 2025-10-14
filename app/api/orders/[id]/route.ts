@@ -3,7 +3,7 @@ import { auth } from '@clerk/nextjs/server';
 import connectDB from '@/lib/mongodb';
 import { User, Order } from '@/models';
 import { withErrorHandling, ApiErrors, successResponse } from '@/lib/errors';
-import { corsHeaders } from '@/lib/security';
+import { corsHeaders, sanitizeObjectId } from '@/lib/security';
 
 interface RouteContext {
   params: Promise<{ id: string }>;
@@ -24,7 +24,11 @@ export const GET = withErrorHandling(async (
   const user = await User.findOne({ clerkId: userId });
   if (!user) throw ApiErrors.notFound('User');
 
-  const { id } = await context.params;
+  const { id: rawId } = await context.params;
+  
+  // SECURITY: Sanitize order ID to prevent NoSQL injection
+  const id = sanitizeObjectId(rawId);
+  if (!id) throw ApiErrors.badRequest('Invalid Order ID');
   
   const order = await Order.findById(id)
     .populate('buyerId', 'firstName lastName email profileImageUrl')
@@ -60,7 +64,12 @@ export const PATCH = withErrorHandling(async (
   const user = await User.findOne({ clerkId: userId });
   if (!user) throw ApiErrors.notFound('User');
 
-  const { id } = await context.params;
+  const { id: rawId } = await context.params;
+  
+  // SECURITY: Sanitize order ID to prevent NoSQL injection
+  const id = sanitizeObjectId(rawId);
+  if (!id) throw ApiErrors.badRequest('Invalid Order ID');
+  
   const { action, tracking, cancellationReason } = await request.json();
 
   const order = await Order.findById(id);

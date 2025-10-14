@@ -4,9 +4,10 @@ import connectDB from '@/lib/mongodb';
 import { User, Item, Order } from '@/models';
 import { ICartItem } from '@/models/User';
 import { withErrorHandling, ApiErrors, successResponse } from '@/lib/errors';
-import { corsHeaders } from '@/lib/security';
+import { corsHeaders, sanitizeObjectId } from '@/lib/security';
 import { stripe } from '@/lib/stripe';
 import { calculatePlatformFee } from '@/lib/format';
+import { withRateLimit, rateLimiters } from '@/lib/rate-limit';
 
 /**
  * GET /api/orders - Get user's orders (buyer or seller)
@@ -45,7 +46,7 @@ export const GET = withErrorHandling(async (request: NextRequest) => {
 /**
  * POST /api/orders - Create new order (checkout)
  */
-export const POST = withErrorHandling(async (request: NextRequest) => {
+export const POST = withRateLimit(rateLimiters.general, withErrorHandling(async (request: NextRequest) => {
   const { userId } = await auth();
   if (!userId) throw ApiErrors.unauthorized();
 
@@ -55,11 +56,18 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
   if (!user) throw ApiErrors.notFound('User');
   if (!user.canBuy()) throw ApiErrors.forbidden('Account suspended or inactive');
 
-  const { items: itemIds, shippingAddressIndex, buyerNotes, shippingAddress: providedAddress } = await request.json();
+  const { items: rawItemIds, shippingAddressIndex, buyerNotes, shippingAddress: providedAddress } = await request.json();
 
   // Validate inputs
-  if (!itemIds || !Array.isArray(itemIds) || itemIds.length === 0) {
+  if (!rawItemIds || !Array.isArray(rawItemIds) || rawItemIds.length === 0) {
     throw ApiErrors.badRequest('At least one item is required');
+  }
+
+  // SECURITY: Sanitize all item IDs to prevent NoSQL injection
+  const itemIds = rawItemIds.map(id => sanitizeObjectId(id)).filter(id => id !== null) as string[];
+  
+  if (itemIds.length === 0 || itemIds.length !== rawItemIds.length) {
+    throw ApiErrors.badRequest('One or more invalid Item IDs provided');
   }
 
   // Get shipping address from user's saved addresses or use provided address
@@ -245,7 +253,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
     'Order created successfully. Complete payment to confirm.',
     201
   );
-});
+}));
 
 /**
  * OPTIONS /api/orders - CORS preflight
