@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import ImageUpload from "@/components/ImageUpload";
+import DynamicFormFields from "@/components/DynamicFormFields";
+import { getCategoryOptions, getFieldsForCategory } from "@/data/categoryFields";
 
 interface FormData {
   title: string;
@@ -15,8 +17,9 @@ interface FormData {
   category: string;
   color: string;
   material: string;
-  width_cm: number;
   location: string;
+  // Dynamic fields will be stored here
+  [key: string]: any;
 }
 
 export default function SellFormPage() {
@@ -40,27 +43,29 @@ export default function SellFormPage() {
     category: "",
     color: "",
     material: "",
-    width_cm: 0,
     location: "",
   });
 
+  // Get dynamic fields for selected category
+  const categoryFields = formData.category ? getFieldsForCategory(formData.category) : [];
+
   const conditions = ["New", "Like New", "Good", "Fair", "Poor"];
-  const categories = ["tie", "belt", "cufflinks", "pocket-square"];
+  const categoryOptions = getCategoryOptions();
   const brands = [
-    "Drake's", "Tom Ford", "Brunello Cucinelli", "Hermes", "Tiffany & Co.",
-    "Brooks Brothers", "Turnbull & Asser", "Charvet", "Brioni", "Other"
+    "Nike", "Adidas", "Ralph Lauren", "Tom Ford", "Gucci", "Prada", "Armani",
+    "Hugo Boss", "Burberry", "Versace", "Dolce & Gabbana", "Saint Laurent",
+    "Balenciaga", "Dior", "Fendi", "Givenchy", "Off-White", "Supreme",
+    "Drake's", "Brunello Cucinelli", "Hermes", "Rolex", "Omega", "TAG Heuer",
+    "Brooks Brothers", "J.Crew", "Banana Republic", "Zara", "H&M", "Uniqlo",
+    "Levi's", "Wrangler", "Lee", "Calvin Klein", "Tommy Hilfiger", "Lacoste",
+    "Other"
   ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     
     // Convert numeric fields properly
-    if (name === 'width_cm') {
-      setFormData(prev => ({
-        ...prev,
-        [name]: parseFloat(value) || 0
-      }));
-    } else if (name.includes('_cents')) {
+    if (name.includes('_cents')) {
       setFormData(prev => ({
         ...prev,
         [name]: parseInt(value) || 0
@@ -71,6 +76,14 @@ export default function SellFormPage() {
         [name]: value
       }));
     }
+  };
+
+  // Handler for dynamic category-specific fields
+  const handleDynamicFieldChange = (name: string, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleImagesChange = (newImages: string[]) => {
@@ -141,20 +154,26 @@ export default function SellFormPage() {
         return;
       }
 
-      // Prepare item data, excluding zero values for optional fields
+      // Prepare item data, excluding empty optional fields
       const itemData: Record<string, unknown> = {
         ...formData,
         images: images,
       };
       
-      // Remove width_cm if it's 0 (optional field)
-      if (itemData.width_cm === 0) {
-        delete itemData.width_cm;
-      }
-      
       // Remove material if empty (optional field)
       if (!itemData.material || (typeof itemData.material === 'string' && itemData.material.trim() === '')) {
         delete itemData.material;
+      }
+
+      // Add category-specific fields to dimensions object for backward compatibility
+      const dimensions: Record<string, number> = {};
+      categoryFields.forEach(field => {
+        if (field.type === 'number' && formData[field.name]) {
+          dimensions[field.name] = formData[field.name];
+        }
+      });
+      if (Object.keys(dimensions).length > 0) {
+        itemData.dimensions = dimensions;
       }
 
       console.log('Submitting item data:', itemData); // Debug log
@@ -314,15 +333,25 @@ export default function SellFormPage() {
                   className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-700 dark:bg-[#151821] dark:text-white"
                 >
                   <option value="">Select a category</option>
-                  {categories.map(category => (
-                    <option key={category} value={category}>
-                      {category.charAt(0).toUpperCase() + category.slice(1)}
+                  {categoryOptions.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
                     </option>
                   ))}
                 </select>
+                <p className="mt-1 text-xs text-gray-500">Choose the category that best matches your item</p>
               </div>
             </div>
           </div>
+
+          {/* Dynamic Category-Specific Fields */}
+          {categoryFields.length > 0 && (
+            <DynamicFormFields
+              fields={categoryFields}
+              formData={formData}
+              onChange={handleDynamicFieldChange}
+            />
+          )}
 
           {/* Pricing */}
           <div className="bg-white dark:bg-[#1f2329] rounded-xl sm:rounded-2xl p-4 sm:p-8 shadow-sm ring-1 ring-gray-200 dark:ring-gray-800">
@@ -439,42 +468,6 @@ export default function SellFormPage() {
                   maxLength={30}
                   className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-700 dark:bg-[#151821] dark:text-white"
                   placeholder="e.g., Navy, Black, Burgundy"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Material <span className="text-gray-400 text-xs">(Optional)</span>
-                </label>
-                <input
-                  type="text"
-                  name="material"
-                  value={formData.material}
-                  onChange={handleInputChange}
-                  maxLength={50}
-                  className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-700 dark:bg-[#151821] dark:text-white"
-                  placeholder="e.g., Silk, Wool, Leather"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Width (cm) <span className="text-gray-400 text-xs">(Optional)</span>
-                </label>
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  name="width_cm"
-                  value={formData.width_cm || ''}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    // Only allow numbers and decimal point
-                    if (value === '' || /^\d*\.?\d*$/.test(value)) {
-                      handleInputChange(e);
-                    }
-                  }}
-                  className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-700 dark:bg-[#151821] dark:text-white"
-                  placeholder="8"
                 />
               </div>
 

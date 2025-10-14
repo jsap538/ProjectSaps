@@ -175,11 +175,20 @@ export const POST = withRateLimit(rateLimiters.createItem, async (request: NextR
       isMain: index === 0,
     }));
     
-    // Convert width_cm to dimensions object
-    const dimensions: any = {};
-    if (itemData.width_cm && itemData.width_cm > 0) {
-      dimensions.width_cm = itemData.width_cm;
-    }
+    // Extract category-specific attributes and dimensions
+    const categoryAttributes: any = {};
+    const dimensions: any = itemData.dimensions || {};
+    
+    // Known base fields to exclude from categoryAttributes
+    const baseFields = ['title', 'description', 'brand', 'price_cents', 'shipping_cents', 
+                         'images', 'condition', 'category', 'color', 'material', 'location', 'dimensions'];
+    
+    // Store all additional fields as category attributes
+    Object.keys(itemData).forEach(key => {
+      if (!baseFields.includes(key)) {
+        categoryAttributes[key] = itemData[key];
+      }
+    });
     
     // Hybrid Approval Logic
     // Auto-approve for verified sellers with good track record
@@ -205,6 +214,7 @@ export const POST = withRateLimit(rateLimiters.createItem, async (request: NextR
       isApproved: shouldAutoApprove, // Auto-approve trusted sellers
       isSold: false,
       dimensions,
+      categoryAttributes, // Store dynamic category-specific fields
     };
     
     // Add optional fields if present

@@ -224,7 +224,20 @@ const ItemSchema = new Schema<IItem>({
   category: {
     type: String,
     required: true,
-    enum: ['tie', 'belt', 'cufflinks', 'pocket-square'],
+    enum: [
+      // Original categories
+      'tie', 'belt', 'cufflinks', 'pocket-square',
+      // Tops
+      'dress-shirt', 'casual-shirt', 't-shirt', 'polo-shirt', 'sweater',
+      // Bottoms
+      'dress-pants', 'jeans', 'chinos', 'shorts',
+      // Outerwear
+      'suit-jacket', 'blazer', 'coat',
+      // Footwear
+      'dress-shoes', 'sneakers', 'boots',
+      // Accessories
+      'watch', 'bag', 'wallet', 'sunglasses', 'hat', 'scarf',
+    ],
     index: true,
   },
   color: {
@@ -241,6 +254,12 @@ const ItemSchema = new Schema<IItem>({
   // Measurements
   dimensions: {
     type: ItemDimensionsSchema,
+    default: () => ({}),
+  },
+
+  // Category-specific attributes (flexible schema for dynamic fields)
+  categoryAttributes: {
+    type: Schema.Types.Mixed,
     default: () => ({}),
   },
   

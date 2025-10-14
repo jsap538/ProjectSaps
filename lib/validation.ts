@@ -39,25 +39,33 @@ export const itemSchema = z.object({
     .min(1, 'At least one image is required')
     .max(10, 'Maximum 10 images allowed'),
   condition: z.enum(['New', 'Like New', 'Good', 'Fair', 'Poor']),
-  category: z.enum(['tie', 'belt', 'cufflinks', 'pocket-square']),
+  category: z.enum([
+    // Original categories
+    'tie', 'belt', 'cufflinks', 'pocket-square',
+    // Tops
+    'dress-shirt', 'casual-shirt', 't-shirt', 'polo-shirt', 'sweater',
+    // Bottoms
+    'dress-pants', 'jeans', 'chinos', 'shorts',
+    // Outerwear
+    'suit-jacket', 'blazer', 'coat',
+    // Footwear
+    'dress-shoes', 'sneakers', 'boots',
+    // Accessories
+    'watch', 'bag', 'wallet', 'sunglasses', 'hat', 'scarf',
+  ]),
   color: z.string()
     .min(1, 'Color is required')
     .max(30, 'Color name too long')
     .regex(/^[a-zA-Z\s\-]+$/, 'Color contains invalid characters'),
   material: z.string()
     .max(50, 'Material name too long')
-    .regex(/^[a-zA-Z\s\-]+$/, 'Material contains invalid characters')
+    .regex(/^[a-zA-Z\s\-,/()]+$/, 'Material contains invalid characters')
     .optional(),
-  width_cm: z.number()
-    .positive('Width must be positive')
-    .max(50, 'Width too large')
-    .optional()
-    .nullable(),
   location: z.string()
     .min(1, 'Location is required')
     .max(50, 'Location name too long')
     .regex(/^[a-zA-Z\s\-.,]+$/, 'Location contains invalid characters'),
-});
+}).passthrough(); // Allow additional dynamic fields
 
 // Update item schema (partial)
 export const updateItemSchema = itemSchema.partial().extend({
