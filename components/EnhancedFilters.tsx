@@ -130,10 +130,7 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
               onClick={() => applyQuickFilter(quickFilter)}
               className="px-3 py-2.5 rounded-lg text-xs font-medium transition-all duration-sap bg-graphite/60 text-nickel border border-porcelain/20 hover:bg-titanium/10 hover:text-titanium hover:border-titanium/30 text-left"
             >
-              <div className="flex items-center gap-1.5">
-                {quickFilter.icon && <span>{quickFilter.icon}</span>}
-                <span>{quickFilter.label}</span>
-              </div>
+              {quickFilter.label}
             </button>
           ))}
         </div>

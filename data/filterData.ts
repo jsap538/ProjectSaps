@@ -214,35 +214,30 @@ export interface QuickFilter {
 export const QUICK_FILTERS: QuickFilter[] = [
   {
     label: 'New Arrivals',
-    icon: '✨',
     filters: {
       // Will be handled by sortBy: newest + last 7 days
     }
   },
   {
     label: 'Under $50',
-    icon: '💰',
     filters: {
       priceRange: { min: 0, max: 5000 }
     }
   },
   {
     label: 'Luxury',
-    icon: '👑',
     filters: {
       brands: ['Hermès', 'Louis Vuitton', 'Gucci', 'Prada', 'Rolex', 'Tom Ford', 'Burberry']
     }
   },
   {
     label: 'Like New',
-    icon: '⭐',
     filters: {
       conditions: ['New', 'Like New']
     }
   },
   {
     label: 'Designer Deals',
-    icon: '🔥',
     filters: {
       brands: ['Gucci', 'Prada', 'Versace', 'Armani', 'Saint Laurent', 'Balenciaga'],
       priceRange: { min: 0, max: 10000 }
@@ -250,7 +245,6 @@ export const QUICK_FILTERS: QuickFilter[] = [
   },
   {
     label: 'Streetwear',
-    icon: '🎨',
     filters: {
       brands: ['Nike', 'Adidas', 'Supreme', 'Off-White', 'Yeezy', 'Jordan'],
       categories: ['Sneakers', 'T-Shirt', 'Hat']
@@ -258,14 +252,12 @@ export const QUICK_FILTERS: QuickFilter[] = [
   },
   {
     label: 'Watches',
-    icon: '⌚',
     filters: {
       categories: ['Watch']
     }
   },
   {
     label: 'Formal Wear',
-    icon: '🤵',
     filters: {
       categories: ['Dress Shirt', 'Dress Pants', 'Suit Jacket', 'Tie', 'Cufflinks', 'Dress Shoes']
     }
