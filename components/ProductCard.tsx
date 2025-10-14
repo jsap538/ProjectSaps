@@ -28,7 +28,6 @@ export default function ProductCard({ item }: ProductCardProps) {
   const { addToWatchlist, removeFromWatchlist, isInWatchlist, isItemLoading: isWatchlistItemLoading } = useWatchlist();
   const [isAdding, setIsAdding] = useState(false);
   const [isWatchlistLoading, setIsWatchlistLoading] = useState(false);
-  const [isBuyingNow, setIsBuyingNow] = useState(false);
 
   const isInCart = cart.some(cartItem => cartItem.itemId === item._id);
 
@@ -76,21 +75,12 @@ export default function ProductCard({ item }: ProductCardProps) {
     }
   };
 
-  const handleBuyNow = async (e: React.MouseEvent) => {
+  const handleBuyNow = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
-    setIsBuyingNow(true);
-    try {
-      // Add to cart if not already there
-      if (!isInCart) {
-        await addToCart(item._id, 1);
-      }
-      // Navigate to checkout
-      router.push('/checkout');
-    } finally {
-      setIsBuyingNow(false);
-    }
+    // Navigate to item detail page for more info and purchase
+    router.push(`/items/${item._id}`);
   };
 
   return (
@@ -175,10 +165,9 @@ export default function ProductCard({ item }: ProductCardProps) {
         
         <button
           onClick={handleBuyNow}
-          disabled={isBuyingNow}
-          className="flex-1 rounded-xl bg-porcelain text-ink px-3 py-2.5 text-sm font-semibold transition-transform duration-sap hover:-translate-y-px shadow-subtle disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+          className="flex-1 rounded-xl bg-porcelain text-ink px-3 py-2.5 text-sm font-semibold transition-transform duration-sap hover:-translate-y-px shadow-subtle"
         >
-          {isBuyingNow ? 'Processing...' : 'Buy Now'}
+          View Details
         </button>
       </div>
     </motion.article>
