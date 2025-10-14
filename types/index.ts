@@ -88,10 +88,16 @@ export interface IItem {
   lowestOfferPrice_cents?: number;
   images: IItemImage[];
   condition: 'New' | 'Like New' | 'Good' | 'Fair' | 'Poor';
-  category: 'tie' | 'belt' | 'cufflinks' | 'pocket-square';
+  category: 'tie' | 'belt' | 'cufflinks' | 'pocket-square' | 
+            'dress-shirt' | 'casual-shirt' | 't-shirt' | 'polo-shirt' | 'sweater' |
+            'dress-pants' | 'jeans' | 'chinos' | 'shorts' |
+            'suit-jacket' | 'blazer' | 'coat' |
+            'dress-shoes' | 'sneakers' | 'boots' |
+            'watch' | 'bag' | 'wallet' | 'sunglasses' | 'hat' | 'scarf';
   color: string;
   material?: string;
   dimensions?: IItemDimensions;
+  categoryAttributes?: Record<string, any>;
   location: string;
   shipsFrom?: string;
   shipsTo?: string[];
@@ -177,7 +183,14 @@ export interface SellerStats {
 
 // Constants - optimized for tree shaking
 export const ITEM_CONDITIONS = ['New', 'Like New', 'Good', 'Fair', 'Poor'] as const;
-export const ITEM_CATEGORIES = ['tie', 'belt', 'cufflinks', 'pocket-square'] as const;
+export const ITEM_CATEGORIES = [
+  'tie', 'belt', 'cufflinks', 'pocket-square',
+  'dress-shirt', 'casual-shirt', 't-shirt', 'polo-shirt', 'sweater',
+  'dress-pants', 'jeans', 'chinos', 'shorts',
+  'suit-jacket', 'blazer', 'coat',
+  'dress-shoes', 'sneakers', 'boots',
+  'watch', 'bag', 'wallet', 'sunglasses', 'hat', 'scarf',
+] as const;
 export const SORT_OPTIONS = [
   { value: 'newest', label: 'Newest First' },
   { value: 'price_cents', label: 'Price: Low to High' },

@@ -9,6 +9,7 @@ import { useCart } from "@/contexts/CartContext";
 import { ItemDetailSkeleton } from "@/components/Skeletons";
 import ImageLightbox from "@/components/ImageLightbox";
 import ReportModal from "@/components/ReportModal";
+import CategoryAttributesDisplay from "@/components/CategoryAttributesDisplay";
 import { Flag } from "lucide-react";
 
 interface PopulatedItem extends Omit<IItem, 'sellerId'> {
@@ -215,12 +216,14 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
                     {item.condition}
                   </dd>
                 </div>
-                <div className="flex justify-between border-b border-porcelain/10 pb-3">
-                  <dt className="text-sm text-nickel">Material</dt>
-                  <dd className="text-sm font-medium text-porcelain">
-                    {item.material}
-                  </dd>
-                </div>
+                {item.material && (
+                  <div className="flex justify-between border-b border-porcelain/10 pb-3">
+                    <dt className="text-sm text-nickel">Material</dt>
+                    <dd className="text-sm font-medium text-porcelain">
+                      {item.material}
+                    </dd>
+                  </div>
+                )}
                 <div className="flex justify-between border-b border-porcelain/10 pb-3">
                   <dt className="text-sm text-nickel">Color</dt>
                   <dd className="text-sm font-medium text-porcelain">
@@ -243,6 +246,14 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
                 </div>
               </dl>
             </div>
+
+            {/* Category-Specific Attributes */}
+            {item.categoryAttributes && (
+              <CategoryAttributesDisplay
+                category={item.category}
+                attributes={item.categoryAttributes}
+              />
+            )}
 
             {/* Seller Info */}
             <div className="mb-8 rounded-2xl border border-porcelain/10 bg-graphite/60 p-6 shadow-subtle">

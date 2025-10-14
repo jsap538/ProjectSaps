@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
     // Execute queries in parallel with optimized projection
     const [items, total] = await Promise.all([
       Item.find(filter)
-        .select('title brand price_cents shipping_cents images condition category color isActive isApproved isSold stats createdAt')
+        .select('title brand price_cents shipping_cents images condition category color isActive isApproved isSold stats createdAt categoryAttributes')
         .populate('sellerId', 'firstName lastName stats.averageRating stats.totalReviews')
         .sort(sort)
         .skip(skip)
