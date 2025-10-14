@@ -1043,7 +1043,7 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
 export function getCategoryOptions(): FieldOption[] {
   return Object.values(CATEGORY_CONFIGS).map(config => ({
     value: config.name,
-    label: `${config.icon} ${config.label}`,
+    label: config.label,
   }));
 }
 
