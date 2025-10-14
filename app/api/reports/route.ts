@@ -3,6 +3,7 @@ import { auth } from '@clerk/nextjs/server';
 import connectDB from '@/lib/mongodb';
 import { User, Item, Report } from '@/models';
 import { corsHeaders, sanitizeObjectId } from '@/lib/security';
+import mongoose from 'mongoose';
 
 // POST /api/reports - Create a new report
 export async function POST(request: NextRequest) {
@@ -63,7 +64,7 @@ export async function POST(request: NextRequest) {
 
     // Check if user already reported this item
     const existingReport = await Report.findOne({
-      itemId,
+      itemId: new mongoose.Types.ObjectId(itemId),
       reporterId: user._id,
     });
 
@@ -75,8 +76,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Create the report
+    const itemObjectId = new mongoose.Types.ObjectId(itemId);
+    
     const report = await Report.create({
-      itemId,
+      itemId: itemObjectId,
       reporterId: user._id,
       reason,
       description: description || '',
@@ -84,13 +87,13 @@ export async function POST(request: NextRequest) {
     });
 
     // Check if item should be auto-taken down
-    const shouldTakedown = await Report.shouldAutoTakedown(itemId);
+    const shouldTakedown = await Report.shouldAutoTakedown(itemObjectId);
     
     if (shouldTakedown) {
       // Auto-deactivate item after 3 reports
       await Item.findByIdAndUpdate(itemId, {
         isActive: false,
-        moderationNotes: `Auto-deactivated due to ${await Report.countReportsForItem(itemId)} user reports`,
+        moderationNotes: `Auto-deactivated due to ${await Report.countReportsForItem(itemObjectId)} user reports`,
       });
 
       console.log(`Item ${itemId} auto-deactivated due to multiple reports`);
