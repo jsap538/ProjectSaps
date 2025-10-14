@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import connectDB from '@/lib/mongodb';
-import { Order, Item } from '@/models';
+import { Order, Item, User } from '@/models';
 import { stripe } from '@/lib/stripe';
+import { sendOrderConfirmationEmail, sendNewSaleEmail, formatEmailCurrency } from '@/lib/email';
 
 /**
  * Stripe Webhook Handler
@@ -96,7 +97,9 @@ async function handlePaymentSucceeded(paymentIntent: Stripe.PaymentIntent) {
     return;
   }
 
-  const order = await Order.findById(orderId);
+  const order = await Order.findById(orderId)
+    .populate('buyerId', 'firstName lastName email')
+    .populate('sellerId', 'firstName lastName email');
 
   if (!order) {
     console.error(`Order not found: ${orderId}`);
@@ -123,7 +126,42 @@ async function handlePaymentSucceeded(paymentIntent: Stripe.PaymentIntent) {
   );
 
   console.log(`✅ Order ${order.orderNumber} marked as paid and confirmed`);
-  // TODO: Send confirmation email to buyer and seller
+
+  // Send email notifications
+  try {
+    const buyer = order.buyerId as any;
+    const seller = order.sellerId as any;
+    
+    const emailData = {
+      orderNumber: order.orderNumber,
+      buyerName: `${buyer.firstName} ${buyer.lastName}`,
+      buyerEmail: buyer.email,
+      sellerName: `${seller.firstName} ${seller.lastName}`,
+      sellerEmail: seller.email,
+      items: order.items.map((item: any) => ({
+        title: item.title,
+        brand: item.brand,
+        price: formatEmailCurrency(item.price_cents),
+        imageUrl: item.imageUrl || 'https://placehold.co/200x200',
+      })),
+      subtotal: formatEmailCurrency(order.subtotal_cents),
+      shipping: formatEmailCurrency(order.shipping_cents),
+      serviceFee: formatEmailCurrency(order.serviceFee_cents),
+      total: formatEmailCurrency(order.total_cents),
+      shippingAddress: order.shippingAddress,
+    };
+
+    // Send confirmation to buyer
+    await sendOrderConfirmationEmail(emailData);
+    
+    // Send sale notification to seller
+    await sendNewSaleEmail(emailData);
+    
+    console.log(`📧 Emails sent for order ${order.orderNumber}`);
+  } catch (emailError) {
+    console.error('Error sending emails:', emailError);
+    // Don't fail the webhook if email fails
+  }
 }
 
 /**
