@@ -29,7 +29,6 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
-  const [isBuyingNow, setIsBuyingNow] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [reportModalOpen, setReportModalOpen] = useState(false);
@@ -74,20 +73,11 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
     }
   };
 
-  const handleBuyNow = async () => {
+  const handleBuyNow = () => {
     if (!item) return;
     
-    setIsBuyingNow(true);
-    try {
-      // Add to cart if not already there
-      if (!isInCart(item._id)) {
-        await addToCart(item._id, 1);
-      }
-      // Navigate to checkout
-      router.push('/checkout');
-    } finally {
-      setIsBuyingNow(false);
-    }
+    // Navigate directly to checkout with this item only (skip cart)
+    router.push(`/checkout?item=${item._id}`);
   };
 
   if (loading) {
@@ -285,10 +275,10 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
             <div className="space-y-4">
               <button
                 onClick={handleBuyNow}
-                disabled={isBuyingNow || !item.isActive || !item.isApproved || item.isSold}
+                disabled={!item.isActive || !item.isApproved || item.isSold}
                 className="w-full rounded-xl bg-porcelain text-ink px-6 py-4 text-base font-semibold shadow-soft transition-transform duration-sap hover:-translate-y-px hover:shadow-soft disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
               >
-                {isBuyingNow ? 'Processing...' : `Buy Now - $${total}`}
+                {item.isSold ? 'Sold Out' : `Buy Now - $${total}`}
               </button>
               
               <div className="flex gap-3">

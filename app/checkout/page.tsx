@@ -20,13 +20,19 @@ export default function CheckoutPage() {
   const [orderId, setOrderId] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [buyNowItem, setBuyNowItem] = useState<any>(null);
+  
+  // Check if this is a "Buy Now" checkout (single item, skip cart)
+  const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const buyNowItemId = searchParams?.get('item');
 
   const createOrder = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const itemIds = cart.map(item => item.itemId);
+      // Use either Buy Now item or cart items
+      const itemIds = buyNowItemId ? [buyNowItemId] : cart.map(item => item.itemId);
 
       const response = await fetch('/api/orders', {
         method: 'POST',
@@ -34,6 +40,7 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           items: itemIds,
           shippingAddressIndex: 0, // TODO: Let user select
+          skipCartClear: !!buyNowItemId, // Don't clear cart for Buy Now purchases
         }),
       });
 
@@ -51,7 +58,21 @@ export default function CheckoutPage() {
     } finally {
       setLoading(false);
     }
-  }, [cart]);
+  }, [cart, buyNowItemId]);
+
+  // Fetch buy now item if needed
+  useEffect(() => {
+    if (buyNowItemId && isSignedIn) {
+      fetch(`/api/items/${buyNowItemId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setBuyNowItem(data.data);
+          }
+        })
+        .catch(err => console.error('Error fetching buy now item:', err));
+    }
+  }, [buyNowItemId, isSignedIn]);
 
   useEffect(() => {
     // Redirect if not signed in
@@ -60,19 +81,38 @@ export default function CheckoutPage() {
       return;
     }
 
-    // Redirect if cart is empty
-    if (isLoaded && cart.length === 0) {
+    // Redirect if cart is empty AND not a buy now checkout
+    if (isLoaded && !buyNowItemId && cart.length === 0) {
       router.push('/cart');
       return;
     }
 
     // Create order and get payment intent
-    if (isSignedIn && cart.length > 0) {
+    if (isSignedIn && (cart.length > 0 || buyNowItemId)) {
       createOrder();
     }
-  }, [isSignedIn, isLoaded, cart.length, createOrder, router]);
+  }, [isSignedIn, isLoaded, cart.length, buyNowItemId, createOrder, router]);
 
-  const totalPrice = getTotalPrice();
+  // Calculate total based on buy now or cart
+  const totalPrice = buyNowItem 
+    ? buyNowItem.price_cents 
+    : getTotalPrice();
+  
+  // Items to display in checkout
+  const checkoutItems = buyNowItem 
+    ? [{
+        itemId: buyNowItem._id,
+        item: {
+          _id: buyNowItem._id,
+          title: buyNowItem.title,
+          brand: buyNowItem.brand,
+          price_cents: buyNowItem.price_cents,
+          images: buyNowItem.images,
+          condition: buyNowItem.condition,
+        },
+        quantity: 1,
+      }]
+    : cart;
 
   // Stripe Elements options
   const appearance = {
@@ -139,13 +179,13 @@ export default function CheckoutPage() {
       <div className="max-w-6xl mx-auto">
         {/* Back Button */}
         <button
-          onClick={() => router.push('/cart')}
+          onClick={() => router.push(buyNowItemId ? `/items/${buyNowItemId}` : '/cart')}
           className="flex items-center gap-2 text-nickel hover:text-porcelain transition-colors duration-sap mb-8 group"
         >
           <svg className="w-5 h-5 transition-transform duration-sap group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          <span>Back to Cart</span>
+          <span>{buyNowItemId ? 'Back to Item' : 'Back to Cart'}</span>
         </button>
 
         {/* Header */}
@@ -168,7 +208,7 @@ export default function CheckoutPage() {
 
               {/* Cart Items */}
               <div className="space-y-4 mb-6">
-                {cart.map((cartItem) => (
+                {checkoutItems.map((cartItem) => (
                   <div
                     key={cartItem.itemId}
                     className="flex gap-4 pb-4 border-b border-porcelain/10 last:border-0"
@@ -204,7 +244,7 @@ export default function CheckoutPage() {
               {/* Pricing */}
               <div className="space-y-3 pt-4 border-t border-porcelain/10">
                 <div className="flex justify-between text-nickel">
-                  <span>Subtotal</span>
+                  <span>Subtotal ({checkoutItems.length} {checkoutItems.length === 1 ? 'item' : 'items'})</span>
                   <span>{formatCurrency(totalPrice)}</span>
                 </div>
                 <div className="flex justify-between text-nickel">

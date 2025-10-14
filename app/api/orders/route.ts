@@ -55,7 +55,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
   if (!user) throw ApiErrors.notFound('User');
   if (!user.canBuy()) throw ApiErrors.forbidden('Account suspended or inactive');
 
-  const { items: itemIds, shippingAddressIndex, buyerNotes, shippingAddress: providedAddress } = await request.json();
+  const { items: itemIds, shippingAddressIndex, buyerNotes, shippingAddress: providedAddress, skipCartClear } = await request.json();
 
   // Validate inputs
   if (!itemIds || !Array.isArray(itemIds) || itemIds.length === 0) {
@@ -173,11 +173,13 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
   order.paymentIntentId = paymentIntent.id;
   await order.save();
 
-  // Remove items from cart
-  user.cart = user.cart.filter((cartItem: ICartItem) => 
-    !itemIds.includes(cartItem.itemId.toString())
-  );
-  await user.save();
+  // Remove items from cart (skip if this is a Buy Now checkout)
+  if (!skipCartClear) {
+    user.cart = user.cart.filter((cartItem: ICartItem) => 
+      !itemIds.includes(cartItem.itemId.toString())
+    );
+    await user.save();
+  }
 
   const populatedOrder = await Order.findById(order._id)
     .populate('buyerId', 'firstName lastName email')
