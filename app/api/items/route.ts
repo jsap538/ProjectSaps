@@ -51,28 +51,59 @@ export async function GET(request: NextRequest) {
       isApproved: true,
     };
 
-    if (filters.category) filter.category = filters.category;
-    if (filters.brand) filter.brand = new RegExp(filters.brand, 'i');
-    if (filters.condition) filter.condition = filters.condition;
-    if (filters.color) filter.color = new RegExp(filters.color, 'i');
+    // Category filtering (support multiple categories)
+    const categories = searchParams.getAll('categories');
+    if (categories.length > 0) {
+      filter.category = { $in: categories };
+    } else if (filters.category) {
+      filter.category = filters.category;
+    }
+
+    // Brand filtering (support multiple brands)
+    const brands = searchParams.getAll('brands');
+    if (brands.length > 0) {
+      filter.brand = { $in: brands };
+    } else if (filters.brand) {
+      filter.brand = new RegExp(filters.brand, 'i');
+    }
+
+    // Condition filtering (support multiple conditions)
+    const conditions = searchParams.getAll('conditions');
+    if (conditions.length > 0) {
+      filter.condition = { $in: conditions };
+    } else if (filters.condition) {
+      filter.condition = filters.condition;
+    }
+
+    // Color filtering (support multiple colors)
+    const colors = searchParams.getAll('colors');
+    if (colors.length > 0) {
+      filter.color = { $in: colors.map(c => new RegExp(c, 'i')) };
+    } else if (filters.color) {
+      filter.color = new RegExp(filters.color, 'i');
+    }
     
     if (filters.minPrice || filters.maxPrice) {
       const priceFilter: { $gte?: number; $lte?: number } = {};
-      if (filters.minPrice) priceFilter.$gte = filters.minPrice * 100; // Convert dollars to cents
-      if (filters.maxPrice) priceFilter.$lte = filters.maxPrice * 100; // Convert dollars to cents
+      if (filters.minPrice) priceFilter.$gte = filters.minPrice * 100;
+      if (filters.maxPrice) priceFilter.$lte = filters.maxPrice * 100;
       filter.price_cents = priceFilter;
     }
 
+    // Improved search with MongoDB text search and weighted relevance
     if (filters.search) {
-      filter.$or = [
-        { title: { $regex: filters.search, $options: 'i' } },
-        { description: { $regex: filters.search, $options: 'i' } },
-        { brand: { $regex: filters.search, $options: 'i' } }
-      ];
+      filter.$text = { $search: filters.search };
     }
 
     // Build sort object
-    const sort: Record<string, 1 | -1> = {};
+    const sort: Record<string, 1 | -1 | { $meta: string }> = {};
+    
+    // If searching, sort by text search score relevance first
+    if (filters.search) {
+      sort.score = { $meta: 'textScore' };
+    }
+    
+    // Then add secondary sort
     switch (filters.sortBy) {
       case 'price_cents':
         sort.price_cents = 1;
@@ -85,16 +116,27 @@ export async function GET(request: NextRequest) {
         break;
       case 'newest':
       default:
-        sort.createdAt = -1;
+        if (!filters.search) {
+          sort.createdAt = -1;
+        }
         break;
     }
 
     const skip = ((filters.page || 1) - 1) * (filters.limit || 12);
     
     // Execute queries in parallel with optimized projection
+    const queryBuilder = Item.find(filter);
+    
+    // Add text score to projection if searching
+    if (filters.search) {
+      queryBuilder.select('title brand price_cents shipping_cents images condition category color isActive isApproved isSold stats createdAt categoryAttributes score');
+      queryBuilder.select({ score: { $meta: 'textScore' } });
+    } else {
+      queryBuilder.select('title brand price_cents shipping_cents images condition category color isActive isApproved isSold stats createdAt categoryAttributes');
+    }
+    
     const [items, total] = await Promise.all([
-      Item.find(filter)
-        .select('title brand price_cents shipping_cents images condition category color isActive isApproved isSold stats createdAt categoryAttributes')
+      queryBuilder
         .populate('sellerId', 'firstName lastName stats.averageRating stats.totalReviews')
         .sort(sort)
         .skip(skip)

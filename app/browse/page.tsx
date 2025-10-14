@@ -5,6 +5,7 @@ import ProductCard from "@/components/ProductCard";
 import EnhancedFilters from "@/components/EnhancedFilters";
 import { ProductCardSkeleton } from "@/components/Skeletons";
 import { EmptyBrowse } from "@/components/EmptyStates";
+import { CATEGORY_SLUG_MAP, QUICK_FILTERS, type QuickFilter } from "@/data/filterData";
 import type { IItem } from "@/types";
 
 interface FilterState {
@@ -58,7 +59,11 @@ export default function BrowsePage() {
         appliedFilters.brands.forEach(brand => params.append('brands', brand));
       }
       if (appliedFilters.categories.length > 0) {
-        appliedFilters.categories.forEach(category => params.append('categories', category.toLowerCase()));
+        appliedFilters.categories.forEach(category => {
+          // Convert display name to slug if it exists in map, otherwise use as-is
+          const slug = CATEGORY_SLUG_MAP[category] || category.toLowerCase();
+          params.append('categories', slug);
+        });
       }
       if (appliedFilters.conditions.length > 0) {
         appliedFilters.conditions.forEach(condition => params.append('conditions', condition));
@@ -128,6 +133,21 @@ export default function BrowsePage() {
     setAppliedFilters(tempFilters);
   };
 
+  const applyQuickFilter = (quickFilter: QuickFilter) => {
+    const newFilters: FilterState = {
+      brands: quickFilter.filters.brands || [],
+      colors: [],
+      materials: [],
+      sizes: [],
+      conditions: quickFilter.filters.conditions || [],
+      categories: quickFilter.filters.categories?.map(cat => CATEGORY_SLUG_MAP[cat] || cat) || [],
+      priceRange: quickFilter.filters.priceRange || { min: 0, max: Infinity },
+      sortBy: quickFilter.label === 'New Arrivals' ? 'Newest First' : 'Newest First'
+    };
+    setTempFilters(newFilters);
+    setAppliedFilters(newFilters);
+  };
+
   const _clearFilters = () => {
     const clearedFilters: FilterState = {
       brands: [],
@@ -147,7 +167,7 @@ export default function BrowsePage() {
     <div className="min-h-screen bg-ink">
       <div className="mx-auto max-w-7xl px-6 py-16">
         {/* Hero Header */}
-        <div className="mb-16 text-center">
+        <div className="mb-12 text-center">
           <div className="mb-6 text-sm font-medium text-nickel tracking-wider uppercase">
             Premium Collection
           </div>
@@ -155,8 +175,23 @@ export default function BrowsePage() {
             Browse Collection
           </h1>
           <p className="text-lg text-nickel max-w-2xl mx-auto text-body">
-            Discover luxury men's accessories from the world's finest brands. {totalItems} items available.
+            Discover luxury men's fashion from the world's finest brands. {totalItems} items available.
           </p>
+        </div>
+
+        {/* Quick Filters Bar */}
+        <div className="mb-8 overflow-x-auto">
+          <div className="flex gap-3 pb-2">
+            {QUICK_FILTERS.map(quickFilter => (
+              <button
+                key={quickFilter.label}
+                onClick={() => applyQuickFilter(quickFilter)}
+                className="flex-shrink-0 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-sap bg-graphite/60 text-nickel border border-porcelain/20 hover:bg-titanium/10 hover:text-titanium hover:border-titanium/30 hover:shadow-soft whitespace-nowrap"
+              >
+                {quickFilter.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Search and Sort Bar */}

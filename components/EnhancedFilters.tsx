@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import SearchableDropdown from './SearchableDropdown';
-import { BRANDS, COLORS, MATERIALS, SIZES, CONDITIONS, CATEGORIES, SORT_OPTIONS } from '@/data/filterData';
+import { BRANDS, COLORS, MATERIALS, SIZES, CONDITIONS, CATEGORIES, SORT_OPTIONS, QUICK_FILTERS, CATEGORY_SLUG_MAP } from '@/data/filterData';
 
 interface FilterState {
   brands: string[];
@@ -81,6 +81,28 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
     );
   };
 
+  const applyQuickFilter = (quickFilter: typeof QUICK_FILTERS[0]) => {
+    const newFilters = { ...filters };
+    
+    // Apply quick filter settings
+    if (quickFilter.filters.conditions) {
+      newFilters.conditions = quickFilter.filters.conditions;
+    }
+    if (quickFilter.filters.priceRange) {
+      newFilters.priceRange = quickFilter.filters.priceRange;
+    }
+    if (quickFilter.filters.categories) {
+      // Convert display names to slugs
+      newFilters.categories = quickFilter.filters.categories.map(cat => CATEGORY_SLUG_MAP[cat] || cat);
+    }
+    if (quickFilter.filters.brands) {
+      newFilters.brands = quickFilter.filters.brands;
+    }
+    
+    setFilters(newFilters);
+    onFiltersChange(newFilters);
+  };
+
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Header */}
@@ -94,6 +116,27 @@ export default function EnhancedFilters({ onFiltersChange, initialFilters, class
             Clear all
           </button>
         )}
+      </div>
+
+      {/* Quick Filters */}
+      <div>
+        <label className="block text-sm font-medium text-porcelain mb-3">
+          Quick Filters
+        </label>
+        <div className="grid grid-cols-2 gap-2">
+          {QUICK_FILTERS.map(quickFilter => (
+            <button
+              key={quickFilter.label}
+              onClick={() => applyQuickFilter(quickFilter)}
+              className="px-3 py-2.5 rounded-lg text-xs font-medium transition-all duration-sap bg-graphite/60 text-nickel border border-porcelain/20 hover:bg-titanium/10 hover:text-titanium hover:border-titanium/30 text-left"
+            >
+              <div className="flex items-center gap-1.5">
+                {quickFilter.icon && <span>{quickFilter.icon}</span>}
+                <span>{quickFilter.label}</span>
+              </div>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Sort By */}

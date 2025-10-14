@@ -114,25 +114,70 @@ export const CONDITIONS = [
 ];
 
 export const CATEGORIES = [
-  'Ties',
+  // Tops
+  'Dress Shirt',
+  'Casual Shirt',
+  'T-Shirt',
+  'Polo Shirt',
+  'Sweater',
+  
+  // Bottoms
+  'Dress Pants',
+  'Jeans',
+  'Chinos',
+  'Shorts',
+  
+  // Outerwear
+  'Suit Jacket',
+  'Blazer',
+  'Coat',
+  
+  // Footwear
+  'Dress Shoes',
+  'Sneakers',
+  'Boots',
+  
+  // Accessories
+  'Tie',
+  'Belt',
   'Cufflinks',
-  'Belts',
-  'Pocket Squares',
-  'Watches',
-  'Shoes',
-  'Shirts',
-  'Suits',
-  'Blazers',
-  'Pants',
-  'Accessories',
-  'Jewelry',
-  'Bags',
-  'Wallets',
+  'Pocket Square',
+  'Watch',
+  'Bag',
+  'Wallet',
   'Sunglasses',
-  'Hats',
-  'Scarves',
-  'Gloves'
+  'Hat',
+  'Scarf'
 ];
+
+// Map display names to category slugs
+export const CATEGORY_SLUG_MAP: Record<string, string> = {
+  'Dress Shirt': 'dress-shirt',
+  'Casual Shirt': 'casual-shirt',
+  'T-Shirt': 't-shirt',
+  'Polo Shirt': 'polo-shirt',
+  'Sweater': 'sweater',
+  'Dress Pants': 'dress-pants',
+  'Jeans': 'jeans',
+  'Chinos': 'chinos',
+  'Shorts': 'shorts',
+  'Suit Jacket': 'suit-jacket',
+  'Blazer': 'blazer',
+  'Coat': 'coat',
+  'Dress Shoes': 'dress-shoes',
+  'Sneakers': 'sneakers',
+  'Boots': 'boots',
+  'Tie': 'tie',
+  'Belt': 'belt',
+  'Cufflinks': 'cufflinks',
+  'Pocket Square': 'pocket-square',
+  'Watch': 'watch',
+  'Bag': 'bag',
+  'Wallet': 'wallet',
+  'Sunglasses': 'sunglasses',
+  'Hat': 'hat',
+  'Scarf': 'scarf',
+};
 
 export const PRICE_RANGES = [
   { label: 'Under $25', min: 0, max: 2500 },
@@ -152,4 +197,77 @@ export const SORT_OPTIONS = [
   'Most Popular',
   'Best Deals',
   'Recently Updated'
+];
+
+// Quick Filter Presets for instant filtering
+export interface QuickFilter {
+  label: string;
+  icon?: string;
+  filters: {
+    conditions?: string[];
+    priceRange?: { min: number; max: number };
+    categories?: string[];
+    brands?: string[];
+  };
+}
+
+export const QUICK_FILTERS: QuickFilter[] = [
+  {
+    label: 'New Arrivals',
+    icon: '✨',
+    filters: {
+      // Will be handled by sortBy: newest + last 7 days
+    }
+  },
+  {
+    label: 'Under $50',
+    icon: '💰',
+    filters: {
+      priceRange: { min: 0, max: 5000 }
+    }
+  },
+  {
+    label: 'Luxury',
+    icon: '👑',
+    filters: {
+      brands: ['Hermès', 'Louis Vuitton', 'Gucci', 'Prada', 'Rolex', 'Tom Ford', 'Burberry']
+    }
+  },
+  {
+    label: 'Like New',
+    icon: '⭐',
+    filters: {
+      conditions: ['New', 'Like New']
+    }
+  },
+  {
+    label: 'Designer Deals',
+    icon: '🔥',
+    filters: {
+      brands: ['Gucci', 'Prada', 'Versace', 'Armani', 'Saint Laurent', 'Balenciaga'],
+      priceRange: { min: 0, max: 10000 }
+    }
+  },
+  {
+    label: 'Streetwear',
+    icon: '🎨',
+    filters: {
+      brands: ['Nike', 'Adidas', 'Supreme', 'Off-White', 'Yeezy', 'Jordan'],
+      categories: ['Sneakers', 'T-Shirt', 'Hat']
+    }
+  },
+  {
+    label: 'Watches',
+    icon: '⌚',
+    filters: {
+      categories: ['Watch']
+    }
+  },
+  {
+    label: 'Formal Wear',
+    icon: '🤵',
+    filters: {
+      categories: ['Dress Shirt', 'Dress Pants', 'Suit Jacket', 'Tie', 'Cufflinks', 'Dress Shoes']
+    }
+  }
 ];
