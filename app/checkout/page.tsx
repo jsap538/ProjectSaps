@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -14,6 +14,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { isSignedIn, isLoaded } = useUser();
   const { cart, getTotalPrice } = useCart();
   const [clientSecret, setClientSecret] = useState('');
@@ -23,8 +24,7 @@ export default function CheckoutPage() {
   const [buyNowItem, setBuyNowItem] = useState<any>(null);
   
   // Check if this is a "Buy Now" checkout (single item, skip cart)
-  const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-  const buyNowItemId = searchParams?.get('item');
+  const buyNowItemId = searchParams.get('item');
 
   const createOrder = useCallback(async () => {
     try {
