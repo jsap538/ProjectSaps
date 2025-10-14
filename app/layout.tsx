@@ -8,6 +8,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import { WatchlistProvider } from "@/contexts/WatchlistContext";
 import { ToastProvider } from "@/contexts/ToastContext";
 import { ClerkProvider } from '@clerk/nextjs';
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: "SAPS - Men's Premium Accessories Resale",
@@ -37,6 +38,7 @@ export default function RootLayout({
                       </CartProvider>
                     </ToastProvider>
                   </ThemeProvider>
+                  <Analytics />
                 </body>
               </html>
             </ClerkProvider>
