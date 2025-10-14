@@ -8,7 +8,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import Image from 'next/image';
 import { useCart } from '@/contexts/CartContext';
 import CheckoutForm from '@/components/CheckoutForm';
-import { formatCurrency } from '@/lib/stripe';
+import { formatCurrency } from '@/lib/format';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useCart } from "@/contexts/CartContext";
 import { useWatchlist } from "@/contexts/WatchlistContext";
@@ -22,10 +23,12 @@ interface ProductCardProps {
 
 export default function ProductCard({ item }: ProductCardProps) {
   const price = (item.price_cents / 100).toFixed(2);
+  const router = useRouter();
   const { cart, addToCart, removeFromCart, isItemLoading: isCartItemLoading } = useCart();
   const { addToWatchlist, removeFromWatchlist, isInWatchlist, isItemLoading: isWatchlistItemLoading } = useWatchlist();
   const [isAdding, setIsAdding] = useState(false);
   const [isWatchlistLoading, setIsWatchlistLoading] = useState(false);
+  const [isBuyingNow, setIsBuyingNow] = useState(false);
 
   const isInCart = cart.some(cartItem => cartItem.itemId === item._id);
 
@@ -70,6 +73,23 @@ export default function ProductCard({ item }: ProductCardProps) {
       }
     } finally {
       setIsAdding(false);
+    }
+  };
+
+  const handleBuyNow = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    setIsBuyingNow(true);
+    try {
+      // Add to cart if not already there
+      if (!isInCart) {
+        await addToCart(item._id, 1);
+      }
+      // Navigate to checkout
+      router.push('/checkout');
+    } finally {
+      setIsBuyingNow(false);
     }
   };
 
@@ -153,11 +173,13 @@ export default function ProductCard({ item }: ProductCardProps) {
           }
         </button>
         
-        <Link href={`/items/${item._id}`} className="flex-1">
-          <button className="w-full rounded-xl bg-porcelain text-ink px-3 py-2.5 text-sm font-semibold transition-transform duration-sap hover:-translate-y-px shadow-subtle">
-            Buy Now
-          </button>
-        </Link>
+        <button
+          onClick={handleBuyNow}
+          disabled={isBuyingNow}
+          className="flex-1 rounded-xl bg-porcelain text-ink px-3 py-2.5 text-sm font-semibold transition-transform duration-sap hover:-translate-y-px shadow-subtle disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+        >
+          {isBuyingNow ? 'Processing...' : 'Buy Now'}
+        </button>
       </div>
     </motion.article>
   );
