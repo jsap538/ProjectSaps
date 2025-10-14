@@ -5,6 +5,7 @@ import { User, Item, Order } from '@/models';
 import { ICartItem } from '@/models/User';
 import { withErrorHandling, ApiErrors, successResponse } from '@/lib/errors';
 import { corsHeaders } from '@/lib/security';
+import { stripe, calculatePlatformFee } from '@/lib/stripe';
 
 /**
  * GET /api/orders - Get user's orders (buyer or seller)
@@ -134,10 +135,28 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
     buyerNotes,
   });
 
-  // TODO: Create Stripe Payment Intent
-  // const paymentIntent = await stripe.paymentIntents.create({...});
-  // order.paymentIntentId = paymentIntent.id;
-  // await order.save();
+  // Create Stripe Payment Intent
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: total_cents,
+    currency: 'usd',
+    automatic_payment_methods: {
+      enabled: true,
+    },
+    metadata: {
+      orderId: order._id.toString(),
+      orderNumber: orderNumber,
+      buyerId: user._id.toString(),
+      sellerId: sellerId.toString(),
+    },
+    description: `SAPS Order ${orderNumber}`,
+    // TODO: Add Connect transfer when seller onboarding is complete
+    // application_fee_amount: serviceFee_cents,
+    // transfer_data: { destination: sellerStripeAccountId },
+  });
+
+  // Save payment intent ID to order
+  order.paymentIntentId = paymentIntent.id;
+  await order.save();
 
   // Remove items from cart
   user.cart = user.cart.filter((cartItem: ICartItem) => 
@@ -153,7 +172,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
   return successResponse(
     {
       order: populatedOrder,
-      // paymentClientSecret: paymentIntent.client_secret, // TODO: Return for frontend
+      clientSecret: paymentIntent.client_secret,
     },
     'Order created successfully. Complete payment to confirm.',
     201

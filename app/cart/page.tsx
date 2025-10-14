@@ -222,9 +222,11 @@ export default function CartPage() {
               </div>
 
               <div className="mt-8 space-y-4">
-                <button className="w-full rounded-xl bg-porcelain text-ink px-6 py-4 font-semibold transition-transform duration-sap hover:-translate-y-px shadow-soft">
-                  Proceed to Checkout
-                </button>
+                <Link href="/checkout" className="block">
+                  <button className="w-full rounded-xl bg-porcelain text-ink px-6 py-4 font-semibold transition-transform duration-sap hover:-translate-y-px shadow-soft">
+                    Proceed to Checkout
+                  </button>
+                </Link>
                 
                 <Link href="/browse" className="block">
                   <button className="w-full rounded-xl border border-porcelain/20 text-porcelain px-6 py-4 font-medium transition-colors duration-sap hover:bg-porcelain/5">
