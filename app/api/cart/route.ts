@@ -4,6 +4,7 @@ import connectDB from '@/lib/mongodb';
 import User, { ICartItem } from '@/models/User';
 import Item from '@/models/Item';
 import { sanitizeObjectId } from '@/lib/security';
+import mongoose from 'mongoose';
 
 // GET /api/cart - Get user's cart
 export async function GET() {
@@ -104,7 +105,7 @@ export async function POST(request: NextRequest) {
     } else {
       // Add new item to cart
       user.cart.push({
-        itemId,
+        itemId: new mongoose.Types.ObjectId(itemId),
         quantity,
         addedAt: new Date(),
       } as ICartItem);
