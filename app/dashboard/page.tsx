@@ -70,7 +70,11 @@ export default function DashboardPage() {
       const data = await response.json();
       
       if (data.success) {
-        setPurchases(data.data || []);
+        // Filter out abandoned checkouts (pending payment + pending status)
+        const completedPurchases = (data.data || []).filter((order: any) => 
+          !(order.paymentStatus === 'pending' && order.status === 'pending')
+        );
+        setPurchases(completedPurchases);
       } else {
         throw new Error(data.error || 'Failed to fetch purchases');
       }
@@ -89,7 +93,11 @@ export default function DashboardPage() {
       const data = await response.json();
       
       if (data.success) {
-        setSales(data.data || []);
+        // Filter out abandoned checkouts (pending payment + pending status)
+        const completedSales = (data.data || []).filter((order: any) => 
+          !(order.paymentStatus === 'pending' && order.status === 'pending')
+        );
+        setSales(completedSales);
       } else {
         throw new Error(data.error || 'Failed to fetch sales');
       }
