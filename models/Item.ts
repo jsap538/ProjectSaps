@@ -56,12 +56,20 @@ export interface IItem extends Document {
   
   // Classification
   condition: 'New' | 'Like New' | 'Good' | 'Fair' | 'Poor';
-  category: 'tie' | 'belt' | 'cufflinks' | 'pocket-square';
+  category: 'tie' | 'belt' | 'cufflinks' | 'pocket-square' | 
+            'dress-shirt' | 'casual-shirt' | 't-shirt' | 'polo-shirt' | 'sweater' |
+            'dress-pants' | 'jeans' | 'chinos' | 'shorts' |
+            'suit-jacket' | 'blazer' | 'coat' |
+            'dress-shoes' | 'sneakers' | 'boots' |
+            'watch' | 'bag' | 'wallet' | 'sunglasses' | 'hat' | 'scarf';
   color: string;
   material?: string;
   
   // Measurements
   dimensions: IItemDimensions;
+  
+  // Category-specific attributes (flexible schema for dynamic fields)
+  categoryAttributes?: Record<string, any>;
   
   // Location & Shipping
   location: string;
