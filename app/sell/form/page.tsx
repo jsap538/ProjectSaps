@@ -5,7 +5,7 @@ import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import ImageUpload from "@/components/ImageUpload";
 import DynamicFormFields from "@/components/DynamicFormFields";
-import { getCategoryOptions, getFieldsForCategory } from "@/data/categoryFields";
+import { getCategoryOptions, getFieldsForCategory, getBrandsForCategory } from "@/data/categoryFields";
 
 interface FormData {
   title: string;
@@ -46,20 +46,15 @@ export default function SellFormPage() {
     location: "",
   });
 
-  // Get dynamic fields for selected category
+  // Get dynamic fields and brands for selected category
   const categoryFields = formData.category ? getFieldsForCategory(formData.category) : [];
+  const categoryBrands = formData.category ? getBrandsForCategory(formData.category) : [];
 
   const conditions = ["New", "Like New", "Good", "Fair", "Poor"];
   const categoryOptions = getCategoryOptions();
-  const brands = [
-    "Nike", "Adidas", "Ralph Lauren", "Tom Ford", "Gucci", "Prada", "Armani",
-    "Hugo Boss", "Burberry", "Versace", "Dolce & Gabbana", "Saint Laurent",
-    "Balenciaga", "Dior", "Fendi", "Givenchy", "Off-White", "Supreme",
-    "Drake's", "Brunello Cucinelli", "Hermes", "Rolex", "Omega", "TAG Heuer",
-    "Brooks Brothers", "J.Crew", "Banana Republic", "Zara", "H&M", "Uniqlo",
-    "Levi's", "Wrangler", "Lee", "Calvin Klein", "Tommy Hilfiger", "Lacoste",
-    "Other"
-  ];
+  
+  // Use category-specific brands if available, otherwise show default message
+  const brands = categoryBrands.length > 0 ? categoryBrands : [];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -69,6 +64,13 @@ export default function SellFormPage() {
       setFormData(prev => ({
         ...prev,
         [name]: parseInt(value) || 0
+      }));
+    } else if (name === 'category') {
+      // When category changes, reset brand and category-specific fields
+      setFormData(prev => ({
+        ...prev,
+        category: value,
+        brand: '', // Reset brand when category changes
       }));
     } else {
       setFormData(prev => ({
@@ -312,13 +314,19 @@ export default function SellFormPage() {
                   value={formData.brand}
                   onChange={handleInputChange}
                   required
-                  className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-700 dark:bg-[#151821] dark:text-white"
+                  disabled={!formData.category}
+                  className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-700 dark:bg-[#151821] dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <option value="">Select a brand</option>
+                  <option value="">
+                    {formData.category ? 'Select a brand' : 'Select category first'}
+                  </option>
                   {brands.map(brand => (
                     <option key={brand} value={brand}>{brand}</option>
                   ))}
                 </select>
+                <p className="mt-1 text-xs text-gray-500">
+                  {formData.category ? 'Brands relevant to your category' : 'Choose a category to see relevant brands'}
+                </p>
               </div>
 
               <div>

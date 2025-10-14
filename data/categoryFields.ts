@@ -27,6 +27,7 @@ export interface CategoryConfig {
   name: string;
   label: string;
   icon: string;
+  brands: string[];
   fields: CategoryField[];
 }
 
@@ -95,6 +96,13 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'dress-shirt',
     label: 'Dress Shirt',
     icon: '👔',
+    brands: [
+      'Brooks Brothers', 'Ralph Lauren', 'Charles Tyrwhitt', 'Thomas Pink',
+      'Hugo Boss', 'Calvin Klein', 'Tommy Hilfiger', 'J.Crew', 'Banana Republic',
+      'Nordstrom', 'Express', 'Van Heusen', 'Kenneth Cole', 'Michael Kors',
+      'Tom Ford', 'Ermenegildo Zegna', 'Brioni', 'Canali', 'Kiton',
+      'Turnbull & Asser', 'Charvet', 'Eton', 'Other'
+    ],
     fields: [
       {
         name: 'neckSize',
@@ -155,6 +163,12 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'casual-shirt',
     label: 'Casual Shirt',
     icon: '👕',
+    brands: [
+      'Ralph Lauren', 'J.Crew', 'Banana Republic', 'Gap', 'Old Navy',
+      'Uniqlo', 'H&M', 'Zara', 'Express', 'American Eagle',
+      'Hollister', 'Abercrombie & Fitch', 'Tommy Hilfiger', 'Calvin Klein',
+      'Bonobos', 'Everlane', 'Patagonia', 'The North Face', 'Other'
+    ],
     fields: [
       {
         name: 'size',
@@ -188,6 +202,12 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 't-shirt',
     label: 'T-Shirt',
     icon: '👕',
+    brands: [
+      'Nike', 'Adidas', 'Under Armour', 'Champion', 'Hanes',
+      'Fruit of the Loom', 'Gildan', 'Ralph Lauren', 'Tommy Hilfiger',
+      'Calvin Klein', 'Gap', 'H&M', 'Uniqlo', 'Zara', 'Supreme',
+      'Stussy', 'Carhartt', 'Dickies', 'Patagonia', 'The North Face', 'Other'
+    ],
     fields: [
       {
         name: 'size',
@@ -222,6 +242,12 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'polo-shirt',
     label: 'Polo Shirt',
     icon: '👕',
+    brands: [
+      'Ralph Lauren', 'Lacoste', 'Tommy Hilfiger', 'Brooks Brothers',
+      'Fred Perry', 'Polo Ralph Lauren', 'U.S. Polo Assn.', 'Vineyard Vines',
+      'Southern Tide', 'Peter Millar', 'Bonobos', 'J.Crew', 'Banana Republic',
+      'Calvin Klein', 'Hugo Boss', 'Burberry', 'Other'
+    ],
     fields: [
       {
         name: 'size',
@@ -244,6 +270,13 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'sweater',
     label: 'Sweater',
     icon: '🧶',
+    brands: [
+      'Ralph Lauren', 'J.Crew', 'Banana Republic', 'Brooks Brothers',
+      'Patagonia', 'The North Face', 'Arc\'teryx', 'Canada Goose',
+      'Barbour', 'L.L.Bean', 'Eddie Bauer', 'Lands\' End', 'Orvis',
+      'Vineyard Vines', 'Tommy Hilfiger', 'Calvin Klein', 'Hugo Boss',
+      'Burberry', 'Gucci', 'Prada', 'Other'
+    ],
     fields: [
       {
         name: 'size',
@@ -274,6 +307,12 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'dress-pants',
     label: 'Dress Pants',
     icon: '👖',
+    brands: [
+      'Brooks Brothers', 'Ralph Lauren', 'J.Crew', 'Banana Republic',
+      'Bonobos', 'Dockers', 'Haggar', 'Calvin Klein', 'Kenneth Cole',
+      'Perry Ellis', 'Tommy Hilfiger', 'Hugo Boss', 'Canali',
+      'Ermenegildo Zegna', 'Armani', 'Gucci', 'Prada', 'Other'
+    ],
     fields: [
       {
         name: 'waistSize',
@@ -316,6 +355,13 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'jeans',
     label: 'Jeans',
     icon: '👖',
+    brands: [
+      'Levi\'s', 'Wrangler', 'Lee', 'AG', 'True Religion', '7 For All Mankind',
+      'Citizens of Humanity', 'J Brand', 'Diesel', 'Lucky Brand',
+      'American Eagle', 'Gap', 'Old Navy', 'H&M', 'Zara',
+      'Calvin Klein', 'Tommy Hilfiger', 'Ralph Lauren', 'Guess', 'Levi Strauss',
+      'Acne Studios', 'A.P.C.', 'Nudie Jeans', 'Rag & Bone', 'Other'
+    ],
     fields: [
       {
         name: 'waistSize',
@@ -368,6 +414,12 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'chinos',
     label: 'Chinos',
     icon: '👖',
+    brands: [
+      'J.Crew', 'Banana Republic', 'Gap', 'Bonobos', 'Dockers',
+      'Ralph Lauren', 'Brooks Brothers', 'Vineyard Vines', 'Southern Tide',
+      'Tommy Hilfiger', 'Calvin Klein', 'Uniqlo', 'H&M', 'Zara',
+      'Lululemon', 'Everlane', 'Club Monaco', 'Other'
+    ],
     fields: [
       {
         name: 'waistSize',
@@ -399,6 +451,12 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'shorts',
     label: 'Shorts',
     icon: '🩳',
+    brands: [
+      'Nike', 'Adidas', 'Under Armour', 'Lululemon', 'Patagonia',
+      'The North Face', 'Columbia', 'J.Crew', 'Banana Republic', 'Gap',
+      'Ralph Lauren', 'Tommy Hilfiger', 'Vineyard Vines', 'Chubbies',
+      'Bonobos', 'Dockers', 'Carhartt', 'Dickies', 'Other'
+    ],
     fields: [
       {
         name: 'waistSize',
@@ -441,6 +499,12 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'suit-jacket',
     label: 'Suit Jacket',
     icon: '🤵',
+    brands: [
+      'Brooks Brothers', 'Ralph Lauren', 'Calvin Klein', 'Kenneth Cole',
+      'Hugo Boss', 'Armani', 'Canali', 'Ermenegildo Zegna', 'Brioni',
+      'Tom Ford', 'Kiton', 'Isaia', 'Corneliani', 'Hickey Freeman',
+      'Hart Schaffner Marx', 'Joseph Abboud', 'J.Crew', 'Banana Republic', 'Other'
+    ],
     fields: [
       {
         name: 'chestSize',
@@ -476,6 +540,12 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'blazer',
     label: 'Blazer',
     icon: '🧥',
+    brands: [
+      'Ralph Lauren', 'Brooks Brothers', 'J.Crew', 'Banana Republic',
+      'Club Monaco', 'Zara', 'H&M', 'Hugo Boss', 'Calvin Klein',
+      'Tommy Hilfiger', 'Bonobos', 'Suit Supply', 'Ted Baker', 'Reiss',
+      'Ermenegildo Zegna', 'Armani', 'Other'
+    ],
     fields: [
       {
         name: 'chestSize',
@@ -499,6 +569,12 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'coat',
     label: 'Coat',
     icon: '🧥',
+    brands: [
+      'Canada Goose', 'The North Face', 'Patagonia', 'Arc\'teryx', 'Moncler',
+      'Barbour', 'Burberry', 'Ralph Lauren', 'Tommy Hilfiger', 'Calvin Klein',
+      'Columbia', 'L.L.Bean', 'Eddie Bauer', 'Lands\' End', 'J.Crew',
+      'Banana Republic', 'Zara', 'H&M', 'Uniqlo', 'Other'
+    ],
     fields: [
       {
         name: 'size',
@@ -540,6 +616,13 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'dress-shoes',
     label: 'Dress Shoes',
     icon: '👞',
+    brands: [
+      'Allen Edmonds', 'Johnston & Murphy', 'Cole Haan', 'Florsheim',
+      'Rockport', 'Ecco', 'Clarks', 'Kenneth Cole', 'Calvin Klein',
+      'Hugo Boss', 'Bruno Magli', 'Magnanni', 'To Boot New York',
+      'Church\'s', 'Crockett & Jones', 'Alden', 'Carmina', 'John Lobb',
+      'Ferragamo', 'Gucci', 'Prada', 'Louis Vuitton', 'Other'
+    ],
     fields: [
       {
         name: 'shoeSize',
@@ -579,6 +662,13 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'sneakers',
     label: 'Sneakers',
     icon: '👟',
+    brands: [
+      'Nike', 'Adidas', 'Jordan', 'Yeezy', 'New Balance', 'Asics', 'Puma',
+      'Reebok', 'Converse', 'Vans', 'Skechers', 'Under Armour', 'Saucony',
+      'Brooks', 'Hoka One One', 'On Running', 'Allbirds', 'Common Projects',
+      'Golden Goose', 'Balenciaga', 'Off-White', 'Gucci', 'Louis Vuitton',
+      'Alexander McQueen', 'Saint Laurent', 'Dior', 'Other'
+    ],
     fields: [
       {
         name: 'shoeSize',
@@ -606,6 +696,13 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'boots',
     label: 'Boots',
     icon: '🥾',
+    brands: [
+      'Red Wing', 'Timberland', 'Dr. Martens', 'Wolverine', 'Frye',
+      'Clarks', 'Thursday Boot Company', 'Allen Edmonds', 'Chippewa',
+      'Sorel', 'UGG', 'Columbia', 'The North Face', 'Merrell',
+      'Danner', 'Blundstone', 'RM Williams', 'Church\'s', 'Common Projects',
+      'Saint Laurent', 'Gucci', 'Prada', 'Other'
+    ],
     fields: [
       {
         name: 'shoeSize',
@@ -647,6 +744,13 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'tie',
     label: 'Tie',
     icon: '👔',
+    brands: [
+      'Brooks Brothers', 'Ralph Lauren', 'Calvin Klein', 'Tommy Hilfiger',
+      'Hugo Boss', 'Vineyard Vines', 'J.Crew', 'Banana Republic',
+      'Drake\'s', 'Tom Ford', 'Hermès', 'Ferragamo', 'Brioni',
+      'Turnbull & Asser', 'Charvet', 'E. Marinella', 'Battistoni',
+      'Burberry', 'Gucci', 'Prada', 'Other'
+    ],
     fields: [
       {
         name: 'length',
@@ -689,6 +793,12 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'belt',
     label: 'Belt',
     icon: '👖',
+    brands: [
+      'Coach', 'Fossil', 'Levi\'s', 'Tommy Hilfiger', 'Calvin Klein',
+      'Ralph Lauren', 'Dockers', 'Timberland', 'Columbia', 'Carhartt',
+      'Dickies', 'Gucci', 'Louis Vuitton', 'Hermès', 'Ferragamo',
+      'Prada', 'Versace', 'Armani', 'Burberry', 'Other'
+    ],
     fields: [
       {
         name: 'waistSize',
@@ -731,6 +841,12 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'cufflinks',
     label: 'Cufflinks',
     icon: '💎',
+    brands: [
+      'Tiffany & Co.', 'Cartier', 'Montblanc', 'Burberry', 'Gucci',
+      'Paul Smith', 'Brooks Brothers', 'Ralph Lauren', 'Hugo Boss',
+      'Dunhill', 'S.T. Dupont', 'Chopard', 'Bvlgari', 'David Yurman',
+      'John Hardy', 'Georg Jensen', 'Other'
+    ],
     fields: [
       {
         name: 'metalType',
@@ -770,6 +886,12 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'pocket-square',
     label: 'Pocket Square',
     icon: '🎨',
+    brands: [
+      'Brooks Brothers', 'Ralph Lauren', 'Drake\'s', 'Tom Ford',
+      'Hermès', 'Charvet', 'Turnbull & Asser', 'Paul Smith',
+      'Hugo Boss', 'Burberry', 'Gucci', 'Ferragamo', 'Brioni',
+      'J.Crew', 'Banana Republic', 'Other'
+    ],
     fields: [
       {
         name: 'dimensions',
@@ -814,6 +936,13 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'watch',
     label: 'Watch',
     icon: '⌚',
+    brands: [
+      'Rolex', 'Omega', 'TAG Heuer', 'Seiko', 'Citizen', 'Tissot',
+      'Casio', 'G-Shock', 'Timex', 'Fossil', 'Bulova', 'Hamilton',
+      'Longines', 'Oris', 'Tudor', 'Breitling', 'IWC', 'Jaeger-LeCoultre',
+      'Patek Philippe', 'Audemars Piguet', 'Vacheron Constantin', 'Cartier',
+      'Panerai', 'Hublot', 'Apple', 'Samsung', 'Garmin', 'Fitbit', 'Other'
+    ],
     fields: [
       {
         name: 'caseSize',
@@ -876,6 +1005,13 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'bag',
     label: 'Bag',
     icon: '💼',
+    brands: [
+      'Tumi', 'Samsonite', 'Coach', 'Fossil', 'Kenneth Cole',
+      'Michael Kors', 'Herschel', 'Fjallraven', 'JanSport', 'The North Face',
+      'Patagonia', 'Eastpak', 'Nike', 'Adidas', 'Under Armour',
+      'Louis Vuitton', 'Gucci', 'Prada', 'Burberry', 'Fendi',
+      'Bottega Veneta', 'Montblanc', 'Dunhill', 'Briggs & Riley', 'Other'
+    ],
     fields: [
       {
         name: 'style',
@@ -909,6 +1045,13 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'wallet',
     label: 'Wallet',
     icon: '👛',
+    brands: [
+      'Coach', 'Fossil', 'Tommy Hilfiger', 'Calvin Klein', 'Ralph Lauren',
+      'Levi\'s', 'Timberland', 'Columbia', 'Carhartt', 'Dickies',
+      'Bellroy', 'Ridge', 'Secrid', 'Ekster', 'Herschel',
+      'Louis Vuitton', 'Gucci', 'Prada', 'Burberry', 'Bottega Veneta',
+      'Hermès', 'Montblanc', 'Dunhill', 'Other'
+    ],
     fields: [
       {
         name: 'style',
@@ -939,6 +1082,13 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'sunglasses',
     label: 'Sunglasses',
     icon: '🕶️',
+    brands: [
+      'Ray-Ban', 'Oakley', 'Maui Jim', 'Costa Del Mar', 'Persol',
+      'Warby Parker', 'Tom Ford', 'Oliver Peoples', 'Randolph Engineering',
+      'American Optical', 'Spy', 'Smith', 'Von Zipper', 'Electric',
+      'Gucci', 'Prada', 'Versace', 'Dior', 'Saint Laurent', 'Burberry',
+      'Carrera', 'Police', 'Armani', 'Other'
+    ],
     fields: [
       {
         name: 'frameShape',
@@ -973,6 +1123,13 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'hat',
     label: 'Hat',
     icon: '🎩',
+    brands: [
+      'New Era', '47 Brand', 'Nike', 'Adidas', 'Under Armour',
+      'Carhartt', 'Dickies', 'The North Face', 'Patagonia', 'Columbia',
+      'Brixton', 'Goorin Bros', 'Stetson', 'Bailey', 'Kangol',
+      'Ralph Lauren', 'Tommy Hilfiger', 'Burberry', 'Gucci', 'Prada',
+      'Supreme', 'Stussy', 'Other'
+    ],
     fields: [
       {
         name: 'style',
@@ -1014,6 +1171,12 @@ export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
     name: 'scarf',
     label: 'Scarf',
     icon: '🧣',
+    brands: [
+      'Brooks Brothers', 'Ralph Lauren', 'J.Crew', 'Banana Republic',
+      'Hermès', 'Burberry', 'Gucci', 'Louis Vuitton', 'Prada',
+      'Versace', 'Armani', 'Hugo Boss', 'Paul Smith', 'Drake\'s',
+      'The North Face', 'Patagonia', 'Columbia', 'Barbour', 'Other'
+    ],
     fields: [
       {
         name: 'length',
@@ -1050,6 +1213,11 @@ export function getCategoryOptions(): FieldOption[] {
 // Helper function to get fields for a specific category
 export function getFieldsForCategory(category: string): CategoryField[] {
   return CATEGORY_CONFIGS[category]?.fields || [];
+}
+
+// Helper function to get brands for a specific category
+export function getBrandsForCategory(category: string): string[] {
+  return CATEGORY_CONFIGS[category]?.brands || [];
 }
 
 // Helper function to check if a category exists
