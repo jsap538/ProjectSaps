@@ -471,3 +471,80 @@ export default function DashboardPage() {
               <div className="px-8 py-6 border-b border-porcelain/10">
                 <h2 className="text-xl font-semibold text-porcelain">My Items</h2>
               </div>
+
+              {loading ? (
+                <div className="divide-y divide-porcelain/10">
+                  {[...Array(5)].map((_, i) => (
+                    <DashboardItemSkeleton key={i} />
+                  ))}
+                </div>
+              ) : error ? (
+                <div className="p-8 text-center">
+                  <p className="text-red-400 mb-4">{error}</p>
+                  <button
+                    onClick={fetchMyItems}
+                    className="rounded-xl bg-porcelain text-ink px-6 py-3 font-medium hover:bg-titanium transition-colors duration-sap"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              ) : items.length === 0 ? (
+                <div className="p-8">
+                  <EmptyDashboard />
+                </div>
+              ) : (
+                <div className="divide-y divide-porcelain/10">
+                  {items.map((item) => (
+                    <div key={item._id} className="p-8">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <h3 className="text-lg font-semibold text-porcelain">
+                              {item.title}
+                            </h3>
+                            <span className="text-sm text-nickel">
+                              {item.brand}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-4 text-sm text-nickel">
+                            <span className="text-titanium font-medium">${(item.price_cents / 100).toFixed(2)}</span>
+                            <span>•</span>
+                            <span>{item.condition}</span>
+                            <span>•</span>
+                            <span>{item.stats.views} views</span>
+                            <span>•</span>
+                            <span className={`px-3 py-1 rounded-xl text-xs font-medium ${
+                              item.isApproved 
+                                ? 'bg-titanium/20 text-titanium'
+                                : 'bg-nickel/20 text-nickel'
+                            }`}>
+                              {item.isApproved ? 'Approved' : 'Pending'}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <Link
+                            href={`/items/${item._id}`}
+                            className="text-titanium hover:text-porcelain text-sm font-medium transition-colors duration-sap"
+                          >
+                            View
+                          </Link>
+                          <button
+                            onClick={() => deleteItem(item._id)}
+                            className="text-red-400 hover:text-red-300 text-sm font-medium transition-colors duration-sap"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
