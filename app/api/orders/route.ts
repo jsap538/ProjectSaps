@@ -143,10 +143,10 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
       enabled: true,
     },
     metadata: {
-      orderId: order._id.toString(),
+      orderId: String(order._id),
       orderNumber: orderNumber,
-      buyerId: user._id.toString(),
-      sellerId: sellerId.toString(),
+      buyerId: String(user._id),
+      sellerId: String(sellerId),
     },
     description: `SAPS Order ${orderNumber}`,
     // TODO: Add Connect transfer when seller onboarding is complete

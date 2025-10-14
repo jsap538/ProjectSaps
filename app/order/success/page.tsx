@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
 function OrderSuccessContent() {
   const router = useRouter();
@@ -11,15 +12,7 @@ function OrderSuccessContent() {
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (orderId) {
-      fetchOrder();
-    } else {
-      setLoading(false);
-    }
-  }, [orderId]);
-
-  const fetchOrder = async () => {
+  const fetchOrder = useCallback(async () => {
     try {
       const response = await fetch(`/api/orders/${orderId}`);
       const data = await response.json();
@@ -32,7 +25,15 @@ function OrderSuccessContent() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [orderId]);
+
+  useEffect(() => {
+    if (orderId) {
+      fetchOrder();
+    } else {
+      setLoading(false);
+    }
+  }, [orderId, fetchOrder]);
 
   if (loading) {
     return (
@@ -108,11 +109,15 @@ function OrderSuccessContent() {
             <div className="space-y-3">
               {order.items?.map((item: any) => (
                 <div key={item._id} className="flex gap-4 p-3 rounded-lg bg-ink/40">
-                  <img
-                    src={item.imageUrl}
-                    alt={item.title}
-                    className="w-16 h-16 object-cover rounded-lg"
-                  />
+                  <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                    <Image
+                      src={item.imageUrl || 'https://placehold.co/200x200/0B0C0E/F5F6F7?text=No+Image'}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                      sizes="64px"
+                    />
+                  </div>
                   <div className="flex-1">
                     <p className="text-porcelain font-medium">{item.title}</p>
                     <p className="text-nickel text-sm">{item.brand}</p>

@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import Image from 'next/image';
 import { useCart } from '@/contexts/CartContext';
 import CheckoutForm from '@/components/CheckoutForm';
 import { formatCurrency } from '@/lib/stripe';
@@ -20,26 +21,7 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Redirect if not signed in
-    if (isLoaded && !isSignedIn) {
-      router.push('/sign-in?redirect=/checkout');
-      return;
-    }
-
-    // Redirect if cart is empty
-    if (isLoaded && cart.length === 0) {
-      router.push('/cart');
-      return;
-    }
-
-    // Create order and get payment intent
-    if (isSignedIn && cart.length > 0) {
-      createOrder();
-    }
-  }, [isSignedIn, isLoaded, cart.length]);
-
-  const createOrder = async () => {
+  const createOrder = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -69,7 +51,26 @@ export default function CheckoutPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [cart]);
+
+  useEffect(() => {
+    // Redirect if not signed in
+    if (isLoaded && !isSignedIn) {
+      router.push('/sign-in?redirect=/checkout');
+      return;
+    }
+
+    // Redirect if cart is empty
+    if (isLoaded && cart.length === 0) {
+      router.push('/cart');
+      return;
+    }
+
+    // Create order and get payment intent
+    if (isSignedIn && cart.length > 0) {
+      createOrder();
+    }
+  }, [isSignedIn, isLoaded, cart.length, createOrder, router]);
 
   const totalPrice = getTotalPrice();
 
@@ -163,11 +164,15 @@ export default function CheckoutPage() {
                   >
                     {cartItem.item && (
                       <>
-                        <img
-                          src={cartItem.item.images[0]?.url || ''}
-                          alt={cartItem.item.title}
-                          className="w-20 h-20 object-cover rounded-lg"
-                        />
+                        <div className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+                          <Image
+                            src={cartItem.item.images[0]?.url || 'https://placehold.co/200x200/0B0C0E/F5F6F7?text=No+Image'}
+                            alt={cartItem.item.title}
+                            fill
+                            className="object-cover"
+                            sizes="80px"
+                          />
+                        </div>
                         <div className="flex-1">
                           <h3 className="text-porcelain font-medium">
                             {cartItem.item.title}
