@@ -13,7 +13,7 @@ export default function HowItWorksPage() {
             How It Works
           </h1>
           <p className="mt-6 text-lg text-nickel max-w-2xl mx-auto text-body">
-            A trusted marketplace for men's premium accessories
+            A trusted marketplace for buying and selling men's premium fashion
           </p>
         </div>
 
@@ -29,7 +29,7 @@ export default function HowItWorksPage() {
               </div>
               <h3 className="mb-3 text-lg font-semibold text-porcelain">Browse & Search</h3>
               <p className="text-nickel text-body">
-                Filter by brand, condition, color, material, and price. Every item is authenticated and photographed.
+                Filter by brand, condition, color, material, and price. Every listing is reviewed and photographed by sellers.
               </p>
             </div>
 
@@ -65,7 +65,7 @@ export default function HowItWorksPage() {
               </div>
               <h3 className="mb-3 text-lg font-semibold text-porcelain">Buyer Protection</h3>
               <p className="text-nickel text-body">
-                Items not as described? We'll make it right. Full refund policy for authenticated issues.
+                Items not as described? We'll make it right. Full refund policy if item doesn't match listing.
               </p>
             </div>
           </div>
@@ -136,7 +136,7 @@ export default function HowItWorksPage() {
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <span>All items are reviewed for authenticity and accurate condition grading</span>
+                <span>All listings are reviewed for accuracy and honest descriptions</span>
               </li>
               <li className="flex items-center gap-4">
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-titanium/20">
@@ -168,7 +168,7 @@ export default function HowItWorksPage() {
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <span>Dispute resolution team available for any issues</span>
+                <span>Dispute resolution available for any issues</span>
               </li>
             </ul>
           </div>
