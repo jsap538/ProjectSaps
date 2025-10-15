@@ -13,8 +13,8 @@ export default function AboutPage() {
             About SAPS
           </h1>
           <p className="mt-6 text-xl text-nickel max-w-3xl mx-auto text-body">
-            The premier marketplace for authenticated men's luxury accessories. 
-            Where quality meets sophistication.
+            The trusted marketplace for buying and selling premium men's fashion. 
+            Authenticated, community-driven, sustainable.
           </p>
         </div>
 
@@ -26,19 +26,19 @@ export default function AboutPage() {
                 Our Mission
               </h2>
               <p className="text-lg text-nickel mb-6 text-body">
-                SAPS was founded on the principle that every man deserves access to 
-                exceptional accessories without compromise. We curate a marketplace 
-                where quality, authenticity, and style converge.
+                SAPS was founded to make premium men's fashion accessible and sustainable. 
+                We connect buyers with trusted sellers in a marketplace where authenticity, 
+                quality, and community come first.
               </p>
               <p className="text-lg text-nickel mb-8 text-body">
-                From handcrafted ties to precision cufflinks, we believe that 
-                the right accessory can transform an outfit and elevate confidence. 
-                Our platform ensures every piece meets our exacting standards.
+                From tailored suits to limited-edition sneakers, luxury watches to designer 
+                accessories—every piece is authenticated and every seller is vetted. We believe 
+                fashion should be circular, not disposable.
               </p>
               <div className="flex gap-4">
                 <Link href="/browse">
                   <PrimaryButton>
-                    Explore Collection
+                    Start Shopping
                   </PrimaryButton>
                 </Link>
                 <Link href="/sell">
@@ -79,8 +79,8 @@ export default function AboutPage() {
               </div>
               <h3 className="text-xl font-semibold text-porcelain mb-4">Authenticity</h3>
               <p className="text-nickel text-body">
-                Every item is carefully verified for authenticity. We work with 
-                trusted experts to ensure you receive genuine luxury accessories.
+                Every item is authenticated before going live. From designer labels to 
+                luxury watches, we verify condition and legitimacy so you can shop with confidence.
               </p>
             </div>
 
@@ -90,10 +90,10 @@ export default function AboutPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-porcelain mb-4">Quality</h3>
+              <h3 className="text-xl font-semibold text-porcelain mb-4">Sustainability</h3>
               <p className="text-nickel text-body">
-                We curate only the finest accessories from established brands. 
-                Each piece represents the pinnacle of craftsmanship and design.
+                Resale reduces waste and extends the life of quality pieces. By buying and 
+                selling pre-owned fashion, our community makes style more sustainable.
               </p>
             </div>
 
@@ -105,8 +105,8 @@ export default function AboutPage() {
               </div>
               <h3 className="text-xl font-semibold text-porcelain mb-4">Community</h3>
               <p className="text-nickel text-body">
-                We foster a community of discerning gentlemen who appreciate 
-                fine accessories and the stories they tell.
+                A trusted network of buyers and sellers who value quality, authenticity, 
+                and fair transactions. We're building a marketplace, not just a platform.
               </p>
             </div>
           </div>
@@ -121,21 +121,19 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-4 text-nickel text-body">
                 <p>
-                  SAPS was born from a simple observation: the market for men's 
-                  luxury accessories was fragmented and lacked the curation that 
-                  discerning gentlemen deserved.
+                  SAPS was born from a simple frustration: buying and selling premium 
+                  men's fashion shouldn't require navigating sketchy marketplaces or 
+                  worrying about fakes.
                 </p>
                 <p>
-                  Founded by a team of style enthusiasts and technology experts, 
-                  we set out to create a platform that would bring together the 
-                  finest accessories from around the world while ensuring 
-                  authenticity and quality at every step.
+                  Founded by fashion enthusiasts and technology experts, we built a 
+                  trusted community where authentication comes first, sellers are 
+                  vetted, and every transaction is secure.
                 </p>
                 <p>
-                  Today, SAPS stands as the premier destination for men who 
-                  understand that the right accessory can make all the difference. 
-                  From boardroom presentations to special occasions, we provide 
-                  the tools for confident, sophisticated style.
+                  Today, SAPS connects hundreds of buyers and sellers across the 
+                  country. Whether you're hunting for grails or clearing out your 
+                  closet, we make it easy, safe, and rewarding.
                 </p>
               </div>
             </div>
@@ -148,7 +146,7 @@ export default function AboutPage() {
               <div className="rounded-2xl border border-porcelain/10 bg-graphite/60 p-6 shadow-subtle">
                 <h3 className="text-xl font-semibold text-porcelain mb-3">Items Sold</h3>
                 <p className="text-2xl font-light text-titanium mb-2">1,000+</p>
-                <p className="text-nickel text-body">Authenticated luxury accessories</p>
+                <p className="text-nickel text-body">Authenticated men's fashion pieces</p>
               </div>
               <div className="rounded-2xl border border-porcelain/10 bg-graphite/60 p-6 shadow-subtle">
                 <h3 className="text-xl font-semibold text-porcelain mb-3">Community</h3>
@@ -166,7 +164,7 @@ export default function AboutPage() {
               Our Team
             </h2>
             <p className="text-lg text-nickel max-w-2xl mx-auto text-body">
-              Passionate professionals dedicated to elevating men's style
+              Real people building a trusted marketplace for the menswear community
             </p>
           </div>
           
@@ -175,10 +173,10 @@ export default function AboutPage() {
               <div className="w-24 h-24 bg-graphite/60 rounded-full mx-auto mb-6 flex items-center justify-center">
                 <BrandMark className="h-12 w-12 text-titanium" />
               </div>
-              <h3 className="text-xl font-semibold text-porcelain mb-2">Style Experts</h3>
+              <h3 className="text-xl font-semibold text-porcelain mb-2">Authentication Team</h3>
               <p className="text-nickel text-body">
-                Our team includes fashion industry veterans who understand 
-                the nuances of men's luxury accessories.
+                Experts in spotting fakes, verifying condition, and ensuring every 
+                item meets our authenticity standards before going live.
               </p>
             </div>
             
@@ -186,10 +184,10 @@ export default function AboutPage() {
               <div className="w-24 h-24 bg-graphite/60 rounded-full mx-auto mb-6 flex items-center justify-center">
                 <BrandMark className="h-12 w-12 text-titanium" />
               </div>
-              <h3 className="text-xl font-semibold text-porcelain mb-2">Authentication Specialists</h3>
+              <h3 className="text-xl font-semibold text-porcelain mb-2">Customer Support</h3>
               <p className="text-nickel text-body">
-                Trained professionals who verify the authenticity of every 
-                item that passes through our platform.
+                Real people who help resolve disputes, answer questions, and 
+                keep our community running smoothly.
               </p>
             </div>
             
@@ -213,9 +211,9 @@ export default function AboutPage() {
               Join the SAPS Community
             </h2>
             <p className="text-lg text-nickel mb-8 max-w-2xl mx-auto text-body">
-              Whether you're looking to add to your collection or share your 
-              favorite pieces with others, SAPS is your destination for 
-              authentic luxury accessories.
+              Whether you're hunting for your next grail piece or turning your 
+              closet into cash, join thousands of buyers and sellers in the 
+              SAPS marketplace.
             </p>
             <div className="flex gap-4 justify-center">
               <Link href="/browse">
