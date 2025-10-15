@@ -14,7 +14,7 @@ const faqData: FAQItem[] = [
   // General Questions
   {
     question: "What is SAPS?",
-    answer: "SAPS is a premium marketplace for authenticated men's luxury accessories. We specialize in ties, cufflinks, belts, pocket squares, and other refined accessories from established brands. Our platform ensures authenticity and quality at every step.",
+    answer: "SAPS is a trusted marketplace for buying and selling premium men's fashion. From designer suits and limited-edition sneakers to luxury watches and accessories, we connect buyers with trusted sellers. All listings are reviewed for accuracy and sellers are accountable to the community.",
     category: "General"
   },
   {
@@ -24,14 +24,14 @@ const faqData: FAQItem[] = [
   },
   {
     question: "Is SAPS safe to use?",
-    answer: "Absolutely. We use bank-level encryption for all transactions and store your payment information securely. All items are authenticated before listing, and we have a comprehensive dispute resolution process.",
+    answer: "Yes. We use Stripe for secure payment processing with buyer protection. All listings are reviewed before going live, and we have a dispute resolution process if items don't match descriptions.",
     category: "General"
   },
 
   // Buying Questions
   {
     question: "How do I know items are authentic?",
-    answer: "Every item on SAPS goes through our rigorous authentication process. Our experts verify authenticity using multiple methods including brand knowledge, material analysis, and construction details. We stand behind every item we list.",
+    answer: "Sellers are responsible for accurate descriptions and photos. We review listings for obvious issues and hold sellers accountable. If you receive an item that doesn't match the listing, you can open a dispute for a refund. For high-value items, we recommend professional authentication.",
     category: "Buying"
   },
   {
@@ -51,19 +51,19 @@ const faqData: FAQItem[] = [
   },
   {
     question: "What payment methods do you accept?",
-    answer: "We accept all major credit cards, PayPal, and Apple Pay. All payments are processed securely through our trusted payment partners.",
+    answer: "We accept all major credit and debit cards through Stripe, our secure payment processor. Stripe handles all payment information and provides buyer protection.",
     category: "Buying"
   },
 
   // Selling Questions
   {
     question: "How do I become a seller?",
-    answer: "Simply sign up and complete our seller verification process. You'll need to provide some basic information and verify your identity. Once approved, you can start listing your items immediately.",
+    answer: "Just sign up for an account and you can start listing items immediately. All listings go through review before going live (usually within 24 hours). Make sure to provide accurate photos and descriptions.",
     category: "Selling"
   },
   {
     question: "What items can I sell?",
-    answer: "We accept men's luxury accessories including ties, cufflinks, belts, pocket squares, watches, and other refined accessories. Items must be authentic, in good condition, and from established brands.",
+    answer: "We accept premium men's fashion including clothing (suits, shirts, pants, outerwear), shoes (dress shoes, sneakers, boots), watches, and accessories (ties, belts, bags, etc.). Items should be in good condition with accurate descriptions and photos.",
     category: "Selling"
   },
   {
@@ -211,7 +211,7 @@ export default function FAQPage() {
               Still Have Questions?
             </h2>
             <p className="text-nickel mb-6 text-body">
-              Our support team is here to help. Get in touch and we'll respond within 24 hours.
+              Need more help? Get in touch and we'll respond within 24-48 hours.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
