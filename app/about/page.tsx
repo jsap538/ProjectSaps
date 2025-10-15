@@ -27,12 +27,12 @@ export default function AboutPage() {
               </h2>
               <p className="text-lg text-nickel mb-6 text-body">
                 SAPS was founded to make premium men's fashion accessible and sustainable. 
-                We connect buyers with trusted sellers in a marketplace where authenticity, 
-                quality, and community come first.
+                We connect buyers with trusted sellers in a marketplace where accountability, 
+                transparency, and community come first.
               </p>
               <p className="text-lg text-nickel mb-8 text-body">
                 From tailored suits to limited-edition sneakers, luxury watches to designer 
-                accessories—every listing is reviewed and sellers are accountable to the community. 
+                accessories. Every listing is reviewed and sellers are accountable to the community. 
                 We believe fashion should be circular, not disposable.
               </p>
               <div className="flex gap-4">
