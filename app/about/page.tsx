@@ -14,7 +14,7 @@ export default function AboutPage() {
           </h1>
           <p className="mt-6 text-xl text-nickel max-w-3xl mx-auto text-body">
             The trusted marketplace for buying and selling premium men's fashion. 
-            Authenticated, community-driven, sustainable.
+            Reviewed, community-driven, sustainable.
           </p>
         </div>
 
@@ -32,8 +32,8 @@ export default function AboutPage() {
               </p>
               <p className="text-lg text-nickel mb-8 text-body">
                 From tailored suits to limited-edition sneakers, luxury watches to designer 
-                accessories—every piece is authenticated and every seller is vetted. We believe 
-                fashion should be circular, not disposable.
+                accessories—every listing is reviewed and sellers are accountable to the community. 
+                We believe fashion should be circular, not disposable.
               </p>
               <div className="flex gap-4">
                 <Link href="/browse">
@@ -77,10 +77,10 @@ export default function AboutPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-porcelain mb-4">Authenticity</h3>
+              <h3 className="text-xl font-semibold text-porcelain mb-4">Trust & Safety</h3>
               <p className="text-nickel text-body">
-                Every item is authenticated before going live. From designer labels to 
-                luxury watches, we verify condition and legitimacy so you can shop with confidence.
+                Every listing is reviewed for accuracy and sellers are held accountable. Report 
+                system, buyer protection, and community moderation keep the marketplace safe.
               </p>
             </div>
 
@@ -127,8 +127,8 @@ export default function AboutPage() {
                 </p>
                 <p>
                   Founded by fashion enthusiasts and technology experts, we built a 
-                  trusted community where authentication comes first, sellers are 
-                  vetted, and every transaction is secure.
+                  trusted community where accountability comes first, sellers are 
+                  responsible for accuracy, and every transaction is secure.
                 </p>
                 <p>
                   Today, SAPS connects hundreds of buyers and sellers across the 
@@ -173,10 +173,10 @@ export default function AboutPage() {
               <div className="w-24 h-24 bg-graphite/60 rounded-full mx-auto mb-6 flex items-center justify-center">
                 <BrandMark className="h-12 w-12 text-titanium" />
               </div>
-              <h3 className="text-xl font-semibold text-porcelain mb-2">Authentication Team</h3>
+              <h3 className="text-xl font-semibold text-porcelain mb-2">Moderation Team</h3>
               <p className="text-nickel text-body">
-                Experts in spotting fakes, verifying condition, and ensuring every 
-                item meets our authenticity standards before going live.
+                Review listings for accuracy, handle reports, and ensure sellers provide 
+                honest descriptions and photos of their items.
               </p>
             </div>
             

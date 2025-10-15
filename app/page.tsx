@@ -60,7 +60,7 @@ export default function Home() {
               </h1>
               
               <p className="mt-6 text-lg leading-relaxed text-nickel max-w-xl text-body">
-                Discover authenticated luxury from trusted sellers, or turn your closet into cash. From designer suits to premium sneakers.
+                Discover premium menswear from trusted sellers, or turn your closet into cash. From designer suits to premium sneakers.
               </p>
               
               <div className="mt-8 flex gap-3">
@@ -147,9 +147,9 @@ export default function Home() {
                   />
                 </svg>
               </div>
-              <h3 className="mb-3 text-xl font-semibold text-porcelain">Authenticated</h3>
+              <h3 className="mb-3 text-xl font-semibold text-porcelain">Reviewed & Moderated</h3>
               <p className="leading-relaxed text-nickel text-body">
-                Every item verified for authenticity and condition
+                Every listing is reviewed before going live to ensure accuracy
               </p>
             </div>
 

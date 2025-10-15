@@ -9,7 +9,7 @@ export default function Footer() {
           <div>
             <h3 className="mb-4 text-xl font-medium text-porcelain">SAPS</h3>
             <p className="text-sm leading-relaxed text-nickel">
-              Buy and sell premium men's fashion. Authenticated, trusted, community-driven.
+              Buy and sell premium men's fashion. Reviewed, trusted, community-driven.
             </p>
           </div>
 

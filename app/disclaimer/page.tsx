@@ -39,9 +39,9 @@ export default function DisclaimerPage() {
               </div>
             </section>
 
-            {/* Authentication Disclaimer */}
+            {/* Seller Responsibility Disclaimer */}
             <section className="rounded-2xl border border-porcelain/10 bg-graphite/60 p-8 shadow-soft">
-              <h2 className="text-2xl font-semibold text-porcelain mb-6 text-display">Authentication & Condition</h2>
+              <h2 className="text-2xl font-semibold text-porcelain mb-6 text-display">Seller Responsibility & Item Condition</h2>
               <div className="space-y-4 text-nickel text-body">
                 <p>
                   While we strive to provide accurate condition assessments, all items are sold "as-is" based on 
