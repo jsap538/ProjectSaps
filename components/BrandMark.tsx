@@ -1,29 +1,25 @@
+import Image from "next/image";
+
 interface BrandMarkProps {
   className?: string;
+  size?: "sm" | "md" | "lg";
 }
 
-export default function BrandMark({ className = "" }: BrandMarkProps) {
+export default function BrandMark({ className = "h-10 w-10", size = "md" }: BrandMarkProps) {
+  const sizeClasses = {
+    sm: "h-8 w-8",
+    md: "h-10 w-10", 
+    lg: "h-12 w-12"
+  };
+
   return (
-    <svg
-      viewBox="0 0 100 100"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-    >
-      {/* Stylized "E" for Encore */}
-      <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="2" opacity="0.2" />
-      <path
-        d="M35 30 H65 M35 50 H60 M35 70 H65"
-        stroke="currentColor"
-        strokeWidth="3.5"
-        strokeLinecap="round"
-      />
-      <path
-        d="M35 30 V70"
-        stroke="currentColor"
-        strokeWidth="3.5"
-        strokeLinecap="round"
-      />
-    </svg>
+    <Image
+      src="/saps-logo-white-10x.png"
+      alt="Encore"
+      width={160}
+      height={160}
+      className={`${sizeClasses[size]} ${className}`}
+      priority
+    />
   );
 }
