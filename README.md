@@ -1,4 +1,4 @@
-# SAPS - Men's Premium Accessories Resale
+# Encore - Men's Premium Accessories Resale
 
 A modern, sleek marketplace for buying and selling premium men's accessories including ties, cufflinks, belts, and pocket squares.
 

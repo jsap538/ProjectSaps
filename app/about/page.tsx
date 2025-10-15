@@ -10,7 +10,7 @@ export default function AboutPage() {
         <div className="mb-24 text-center">
           <BrandMark className="h-20 w-20 text-titanium mx-auto mb-8" />
           <h1 className="text-4xl font-semibold tracking-wide1 text-porcelain md:text-6xl text-display">
-            About SAPS
+            About Encore
           </h1>
           <p className="mt-6 text-xl text-nickel max-w-3xl mx-auto text-body">
             The trusted marketplace for buying and selling premium men's fashion. 
@@ -26,7 +26,7 @@ export default function AboutPage() {
                 Our Mission
               </h2>
               <p className="text-lg text-nickel mb-6 text-body">
-                SAPS was founded to make premium men's fashion accessible and sustainable. 
+                Encore was founded to make premium men's fashion accessible and sustainable. 
                 We connect buyers with trusted sellers in a marketplace where accountability, 
                 transparency, and community come first.
               </p>
@@ -121,7 +121,7 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-4 text-nickel text-body">
                 <p>
-                  SAPS was born from a simple frustration: buying and selling premium 
+                  Encore was born from a simple frustration: buying and selling premium 
                   men's fashion shouldn't require navigating sketchy marketplaces or 
                   worrying about fakes.
                 </p>
@@ -131,7 +131,7 @@ export default function AboutPage() {
                   responsible for accuracy, and every transaction is secure.
                 </p>
                 <p>
-                  Today, SAPS connects hundreds of buyers and sellers across the 
+                  Today, Encore connects hundreds of buyers and sellers across the 
                   country. Whether you're hunting for grails or clearing out your 
                   closet, we make it easy, safe, and rewarding.
                 </p>
@@ -161,12 +161,12 @@ export default function AboutPage() {
         <section className="text-center">
           <div className="rounded-2xl border border-porcelain/10 bg-graphite/60 p-12 shadow-soft">
             <h2 className="text-3xl font-semibold text-porcelain mb-6 text-display">
-              Join the SAPS Community
+              Join the Encore Community
             </h2>
             <p className="text-lg text-nickel mb-8 max-w-2xl mx-auto text-body">
               Whether you're hunting for your next grail piece or turning your 
               closet into cash, join thousands of buyers and sellers in the 
-              SAPS marketplace.
+              Encore marketplace.
             </p>
             <div className="flex gap-4 justify-center">
               <Link href="/browse">

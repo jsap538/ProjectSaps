@@ -13,8 +13,8 @@ interface FAQItem {
 const faqData: FAQItem[] = [
   // General Questions
   {
-    question: "What is SAPS?",
-    answer: "SAPS is a trusted marketplace for buying and selling premium men's fashion. From designer suits and limited-edition sneakers to luxury watches and accessories, we connect buyers with trusted sellers. All listings are reviewed for accuracy and sellers are accountable to the community.",
+    question: "What is Encore?",
+    answer: "Encore is a trusted marketplace for buying and selling premium men's fashion. From designer suits and limited-edition sneakers to luxury watches and accessories, we connect buyers with trusted sellers. All listings are reviewed for accuracy and sellers are accountable to the community.",
     category: "General"
   },
   {
@@ -23,7 +23,7 @@ const faqData: FAQItem[] = [
     category: "General"
   },
   {
-    question: "Is SAPS safe to use?",
+    question: "Is Encore safe to use?",
     answer: "Yes. We use Stripe for secure payment processing with buyer protection. All listings are reviewed before going live, and we have a dispute resolution process if items don't match descriptions.",
     category: "General"
   },
@@ -68,7 +68,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "How much does it cost to sell?",
-    answer: "SAPS charges a competitive commission on successful sales. Our fee structure is transparent and clearly displayed before you list. There are no upfront costs or monthly fees.",
+    answer: "Encore charges a competitive commission on successful sales. Our fee structure is transparent and clearly displayed before you list. There are no upfront costs or monthly fees.",
     category: "Selling"
   },
   {
@@ -147,7 +147,7 @@ export default function FAQPage() {
             Frequently Asked Questions
           </h1>
           <p className="mt-6 text-lg text-nickel max-w-2xl mx-auto text-body">
-            Find answers to common questions about shopping and selling on SAPS
+            Find answers to common questions about shopping and selling on Encore
           </p>
         </div>
 
@@ -215,7 +215,7 @@ export default function FAQPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="mailto:support@saps.com"
+                href="mailto:support@encore.com"
                 className="inline-flex items-center justify-center rounded-xl px-6 py-3 bg-titanium text-ink font-medium transition-transform duration-sap hover:-translate-y-px"
               >
                 Contact Support

@@ -122,7 +122,7 @@ export default function PrivacyPage() {
                   <li><strong className="text-porcelain">Opt-out:</strong> Unsubscribe from marketing communications</li>
                 </ul>
                 <p>
-                  To exercise these rights, contact us at privacy@saps.com with your request. 
+                  To exercise these rights, contact us at privacy@encore.com with your request. 
                   We will respond within 30 days.
                 </p>
               </div>
@@ -153,14 +153,14 @@ export default function PrivacyPage() {
               <h2 className="text-2xl font-semibold text-porcelain mb-6 text-display">Children's Privacy</h2>
               <div className="space-y-4 text-nickel text-body">
                 <p>
-                  SAPS is not intended for children under 13 years of age. We do not knowingly 
+                  Encore is not intended for children under 13 years of age. We do not knowingly 
                   collect personal information from children under 13. If we become aware that we 
                   have collected personal information from a child under 13, we will take steps 
                   to delete such information.
                 </p>
                 <p>
                   If you are a parent or guardian and believe your child has provided us with 
-                  personal information, please contact us at privacy@saps.com.
+                  personal information, please contact us at privacy@encore.com.
                 </p>
               </div>
             </section>
@@ -173,9 +173,9 @@ export default function PrivacyPage() {
                   If you have questions about this Privacy Policy or our data practices:
                 </p>
                 <ul className="list-disc pl-6 space-y-2">
-                  <li>Email: privacy@saps.com</li>
+                  <li>Email: privacy@encore.com</li>
                   <li>Response time: 48 hours for privacy-related inquiries</li>
-                  <li>Data Protection Officer: dpo@saps.com</li>
+                  <li>Data Protection Officer: dpo@encore.com</li>
                 </ul>
                 <p className="text-titanium font-medium">
                   <strong>Last Updated:</strong> {new Date().toLocaleDateString()}

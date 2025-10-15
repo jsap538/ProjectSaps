@@ -6,7 +6,7 @@ export default function SignUpPage() {
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-dark dark:text-white">
-            Join SAPS
+            Join Encore
           </h2>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
             Create your account to start buying and selling

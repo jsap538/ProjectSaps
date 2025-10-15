@@ -38,7 +38,7 @@ export interface ITransaction extends Document {
   
   // Amount details
   amount_cents: number; // Transaction amount
-  platformFee_cents: number; // SAPS platform fee
+  platformFee_cents: number; // Encore platform fee
   stripeFee_cents: number; // Stripe processing fee
   netAmount_cents: number; // Amount after all fees
   currency: string; // USD, EUR, etc.

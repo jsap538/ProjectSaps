@@ -128,7 +128,7 @@ export default function Home() {
       <section className="bg-onyx py-20">
         <div className="mx-auto max-w-7xl px-6">
           <h2 className="mb-16 text-center text-3xl font-semibold text-porcelain md:text-4xl text-display">
-            Why SAPS
+            Why Encore
           </h2>
           <div className="grid gap-10 md:grid-cols-3">
             <div className="group rounded-2xl bg-graphite/60 p-8 text-center shadow-subtle transition hover:shadow-soft sap-hover-lift">

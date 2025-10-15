@@ -1,4 +1,4 @@
-// Comprehensive filter data for SAPS marketplace
+// Comprehensive filter data for Encore marketplace
 
 export const BRANDS = [
   // Luxury & Designer

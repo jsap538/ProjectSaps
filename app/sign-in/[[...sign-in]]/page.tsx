@@ -9,7 +9,7 @@ export default function SignInPage() {
             Welcome back
           </h2>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Sign in to your SAPS account
+            Sign in to your Encore account
           </p>
         </div>
         <SignIn 

@@ -228,7 +228,7 @@ export const POST = withRateLimit(rateLimiters.general, withErrorHandling(async 
       buyerId: String(user._id),
       sellerId: String(sellerId),
     },
-    description: `SAPS Order ${orderNumber}`,
+    description: `Encore Order ${orderNumber}`,
     // TODO: Add Connect transfer when seller onboarding is complete
     // application_fee_amount: serviceFee_cents,
     // transfer_data: { destination: sellerStripeAccountId },

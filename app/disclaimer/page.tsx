@@ -11,7 +11,7 @@ export default function DisclaimerPage() {
             Terms & Disclaimers
           </h1>
           <p className="mt-6 text-lg text-nickel max-w-2xl mx-auto text-body">
-            Important information about using SAPS marketplace
+            Important information about using Encore marketplace
           </p>
         </div>
 
@@ -23,7 +23,7 @@ export default function DisclaimerPage() {
               <h2 className="text-2xl font-semibold text-porcelain mb-6 text-display">Platform Disclaimer</h2>
               <div className="space-y-4 text-nickel text-body">
                 <p>
-                  SAPS is a peer-to-peer marketplace platform that facilitates transactions between buyers and sellers. 
+                  Encore is a peer-to-peer marketplace platform that facilitates transactions between buyers and sellers. 
                   We do not own, manufacture, or directly sell the items listed on our platform. All items are sold 
                   by independent sellers who are responsible for their own listings, descriptions, and fulfillment.
                 </p>
@@ -66,17 +66,17 @@ export default function DisclaimerPage() {
               <div className="space-y-4 text-nickel text-body">
                 <p>
                   <strong className="text-porcelain">Payment Processing:</strong> All payments are processed through 
-                  secure third-party payment processors. SAPS may hold funds temporarily to ensure 
+                  secure third-party payment processors. Encore may hold funds temporarily to ensure 
                   transaction completion and dispute resolution.
                 </p>
                 <p>
                   <strong className="text-porcelain">Shipping & Delivery:</strong> Sellers are responsible for 
                   packaging and shipping items. Delivery times are estimates and not guaranteed. 
-                  SAPS is not responsible for shipping delays, lost packages, or damage during transit.
+                  Encore is not responsible for shipping delays, lost packages, or damage during transit.
                 </p>
                 <p>
                   <strong className="text-porcelain">Returns & Refunds:</strong> Return policies are set by 
-                  individual sellers. SAPS may facilitate dispute resolution but does not guarantee 
+                  individual sellers. Encore may facilitate dispute resolution but does not guarantee 
                   refunds or returns. All sales are considered final unless otherwise specified.
                 </p>
               </div>
@@ -112,7 +112,7 @@ export default function DisclaimerPage() {
               <h2 className="text-2xl font-semibold text-porcelain mb-6 text-display">Limitation of Liability</h2>
               <div className="space-y-4 text-nickel text-body">
                 <p>
-                  SAPS's liability is limited to the fees we collect from transactions. We are not liable for:
+                  Encore's liability is limited to the fees we collect from transactions. We are not liable for:
                 </p>
                 <ul className="list-disc pl-6 space-y-2">
                   <li>Direct, indirect, incidental, or consequential damages</li>
@@ -123,7 +123,7 @@ export default function DisclaimerPage() {
                 </ul>
                 <p className="text-titanium font-medium">
                   <strong>Maximum Liability:</strong> Our total liability for any claim shall not exceed 
-                  the total fees collected by SAPS for the specific transaction in question.
+                  the total fees collected by Encore for the specific transaction in question.
                 </p>
               </div>
             </section>
@@ -133,13 +133,13 @@ export default function DisclaimerPage() {
               <h2 className="text-2xl font-semibold text-porcelain mb-6 text-display">Dispute Resolution</h2>
               <div className="space-y-4 text-nickel text-body">
                 <p>
-                  <strong className="text-porcelain">Resolution Process:</strong> SAPS may facilitate 
+                  <strong className="text-porcelain">Resolution Process:</strong> Encore may facilitate 
                   communication between buyers and sellers to resolve disputes, but we do not guarantee 
                   outcomes or provide binding arbitration.
                 </p>
                 <p>
                   <strong className="text-porcelain">Escalation:</strong> For disputes involving amounts 
-                  over $500, we recommend seeking professional mediation or legal counsel. SAPS reserves 
+                  over $500, we recommend seeking professional mediation or legal counsel. Encore reserves 
                   the right to suspend accounts involved in fraudulent activity.
                 </p>
                 <p>
@@ -158,7 +158,7 @@ export default function DisclaimerPage() {
                   For questions about these disclaimers or to report issues:
                 </p>
                 <ul className="list-disc pl-6 space-y-2">
-                  <li>Email: support@saps.com</li>
+                  <li>Email: support@encore.com</li>
                   <li>Response time: 24-48 hours for general inquiries</li>
                   <li>Urgent disputes: Include "URGENT" in subject line</li>
                   <li>Documentation: Keep records of all communications and transactions</li>
@@ -174,7 +174,7 @@ export default function DisclaimerPage() {
         {/* Footer Note */}
         <div className="mt-16 text-center">
           <p className="text-sm text-nickel">
-            By using SAPS, you acknowledge that you have read, understood, and agree to be bound by these terms and disclaimers.
+            By using Encore, you acknowledge that you have read, understood, and agree to be bound by these terms and disclaimers.
           </p>
         </div>
       </div>

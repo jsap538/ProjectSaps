@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="grid gap-12 md:grid-cols-3">
           {/* Brand */}
           <div>
-            <h3 className="mb-4 text-xl font-medium text-porcelain">SAPS</h3>
+            <h3 className="mb-4 text-xl font-medium text-porcelain">Encore</h3>
             <p className="text-sm leading-relaxed text-nickel">
               Buy and sell premium men's fashion. Reviewed, trusted, community-driven.
             </p>
@@ -115,7 +115,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-16 border-t border-porcelain/10 pt-8 text-center">
           <p className="text-sm text-nickel">
-            © {new Date().getFullYear()} SAPS. All rights reserved.{" "}
+            © {new Date().getFullYear()} Encore. All rights reserved.{" "}
             <Link href="/disclaimer" className="text-titanium hover:text-porcelain transition-colors duration-sap">
               Terms & Disclaimers
             </Link>

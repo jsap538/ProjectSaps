@@ -61,7 +61,7 @@ interface IOrderModel extends Model<IOrder, {}, IOrderMethods> {
 
 export interface IOrder extends Document {
   // Order number for customer reference
-  orderNumber: string; // e.g., "SAPS-20240101-ABCD"
+  orderNumber: string; // e.g., "ENC-20240101-ABCD"
   
   // Parties involved
   buyerId: mongoose.Types.ObjectId;
@@ -406,7 +406,7 @@ OrderSchema.methods = {
 OrderSchema.static('generateOrderNumber', async function(): Promise<string> {
   const date = new Date().toISOString().split('T')[0].replace(/-/g, '');
   const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-  return `SAPS-${date}-${random}`;
+  return `ENC-${date}-${random}`;
 });
 
 OrderSchema.static('findByBuyer', async function(buyerId: mongoose.Types.ObjectId, filters = {}) {

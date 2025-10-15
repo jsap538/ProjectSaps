@@ -61,10 +61,10 @@ export default function ContactPage() {
                   Can't find what you're looking for? Send us an email and we'll get back to you.
                 </p>
                 <a 
-                  href="mailto:support@saps.com"
+                  href="mailto:support@encore.com"
                   className="inline-flex items-center gap-2 text-lg font-medium text-titanium hover:text-porcelain transition-colors duration-sap"
                 >
-                  support@saps.com
+                  support@encore.com
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>

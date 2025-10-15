@@ -58,7 +58,7 @@ export default function ShippingPage() {
               <h2 className="text-2xl font-semibold text-porcelain mb-6 text-display">How Shipping Works</h2>
               <div className="space-y-4 text-nickel text-body">
                 <p>
-                  SAPS is a marketplace where individual sellers ship their own items directly to buyers. 
+                  Encore is a marketplace where individual sellers ship their own items directly to buyers. 
                   When you purchase an item, the seller is notified and ships the item from their location.
                 </p>
                 <p>
@@ -141,7 +141,7 @@ export default function ShippingPage() {
               <h2 className="text-2xl font-semibold text-porcelain mb-6 text-display">Shipping Issues</h2>
               <div className="space-y-4 text-nickel text-body">
                 <p>
-                  If you have issues with your order, contact us at support@saps.com with your 
+                  If you have issues with your order, contact us at support@encore.com with your 
                   order number and details of the problem.
                 </p>
                 <p>
@@ -167,12 +167,12 @@ export default function ShippingPage() {
               <div className="space-y-4 text-nickel text-body">
                 <p>
                   For questions about shipping, tracking, or delivery issues, contact us at 
-                  <strong className="text-titanium"> support@saps.com</strong>. Include your order 
+                  <strong className="text-titanium"> support@encore.com</strong>. Include your order 
                   number for faster assistance.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 mt-6">
                   <a
-                    href="mailto:support@saps.com"
+                    href="mailto:support@encore.com"
                     className="inline-flex items-center justify-center rounded-xl px-6 py-3 bg-titanium text-ink font-medium transition-transform duration-sap hover:-translate-y-px"
                   >
                     Contact Support

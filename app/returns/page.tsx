@@ -107,7 +107,7 @@ export default function ReturnsPage() {
                   <div>
                     <h3 className="text-lg font-semibold text-porcelain mb-2">Contact Support</h3>
                     <p className="text-nickel text-body">
-                      Email us at support@saps.com within 48 hours of delivery. Include your 
+                      Email us at support@encore.com within 48 hours of delivery. Include your 
                       order number and detailed description of the issue with photos.
                     </p>
                   </div>
@@ -162,7 +162,7 @@ export default function ReturnsPage() {
                   <strong className="text-porcelain">Who Pays for Return Shipping:</strong>
                 </p>
                 <ul className="list-disc pl-6 space-y-2">
-                  <li><strong className="text-porcelain">SAPS covers return shipping</strong> if the item doesn't match the description, has undisclosed damage, or was damaged during shipping</li>
+                  <li><strong className="text-porcelain">Encore covers return shipping</strong> if the item doesn't match the description, has undisclosed damage, or was damaged during shipping</li>
                   <li><strong className="text-porcelain">Buyer pays return shipping</strong> if you simply change your mind or the item doesn't fit as expected</li>
                   <li><strong className="text-porcelain">Case-by-case basis</strong> for other situations - we'll work with you to find a fair solution</li>
                 </ul>
@@ -205,12 +205,12 @@ export default function ReturnsPage() {
               <div className="space-y-4 text-nickel text-body">
                 <p>
                   For questions about returns or to start a return, contact us at 
-                  <strong className="text-titanium"> support@saps.com</strong>. Include your order 
+                  <strong className="text-titanium"> support@encore.com</strong>. Include your order 
                   number and photos of the issue for faster processing.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 mt-6">
                   <a
-                    href="mailto:support@saps.com"
+                    href="mailto:support@encore.com"
                     className="inline-flex items-center justify-center rounded-xl px-6 py-3 bg-titanium text-ink font-medium transition-transform duration-sap hover:-translate-y-px"
                   >
                     Contact Support

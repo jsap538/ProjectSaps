@@ -12,8 +12,8 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
-  title: "SAPS - Men's Premium Accessories Resale",
-  description: "Discover premium men's ties, accessories, and essentials. Buy and sell authenticated luxury items.",
+  title: "Encore - Premium Men's Fashion Marketplace",
+  description: "Buy and sell premium men's fashion. From designer suits to luxury sneakers. Trusted marketplace for menswear enthusiasts.",
 };
 
 export default function RootLayout({

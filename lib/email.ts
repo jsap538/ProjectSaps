@@ -7,9 +7,9 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const FROM_EMAIL = 'SAPS <orders@saps.com>'; // Update with your verified domain
-const SUPPORT_EMAIL = 'support@saps.com';
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://project-saps.vercel.app';
+const FROM_EMAIL = 'Encore <orders@encore.com>'; // Update with your verified domain
+const SUPPORT_EMAIL = 'support@encore.com';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://encore.vercel.app';
 
 interface EmailRecipient {
   email: string;
@@ -249,7 +249,7 @@ function generateOrderConfirmationHTML(data: OrderEmailData): string {
                 Questions? Contact us at <a href="mailto:${SUPPORT_EMAIL}" style="color: #33CC66; text-decoration: none;">${SUPPORT_EMAIL}</a>
               </p>
               <p style="margin: 0; color: #5A6270; font-size: 12px;">
-                © ${new Date().getFullYear()} SAPS. All rights reserved.
+                © ${new Date().getFullYear()} Encore. All rights reserved.
               </p>
             </td>
           </tr>
@@ -367,7 +367,7 @@ function generateNewSaleHTML(data: OrderEmailData): string {
                 Questions? Contact us at <a href="mailto:${SUPPORT_EMAIL}" style="color: #33CC66; text-decoration: none;">${SUPPORT_EMAIL}</a>
               </p>
               <p style="margin: 0; color: #5A6270; font-size: 12px;">
-                © ${new Date().getFullYear()} SAPS. All rights reserved.
+                © ${new Date().getFullYear()} Encore. All rights reserved.
               </p>
             </td>
           </tr>
@@ -428,7 +428,7 @@ function generateItemSoldHTML(data: ItemSoldEmailData): string {
           <tr>
             <td style="padding: 30px; text-align: center; background-color: #151821; border-top: 1px solid #2a2f3a;">
               <p style="margin: 0; color: #5A6270; font-size: 12px;">
-                © ${new Date().getFullYear()} SAPS. All rights reserved.
+                © ${new Date().getFullYear()} Encore. All rights reserved.
               </p>
             </td>
           </tr>
@@ -496,7 +496,7 @@ function generateShippingNotificationHTML(
                 Questions? Contact us at <a href="mailto:${SUPPORT_EMAIL}" style="color: #33CC66; text-decoration: none;">${SUPPORT_EMAIL}</a>
               </p>
               <p style="margin: 0; color: #5A6270; font-size: 12px;">
-                © ${new Date().getFullYear()} SAPS. All rights reserved.
+                © ${new Date().getFullYear()} Encore. All rights reserved.
               </p>
             </td>
           </tr>
