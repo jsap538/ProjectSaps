@@ -49,29 +49,29 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <div className="max-w-2xl">
               <div className="mb-8 text-sm font-medium text-nickel tracking-wider uppercase">
-                Premium Collection
+                Men's Fashion Marketplace
               </div>
               
               <h1 className="text-4xl md:text-6xl font-semibold tracking-wide1 text-display">
-                Quiet confidence.
+                Buy and sell premium
                 <span className="block mt-2 text-titanium">
-                  Crafted for performance.
+                  men's fashion.
                 </span>
               </h1>
               
               <p className="mt-6 text-lg leading-relaxed text-nickel max-w-xl text-body">
-                Premium accessories curated for the modern wardrobe. Precision, materials, and minimal design.
+                Discover authenticated luxury from trusted sellers, or turn your closet into cash. From designer suits to premium sneakers.
               </p>
               
               <div className="mt-8 flex gap-3">
                 <Link href="/browse">
                   <PrimaryButton>
-                    Shop the edit
+                    Start Shopping
                   </PrimaryButton>
                 </Link>
                 <Link href="/sell">
                   <GhostButton>
-                    View collections
+                    Start Selling
                   </GhostButton>
                 </Link>
               </div>
@@ -92,13 +92,13 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-16 text-center">
             <div className="mb-6 text-sm font-medium text-nickel tracking-wider uppercase">
-              Featured Collection
+              Trending Now
             </div>
             <h2 className="text-4xl font-semibold tracking-wide1 md:text-5xl text-porcelain text-display">
-              Selected Items
+              Shop the Latest Listings
             </h2>
             <p className="mt-6 text-lg text-nickel max-w-2xl mx-auto text-body">
-              A carefully curated selection of premium accessories from trusted sellers.
+              Discover premium men's fashion from trusted sellers in our community.
             </p>
           </div>
 
