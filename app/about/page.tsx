@@ -139,19 +139,19 @@ export default function AboutPage() {
             </div>
             <div className="space-y-8">
               <div className="rounded-2xl border border-porcelain/10 bg-graphite/60 p-6 shadow-subtle">
-                <h3 className="text-xl font-semibold text-porcelain mb-3">Founded</h3>
-                <p className="text-2xl font-light text-titanium mb-2">2024</p>
-                <p className="text-nickel text-body">The year SAPS was established</p>
+                <h3 className="text-xl font-semibold text-porcelain mb-3">Free to List</h3>
+                <p className="text-2xl font-light text-titanium mb-2">$0</p>
+                <p className="text-nickel text-body">No upfront fees. List as many items as you want.</p>
               </div>
               <div className="rounded-2xl border border-porcelain/10 bg-graphite/60 p-6 shadow-subtle">
-                <h3 className="text-xl font-semibold text-porcelain mb-3">Items Sold</h3>
-                <p className="text-2xl font-light text-titanium mb-2">1,000+</p>
-                <p className="text-nickel text-body">Authenticated men's fashion pieces</p>
+                <h3 className="text-xl font-semibold text-porcelain mb-3">Fair Commission</h3>
+                <p className="text-2xl font-light text-titanium mb-2">12%</p>
+                <p className="text-nickel text-body">Only when you sell. No hidden fees.</p>
               </div>
               <div className="rounded-2xl border border-porcelain/10 bg-graphite/60 p-6 shadow-subtle">
-                <h3 className="text-xl font-semibold text-porcelain mb-3">Community</h3>
-                <p className="text-2xl font-light text-titanium mb-2">500+</p>
-                <p className="text-nickel text-body">Active buyers and sellers</p>
+                <h3 className="text-xl font-semibold text-porcelain mb-3">Secure Payments</h3>
+                <p className="text-2xl font-light text-titanium mb-2">Stripe</p>
+                <p className="text-nickel text-body">Buyer protection and fast seller payouts.</p>
               </div>
             </div>
           </div>
