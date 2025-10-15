@@ -157,53 +157,6 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Team Section */}
-        <section className="mb-24">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-semibold text-porcelain mb-6 text-display">
-              Our Team
-            </h2>
-            <p className="text-lg text-nickel max-w-2xl mx-auto text-body">
-              Real people building a trusted marketplace for the menswear community
-            </p>
-          </div>
-          
-          <div className="grid gap-8 md:grid-cols-3">
-            <div className="text-center">
-              <div className="w-24 h-24 bg-graphite/60 rounded-full mx-auto mb-6 flex items-center justify-center">
-                <BrandMark className="h-12 w-12 text-titanium" />
-              </div>
-              <h3 className="text-xl font-semibold text-porcelain mb-2">Moderation Team</h3>
-              <p className="text-nickel text-body">
-                Review listings for accuracy, handle reports, and ensure sellers provide 
-                honest descriptions and photos of their items.
-              </p>
-            </div>
-            
-            <div className="text-center">
-              <div className="w-24 h-24 bg-graphite/60 rounded-full mx-auto mb-6 flex items-center justify-center">
-                <BrandMark className="h-12 w-12 text-titanium" />
-              </div>
-              <h3 className="text-xl font-semibold text-porcelain mb-2">Customer Support</h3>
-              <p className="text-nickel text-body">
-                Real people who help resolve disputes, answer questions, and 
-                keep our community running smoothly.
-              </p>
-            </div>
-            
-            <div className="text-center">
-              <div className="w-24 h-24 bg-graphite/60 rounded-full mx-auto mb-6 flex items-center justify-center">
-                <BrandMark className="h-12 w-12 text-titanium" />
-              </div>
-              <h3 className="text-xl font-semibold text-porcelain mb-2">Technology Team</h3>
-              <p className="text-nickel text-body">
-                Engineers and designers who create the seamless experience 
-                that makes SAPS a pleasure to use.
-              </p>
-            </div>
-          </div>
-        </section>
-
         {/* CTA Section */}
         <section className="text-center">
           <div className="rounded-2xl border border-porcelain/10 bg-graphite/60 p-12 shadow-soft">
