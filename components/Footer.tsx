@@ -4,55 +4,13 @@ export default function Footer() {
   return (
     <footer className="border-t border-porcelain/10 bg-graphite/60">
       <div className="mx-auto max-w-7xl px-6 py-16">
-        <div className="grid gap-12 md:grid-cols-4">
+        <div className="grid gap-12 md:grid-cols-3">
           {/* Brand */}
           <div>
             <h3 className="mb-4 text-xl font-medium text-porcelain">SAPS</h3>
             <p className="text-sm leading-relaxed text-nickel">
-              Premium men's accessories resale marketplace. Authenticated,
-              trusted, refined.
+              Buy and sell premium men's fashion. Authenticated, trusted, community-driven.
             </p>
-          </div>
-
-          {/* Shop */}
-          <div>
-            <h4 className="mb-4 text-xs font-medium uppercase tracking-wider text-nickel">
-              Shop
-            </h4>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/browse?category=tie"
-                  className="sap-link text-sm text-nickel transition-colors duration-sap hover:text-porcelain"
-                >
-                  Ties
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/browse?category=cufflinks"
-                  className="sap-link text-sm text-nickel transition-colors duration-sap hover:text-porcelain"
-                >
-                  Cufflinks
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/browse?category=belt"
-                  className="sap-link text-sm text-nickel transition-colors duration-sap hover:text-porcelain"
-                >
-                  Belts
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/browse?category=pocket-square"
-                  className="sap-link text-sm text-nickel transition-colors duration-sap hover:text-porcelain"
-                >
-                  Pocket Squares
-                </Link>
-              </li>
-            </ul>
           </div>
 
           {/* Company */}
@@ -61,6 +19,22 @@ export default function Footer() {
               Company
             </h4>
             <ul className="space-y-3">
+              <li>
+                <Link
+                  href="/browse"
+                  className="sap-link text-sm text-nickel transition-colors duration-sap hover:text-porcelain"
+                >
+                  Browse
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/sell"
+                  className="sap-link text-sm text-nickel transition-colors duration-sap hover:text-porcelain"
+                >
+                  Start Selling
+                </Link>
+              </li>
               <li>
                 <Link
                   href="/about"
@@ -75,14 +49,6 @@ export default function Footer() {
                   className="sap-link text-sm text-nickel transition-colors duration-sap hover:text-porcelain"
                 >
                   How It Works
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/sell"
-                  className="sap-link text-sm text-nickel transition-colors duration-sap hover:text-porcelain"
-                >
-                  Start Selling
                 </Link>
               </li>
               <li>
