@@ -179,21 +179,6 @@ export default function BrowsePage() {
           </p>
         </div>
 
-        {/* Quick Filters Bar */}
-        <div className="mb-8 overflow-x-auto">
-          <div className="flex gap-3 pb-2">
-            {QUICK_FILTERS.map(quickFilter => (
-              <button
-                key={quickFilter.label}
-                onClick={() => applyQuickFilter(quickFilter)}
-                className="flex-shrink-0 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-sap bg-graphite/60 text-nickel border border-porcelain/20 hover:bg-titanium/10 hover:text-titanium hover:border-titanium/30 hover:shadow-soft whitespace-nowrap"
-              >
-                {quickFilter.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
         {/* Search and Sort Bar */}
         <div className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           {/* Search Bar */}
