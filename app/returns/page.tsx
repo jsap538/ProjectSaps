@@ -86,8 +86,8 @@ export default function ReturnsPage() {
                   <li>Items that don't match the description or photos</li>
                   <li>Items with undisclosed damage or defects</li>
                   <li>Items that are significantly different from what was ordered</li>
-                  <li>Items that arrive damaged during shipping (when properly packaged)</li>
-                  <li>Authenticity issues (rare, but we take this seriously)</li>
+                  <li>Items that arrive damaged during shipping</li>
+                  <li>Items that are not as described by the seller</li>
                 </ul>
                 <p className="text-titanium font-medium">
                   <strong>Note:</strong> We may request photos or additional information to 
@@ -107,8 +107,8 @@ export default function ReturnsPage() {
                   <div>
                     <h3 className="text-lg font-semibold text-porcelain mb-2">Contact Support</h3>
                     <p className="text-nickel text-body">
-                      Email us at returns@saps.com within 48 hours of delivery. Include your 
-                      order number and detailed description of the issue.
+                      Email us at support@saps.com within 48 hours of delivery. Include your 
+                      order number and detailed description of the issue with photos.
                     </p>
                   </div>
                 </div>
@@ -204,20 +204,16 @@ export default function ReturnsPage() {
               <h2 className="text-2xl font-semibold text-porcelain mb-6 text-display">Need Help?</h2>
               <div className="space-y-4 text-nickel text-body">
                 <p>
-                  If you have questions about returns or need assistance:
+                  For questions about returns or to start a return, contact us at 
+                  <strong className="text-titanium"> support@saps.com</strong>. Include your order 
+                  number and photos of the issue for faster processing.
                 </p>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>Email: returns@saps.com</li>
-                  <li>Response time: 24 hours for return inquiries</li>
-                  <li>Include your order number for faster service</li>
-                  <li>We're here to help resolve any issues</li>
-                </ul>
-                <div className="flex gap-4 mt-6">
+                <div className="flex flex-col sm:flex-row gap-4 mt-6">
                   <a
-                    href="mailto:returns@saps.com"
+                    href="mailto:support@saps.com"
                     className="inline-flex items-center justify-center rounded-xl px-6 py-3 bg-titanium text-ink font-medium transition-transform duration-sap hover:-translate-y-px"
                   >
-                    Contact Returns
+                    Contact Support
                   </a>
                   <Link href="/faq">
                     <button className="inline-flex items-center justify-center rounded-xl px-6 py-3 border border-porcelain/20 text-porcelain font-medium transition-colors duration-sap hover:bg-porcelain/5">
