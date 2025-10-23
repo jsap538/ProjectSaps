@@ -54,7 +54,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="group flex items-center gap-3 text-porcelain transition-colors duration-sap hover:text-titanium">
             <BrandMark className="h-8 w-8 text-titanium" />
-            <span className="text-2xl font-semibold tracking-wide1">Encore</span>
+            <span className="text-2xl font-bold tracking-tight" style={{ fontFamily: 'ui-sans-serif, system-ui, -apple-system, sans-serif', letterSpacing: '-0.02em' }}>Encore</span>
           </Link>
 
           {/* Desktop Navigation */}
