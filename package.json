@@ -14,10 +14,13 @@
     "test:integration": "jest --config jest.integration.config.js --runInBand",
     "test:integration:ci": "jest --config jest.integration.config.js --runInBand --ci",
     "test:all": "npm run test:unit:ci && npm run test:integration:ci",
-    "test:coverage": "jest --coverage && jest --config jest.integration.config.js --coverage --runInBand"
+    "test:coverage": "jest --coverage && jest --config jest.integration.config.js --coverage --runInBand",
+    "backup:db": "node scripts/backup-database.js",
+    "backup:test": "node scripts/backup-database.js && echo 'Backup test completed'"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.33.3",
+    "@sentry/nextjs": "^10.22.0",
     "@stripe/react-stripe-js": "^5.2.0",
     "@stripe/stripe-js": "^8.0.0",
     "@types/helmet": "^0.0.48",

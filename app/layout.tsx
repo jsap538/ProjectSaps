@@ -10,6 +10,7 @@ import { ToastProvider } from "@/contexts/ToastContext";
 import { ClerkProvider } from '@clerk/nextjs';
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import SentryProvider from "@/components/SentryProvider";
 
 export const metadata: Metadata = {
   title: "Encore - Premium Men's Fashion Marketplace",
@@ -29,15 +30,17 @@ export default function RootLayout({
                      <html lang="en" suppressHydrationWarning>
                        <body className="antialiased bg-ink text-porcelain" suppressHydrationWarning>
                   <ThemeProvider>
-                    <ToastProvider>
-                      <CartProvider>
-                        <WatchlistProvider>
-                          <Navbar />
-                          <main className="min-h-screen">{children}</main>
-                          <Footer />
-                        </WatchlistProvider>
-                      </CartProvider>
-                    </ToastProvider>
+                    <SentryProvider>
+                      <ToastProvider>
+                        <CartProvider>
+                          <WatchlistProvider>
+                            <Navbar />
+                            <main className="min-h-screen">{children}</main>
+                            <Footer />
+                          </WatchlistProvider>
+                        </CartProvider>
+                      </ToastProvider>
+                    </SentryProvider>
                   </ThemeProvider>
                   <Analytics />
                   <SpeedInsights />

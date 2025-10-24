@@ -7,10 +7,14 @@ import { withRateLimit, rateLimiters } from '@/lib/rate-limit';
 import { sanitizeAndValidate, itemSchema } from '@/lib/validation';
 import { corsHeaders, sanitizeSearchQuery } from '@/lib/security';
 import { apiCache } from '@/lib/cache';
+import { withErrorHandling, AppError } from '@/lib/error-handler';
+import { trackApiPerformance, trackSearchEvent, trackBusinessEvent } from '@/lib/monitoring';
 import type { IItem, ItemFilters, ApiResponse } from '@/types';
 
 // GET /api/items - Browse items with filters
-export async function GET(request: NextRequest) {
+export const GET = withErrorHandling(async (request: NextRequest) => {
+  const startTime = Date.now();
+  
   try {
     await connectDB();
 
@@ -161,16 +165,24 @@ export async function GET(request: NextRequest) {
     // Cache the response
     await apiCache.set(cacheKey, response);
 
-    return NextResponse.json(response, { headers: corsHeaders });
+    // Track search analytics
+    if (filters.search) {
+      trackSearchEvent(filters.search, items.length, items.length > 0);
+    }
 
-  } catch (error: unknown) {
-    console.error('Error fetching items:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500, headers: corsHeaders }
-    );
+    // Track business event
+    trackBusinessEvent('items_browsed', {
+      count: items.length,
+      filters: Object.keys(filters).filter(key => filters[key as keyof ItemFilters]),
+      search: !!filters.search,
+    });
+
+    const duration = Date.now() - startTime;
+    trackApiPerformance('/api/items', duration, 200);
+
+    return NextResponse.json(response, { headers: corsHeaders });
   }
-}
+});
 
 // POST /api/items - Create new item
 export const POST = withRateLimit(rateLimiters.createItem, async (request: NextRequest) => {
