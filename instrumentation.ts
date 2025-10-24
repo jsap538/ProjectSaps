@@ -36,6 +36,7 @@ export async function register() {
       
       // Add release tracking
       release: process.env.VERCEL_GIT_COMMIT_SHA || 'development',
+      
     });
   }
 
@@ -51,6 +52,7 @@ export async function register() {
       
       // Add release tracking
       release: process.env.VERCEL_GIT_COMMIT_SHA || 'development',
+      
     });
   }
 }
