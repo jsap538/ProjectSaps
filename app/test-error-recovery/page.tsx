@@ -106,7 +106,12 @@ export default function TestErrorRecoveryPage() {
                 {asyncTest ? 'Test Success' : 'Test Failure'}
               </button>
               
-              <AsyncWrapper context="Async operation">
+              <AsyncWrapper 
+                context="Async operation"
+                isLoading={false}
+                error={asyncTest ? "Simulated async error" : null}
+                onRetry={() => setAsyncTest(false)}
+              >
                 <AsyncComponent shouldFail={asyncTest} />
               </AsyncWrapper>
             </div>
