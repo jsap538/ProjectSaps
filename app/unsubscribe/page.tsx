@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 export default function UnsubscribePage() {
   const searchParams = useSearchParams();
@@ -69,12 +70,12 @@ export default function UnsubscribePage() {
               Unsubscribed Successfully
             </h1>
             <p className="text-nickel mb-6">{message}</p>
-            <a
+            <Link
               href="/"
               className="inline-block rounded-xl bg-titanium text-ink px-6 py-3 font-medium transition-colors duration-sap hover:bg-titanium/90"
             >
               Return to Homepage
-            </a>
+            </Link>
           </>
         )}
 
@@ -89,12 +90,12 @@ export default function UnsubscribePage() {
               Error
             </h1>
             <p className="text-nickel mb-6">{message}</p>
-            <a
+            <Link
               href="/"
               className="inline-block rounded-xl bg-titanium text-ink px-6 py-3 font-medium transition-colors duration-sap hover:bg-titanium/90"
             >
               Return to Homepage
-            </a>
+            </Link>
           </>
         )}
       </div>
