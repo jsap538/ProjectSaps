@@ -257,39 +257,40 @@ export const POST = withRateLimit(rateLimiters.general, withErrorHandling(async 
 
   // Send email notifications
   try {
-    // Order confirmation email to buyer
-    const buyerEmail = populatedOrder.buyerId.email;
-    const buyerName = `${populatedOrder.buyerId.firstName} ${populatedOrder.buyerId.lastName}`;
-    const sellerName = `${populatedOrder.sellerId.firstName} ${populatedOrder.sellerId.lastName}`;
-    
-    const orderData = {
-      orderNumber: populatedOrder.orderNumber,
-      buyerName,
-      sellerName,
-      items: populatedOrder.items.map(item => ({
-        title: item.title,
-        price: item.price_cents / 100,
-        quantity: item.quantity,
-      })),
-      total: populatedOrder.total_cents / 100,
-      shippingAddress: `${populatedOrder.shippingAddress.fullName}, ${populatedOrder.shippingAddress.street1}, ${populatedOrder.shippingAddress.city}, ${populatedOrder.shippingAddress.state} ${populatedOrder.shippingAddress.postalCode}`,
-    };
+    if (populatedOrder) {
+      // Order confirmation email to buyer
+      const buyerEmail = populatedOrder.buyerId.email;
+      const buyerName = `${populatedOrder.buyerId.firstName} ${populatedOrder.buyerId.lastName}`;
+      const sellerName = `${populatedOrder.sellerId.firstName} ${populatedOrder.sellerId.lastName}`;
+      
+      const orderData = {
+        orderNumber: populatedOrder.orderNumber,
+        buyerName,
+        sellerName,
+        items: populatedOrder.items.map(item => ({
+          title: item.title,
+          price: item.price_cents / 100,
+          quantity: item.quantity,
+        })),
+        total: populatedOrder.total_cents / 100,
+        shippingAddress: `${populatedOrder.shippingAddress.fullName}, ${populatedOrder.shippingAddress.street1}, ${populatedOrder.shippingAddress.city}, ${populatedOrder.shippingAddress.state} ${populatedOrder.shippingAddress.postalCode}`,
+      };
 
-    // Send order confirmation to buyer
-    await sendEmail(
-      buyerEmail,
-      orderConfirmationTemplate(orderData).subject,
-      orderConfirmationTemplate(orderData).html
-    );
+      // Send order confirmation to buyer
+      await sendEmail(
+        buyerEmail,
+        orderConfirmationTemplate(orderData).subject,
+        orderConfirmationTemplate(orderData).html
+      );
 
-    // Send new order notification to seller
-    const sellerEmail = populatedOrder.sellerId.email;
-    await sendEmail(
-      sellerEmail,
-      newOrderNotificationTemplate(orderData).subject,
-      newOrderNotificationTemplate(orderData).html
-    );
-
+      // Send new order notification to seller
+      const sellerEmail = populatedOrder.sellerId.email;
+      await sendEmail(
+        sellerEmail,
+        newOrderNotificationTemplate(orderData).subject,
+        newOrderNotificationTemplate(orderData).html
+      );
+    }
   } catch (emailError) {
     console.error('Error sending order emails:', emailError);
     // Don't fail the order creation if emails fail
