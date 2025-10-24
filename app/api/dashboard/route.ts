@@ -4,6 +4,7 @@ import connectDB from '@/lib/mongodb';
 import { User, Item, Order } from '@/models';
 import { withErrorHandling, ApiErrors, successResponse } from '@/lib/errors';
 import { corsHeaders } from '@/lib/security';
+import { AnalyticsService } from '@/lib/analytics';
 
 export const GET = withErrorHandling(async (request: NextRequest) => {
   const { userId } = await auth();
@@ -26,9 +27,7 @@ export const GET = withErrorHandling(async (request: NextRequest) => {
     ordersRequiringShipping,
     recentListings,
     recentOrdersList,
-    viewsOverTime,
-    topPerformingItems,
-    conversionRates
+    analyticsData
   ] = await Promise.all([
     // Total revenue from completed orders
     Order.aggregate([
@@ -81,39 +80,12 @@ export const GET = withErrorHandling(async (request: NextRequest) => {
       .populate('buyerId', 'firstName lastName email')
       .lean(),
 
-    // Views over time (last 30 days)
-    Item.aggregate([
-      { $match: { sellerId: user._id } },
-      { $unwind: '$stats.viewsHistory' },
-      { $match: { 'stats.viewsHistory.date': { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } } },
-      { $group: { _id: { $dateToString: { format: '%Y-%m-%d', date: '$stats.viewsHistory.date' } }, views: { $sum: '$stats.viewsHistory.count' } } },
-      { $sort: { _id: 1 } }
-    ]),
+    // Get analytics data using the service
+    AnalyticsService.getSellerAnalytics(user._id.toString(), '30d'),
 
-    // Top performing items
-    Item.find({ sellerId: user._id })
-      .sort({ 'stats.views': -1 })
-      .limit(5)
-      .select('title price_cents stats.views stats.favorites')
-      .lean(),
-
-    // Conversion rates
-    Item.aggregate([
-      { $match: { sellerId: user._id } },
-      { $group: { 
-        _id: null, 
-        totalViews: { $sum: '$stats.views' },
-        totalFavorites: { $sum: '$stats.favorites' },
-        totalSold: { $sum: '$stats.sold' }
-      } }
-    ]).then(result => {
-      const data = result[0] || { totalViews: 0, totalFavorites: 0, totalSold: 0 };
-      return {
-        viewToFavorite: data.totalViews > 0 ? (data.totalFavorites / data.totalViews * 100).toFixed(2) : 0,
-        favoriteToSale: data.totalFavorites > 0 ? (data.totalSold / data.totalFavorites * 100).toFixed(2) : 0,
-        viewToSale: data.totalViews > 0 ? (data.totalSold / data.totalViews * 100).toFixed(2) : 0
-      };
-    })
+    // These are now handled by AnalyticsService
+    Promise.resolve([]),
+    Promise.resolve({ viewToFavorite: 0, favoriteToSale: 0, viewToSale: 0 })
   ]);
 
   const dashboardData = {
@@ -143,20 +115,7 @@ export const GET = withErrorHandling(async (request: NextRequest) => {
       status: order.status,
       createdAt: order.createdAt
     })),
-    analytics: {
-      viewsOverTime: viewsOverTime.map(item => ({
-        date: item._id,
-        views: item.views
-      })),
-      topPerformingItems: topPerformingItems.map(item => ({
-        id: item._id,
-        title: item.title,
-        price: item.price_cents / 100,
-        views: item.stats?.views || 0,
-        favorites: item.stats?.favorites || 0
-      })),
-      conversionRates
-    }
+    analytics: analyticsData
   };
 
   return successResponse(dashboardData, 'Dashboard data retrieved successfully');

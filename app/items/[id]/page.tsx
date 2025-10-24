@@ -63,6 +63,24 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
     fetchItem();
   }, [fetchItem]);
 
+  useEffect(() => {
+    if (item) {
+      // Track view when item loads
+      trackItemView(item._id);
+    }
+  }, [item]);
+
+  const trackItemView = async (itemId: string) => {
+    try {
+      await fetch(`/api/items/${itemId}/view`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+    } catch (error) {
+      console.error('Error tracking view:', error);
+    }
+  };
+
   const handleCartToggle = async () => {
     if (!item) return;
     

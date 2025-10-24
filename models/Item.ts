@@ -22,6 +22,20 @@ export interface IItemStats {
   favorites: number; // Count of users who watchlisted
   timesShared: number;
   clicks: number;
+  sold: number; // Number of times sold
+  revenue: number; // Total revenue generated
+  
+  // Time-series data for analytics
+  viewsHistory: Array<{
+    date: Date;
+    count: number;
+  }>;
+  
+  // Daily stats for real-time tracking
+  dailyViews: number;
+  dailyFavorites: number;
+  lastViewedAt?: Date;
+  lastFavoritedAt?: Date;
 }
 
 // Item methods interface
