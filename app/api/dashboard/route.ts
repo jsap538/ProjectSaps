@@ -13,7 +13,7 @@ export const GET = withErrorHandling(async (request: NextRequest) => {
   await connectDB();
 
   // Get user data
-  const user = await User.findOne({ clerkId: userId }).lean();
+  const user = await User.findOne({ clerkId: userId });
   if (!user) throw ApiErrors.notFound('User not found');
 
   // Get seller stats
