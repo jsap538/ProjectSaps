@@ -111,3 +111,33 @@ export const isUserSubscribed = async (email: string, type: 'all' | 'marketing' 
   // For now, assume all users are subscribed
   return true;
 };
+
+// Format currency for email templates
+export const formatEmailCurrency = (amount: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(amount);
+};
+
+// Send order confirmation email (for Stripe webhook)
+export const sendOrderConfirmationEmail = async (emailData: any) => {
+  try {
+    const { orderConfirmationTemplate } = await import('./email-templates');
+    const template = orderConfirmationTemplate(emailData);
+    await sendEmail(emailData.buyerEmail, template.subject, template.html);
+  } catch (error) {
+    console.error('Error sending order confirmation email:', error);
+  }
+};
+
+// Send new sale email (for Stripe webhook)
+export const sendNewSaleEmail = async (emailData: any) => {
+  try {
+    const { newOrderNotificationTemplate } = await import('./email-templates');
+    const template = newOrderNotificationTemplate(emailData);
+    await sendEmail(emailData.sellerEmail, template.subject, template.html);
+  } catch (error) {
+    console.error('Error sending new sale email:', error);
+  }
+};
