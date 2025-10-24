@@ -30,9 +30,11 @@ export const POST = withErrorHandling(async (request: NextRequest, { params }: {
       $set: { 
         status: 'shipped',
         shippingStatus: 'shipped',
-        trackingNumber,
-        carrier,
-        shippedAt: new Date()
+        tracking: {
+          carrier,
+          trackingNumber,
+          shippedAt: new Date()
+        }
       } 
     },
     { new: true }
@@ -46,8 +48,8 @@ export const POST = withErrorHandling(async (request: NextRequest, { params }: {
     { 
       orderId,
       status: order.status,
-      trackingNumber: order.trackingNumber,
-      carrier: order.carrier
+      trackingNumber: order.tracking?.trackingNumber,
+      carrier: order.tracking?.carrier
     },
     'Order marked as shipped successfully'
   );
