@@ -14,7 +14,12 @@ export const trackConversionEvent = (event: string, data?: Record<string, any>) 
   });
   
   // Track as custom metric
-  Sentry.metrics.increment(`conversion.${event}`, 1);
+  Sentry.addBreadcrumb({
+    category: 'conversion_metric',
+    message: `conversion.${event}`,
+    level: 'info',
+    data: { event, count: 1 },
+  });
 };
 
 // Track user actions
@@ -29,9 +34,16 @@ export const trackUserAction = (action: string, userId?: string, data?: Record<s
 
 // Track API performance
 export const trackApiPerformance = (endpoint: string, duration: number, status: number) => {
-  Sentry.metrics.distribution('api.duration', duration, {
-    endpoint,
-    status: status.toString(),
+  Sentry.addBreadcrumb({
+    category: 'api_performance',
+    message: `API call to ${endpoint}`,
+    level: 'info',
+    data: {
+      endpoint,
+      duration,
+      status,
+      slow: duration > 2000,
+    },
   });
   
   if (duration > 2000) { // Alert on slow APIs
@@ -48,7 +60,12 @@ export const trackBusinessEvent = (event: string, data?: Record<string, any>) =>
     data,
   });
   
-  Sentry.metrics.increment(`business.${event}`, 1);
+  Sentry.addBreadcrumb({
+    category: 'business_metric',
+    message: `business.${event}`,
+    level: 'info',
+    data: { event, count: 1 },
+  });
 };
 
 // Track errors with context
@@ -69,7 +86,12 @@ export const trackPaymentEvent = (event: string, orderId?: string, amount?: numb
     data: { orderId, amount },
   });
   
-  Sentry.metrics.increment(`payment.${event}`, 1);
+  Sentry.addBreadcrumb({
+    category: 'payment_metric',
+    message: `payment.${event}`,
+    level: 'info',
+    data: { event, orderId, amount, count: 1 },
+  });
 };
 
 // Track search analytics
@@ -81,10 +103,20 @@ export const trackSearchEvent = (query: string, resultsCount: number, hasResults
     data: { query, resultsCount, hasResults },
   });
   
-  Sentry.metrics.increment('search.performed', 1);
+  Sentry.addBreadcrumb({
+    category: 'search_metric',
+    message: 'search.performed',
+    level: 'info',
+    data: { query, resultsCount, hasResults, count: 1 },
+  });
   
   if (!hasResults) {
-    Sentry.metrics.increment('search.no_results', 1);
+    Sentry.addBreadcrumb({
+      category: 'search_metric',
+      message: 'search.no_results',
+      level: 'info',
+      data: { query, count: 1 },
+    });
   }
 };
 
@@ -97,7 +129,12 @@ export const trackCartEvent = (event: string, itemId?: string, quantity?: number
     data: { itemId, quantity },
   });
   
-  Sentry.metrics.increment(`cart.${event}`, 1);
+  Sentry.addBreadcrumb({
+    category: 'cart_metric',
+    message: `cart.${event}`,
+    level: 'info',
+    data: { event, itemId, quantity, count: 1 },
+  });
 };
 
 // Track item events
@@ -109,7 +146,12 @@ export const trackItemEvent = (event: string, itemId: string, category?: string,
     data: { itemId, category, price },
   });
   
-  Sentry.metrics.increment(`item.${event}`, 1);
+  Sentry.addBreadcrumb({
+    category: 'item_metric',
+    message: `item.${event}`,
+    level: 'info',
+    data: { event, itemId, category, price, count: 1 },
+  });
 };
 
 // Set user context for better error tracking
@@ -125,8 +167,11 @@ export const setUserContext = (user: { id: string; email?: string; isSeller?: bo
 
 // Track performance metrics
 export const trackPerformance = (metric: string, value: number, unit?: string) => {
-  Sentry.metrics.distribution(`performance.${metric}`, value, {
-    unit: unit || 'ms',
+  Sentry.addBreadcrumb({
+    category: 'performance_metric',
+    message: `performance.${metric}`,
+    level: 'info',
+    data: { metric, value, unit: unit || 'ms' },
   });
 };
 
