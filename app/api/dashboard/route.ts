@@ -102,7 +102,7 @@ export const GET = withErrorHandling(async (request: NextRequest) => {
       id: item._id,
       title: item.title,
       price: item.price_cents / 100,
-      status: item.status,
+      status: item.isSold ? 'sold' : !item.isActive ? 'inactive' : !item.isApproved ? 'pending' : 'active',
       views: item.stats?.views || 0,
       favorites: item.stats?.favorites || 0,
       createdAt: item.createdAt
