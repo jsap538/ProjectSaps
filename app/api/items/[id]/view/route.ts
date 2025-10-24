@@ -5,9 +5,10 @@ import { Item } from '@/models';
 import { withErrorHandling, ApiErrors, successResponse } from '@/lib/errors';
 import { corsHeaders, sanitizeObjectId } from '@/lib/security';
 
-export const POST = withErrorHandling(async (request: NextRequest, { params }: { params: { id: string } }) => {
+export const POST = withErrorHandling(async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
   const { userId } = await auth();
-  const itemId = sanitizeObjectId(params.id);
+  const { id } = await params;
+  const itemId = sanitizeObjectId(id);
 
   await connectDB();
 
