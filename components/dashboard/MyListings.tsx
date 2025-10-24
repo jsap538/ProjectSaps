@@ -13,6 +13,7 @@ import {
   Search,
   Plus
 } from 'lucide-react';
+import Image from 'next/image';
 
 interface Listing {
   id: string;
@@ -282,9 +283,11 @@ export default function MyListings({ listings, onRefresh }: MyListingsProps) {
                   <td className="px-6 py-4">
                     <div className="flex items-center">
                       {listing.imageUrl && (
-                        <img
+                        <Image
                           src={listing.imageUrl}
                           alt={listing.title}
+                          width={48}
+                          height={48}
                           className="w-12 h-12 rounded-lg object-cover mr-4"
                         />
                       )}

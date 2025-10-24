@@ -5,11 +5,12 @@ import { User, Item } from '@/models';
 import { withErrorHandling, ApiErrors, successResponse } from '@/lib/errors';
 import { corsHeaders, sanitizeObjectId } from '@/lib/security';
 
-export const DELETE = withErrorHandling(async (request: NextRequest, { params }: { params: { id: string } }) => {
+export const DELETE = withErrorHandling(async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
   const { userId } = await auth();
   if (!userId) throw ApiErrors.unauthorized();
 
-  const itemId = sanitizeObjectId(params.id);
+  const { id } = await params;
+  const itemId = sanitizeObjectId(id);
 
   await connectDB();
 
@@ -33,11 +34,12 @@ export const DELETE = withErrorHandling(async (request: NextRequest, { params }:
   );
 });
 
-export const PATCH = withErrorHandling(async (request: NextRequest, { params }: { params: { id: string } }) => {
+export const PATCH = withErrorHandling(async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
   const { userId } = await auth();
   if (!userId) throw ApiErrors.unauthorized();
 
-  const itemId = sanitizeObjectId(params.id);
+  const { id } = await params;
+  const itemId = sanitizeObjectId(id);
   const { action, data } = await request.json();
 
   await connectDB();

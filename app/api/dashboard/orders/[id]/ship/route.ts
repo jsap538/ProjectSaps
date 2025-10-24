@@ -5,11 +5,12 @@ import { User, Order } from '@/models';
 import { withErrorHandling, ApiErrors, successResponse } from '@/lib/errors';
 import { corsHeaders, sanitizeObjectId } from '@/lib/security';
 
-export const POST = withErrorHandling(async (request: NextRequest, { params }: { params: { id: string } }) => {
+export const POST = withErrorHandling(async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
   const { userId } = await auth();
   if (!userId) throw ApiErrors.unauthorized();
 
-  const orderId = sanitizeObjectId(params.id);
+  const { id } = await params;
+  const orderId = sanitizeObjectId(id);
   const { trackingNumber, carrier } = await request.json();
 
   await connectDB();
