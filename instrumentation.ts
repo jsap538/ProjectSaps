@@ -4,7 +4,13 @@ export async function register() {
   // Add onRequestError hook for React Server Components
   if (typeof globalThis !== 'undefined') {
     (globalThis as any).onRequestError = (error: Error, request: Request) => {
-      Sentry.captureRequestError(error, request, {});
+      // Convert Request to RequestInfo format
+      const requestInfo = {
+        path: request.url,
+        method: request.method,
+        headers: Object.fromEntries(request.headers.entries()),
+      };
+      Sentry.captureRequestError(error, requestInfo, {});
     };
   }
   if (process.env.NEXT_RUNTIME === 'nodejs') {
