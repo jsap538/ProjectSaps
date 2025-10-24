@@ -12,7 +12,7 @@ import { trackApiPerformance, trackSearchEvent, trackBusinessEvent } from '@/lib
 import type { IItem, ItemFilters, ApiResponse } from '@/types';
 
 // GET /api/items - Browse items with filters
-export const GET = withErrorHandling(async (request: NextRequest) => {
+export async function GET(request: NextRequest) {
   const startTime = Date.now();
   
   try {
@@ -181,8 +181,16 @@ export const GET = withErrorHandling(async (request: NextRequest) => {
     trackApiPerformance('/api/items', duration, 200);
 
     return NextResponse.json(response, { headers: corsHeaders });
+  } catch (error: unknown) {
+    console.error('Error fetching items:', error);
+    const duration = Date.now() - startTime;
+    trackApiPerformance('/api/items', duration, 500);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500, headers: corsHeaders }
+    );
   }
-});
+}
 
 // POST /api/items - Create new item
 export const POST = withRateLimit(rateLimiters.createItem, async (request: NextRequest) => {
