@@ -10,6 +10,8 @@ import { ItemDetailSkeleton } from "@/components/Skeletons";
 import ImageLightbox from "@/components/ImageLightbox";
 import ReportModal from "@/components/ReportModal";
 import CategoryAttributesDisplay from "@/components/CategoryAttributesDisplay";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import LoadingError from "@/components/LoadingError";
 import { Flag } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 
@@ -93,21 +95,11 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
 
   if (error || !item) {
     return (
-      <div className="min-h-screen bg-white dark:bg-[#1a1d24] flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-dark dark:text-white mb-4">
-            Item Not Found
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            {error || 'The item you\'re looking for doesn\'t exist.'}
-          </p>
-          <Link
-            href="/browse"
-            className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition"
-          >
-            Browse Items
-          </Link>
-        </div>
+      <div className="min-h-screen bg-ink flex items-center justify-center">
+        <LoadingError
+          onRetry={fetchItem}
+          context="Item not found"
+        />
       </div>
     );
   }
@@ -120,7 +112,8 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
   const isOwnItem = user && item.sellerId?._id === user.id;
 
   return (
-    <div className="min-h-screen bg-ink">
+    <ErrorBoundary context="Item Detail Page">
+      <div className="min-h-screen bg-ink">
       <div className="mx-auto max-w-7xl px-6 py-10">
         {/* Breadcrumb */}
         <nav className="mb-8 text-sm text-nickel">
@@ -403,7 +396,8 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
           }}
         />
       )}
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 }
 

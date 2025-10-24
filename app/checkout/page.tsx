@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { useCart } from '@/contexts/CartContext';
 import CheckoutForm from '@/components/CheckoutForm';
 import { formatCurrency } from '@/lib/format';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -309,15 +310,17 @@ function CheckoutContent() {
 
 export default function CheckoutPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-ink flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-titanium border-r-transparent mb-4"></div>
-          <p className="text-porcelain text-lg">Loading checkout...</p>
+    <ErrorBoundary context="Checkout Flow">
+      <Suspense fallback={
+        <div className="min-h-screen bg-ink flex items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-titanium border-r-transparent mb-4"></div>
+            <p className="text-porcelain text-lg">Loading checkout...</p>
+          </div>
         </div>
-      </div>
-    }>
-      <CheckoutContent />
-    </Suspense>
+      }>
+        <CheckoutContent />
+      </Suspense>
+    </ErrorBoundary>
   );
 }
