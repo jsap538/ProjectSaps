@@ -89,9 +89,58 @@ export default function MyListings({ listings, onRefresh }: MyListingsProps) {
       if (response.ok) {
         setSelectedItems([]);
         onRefresh();
+      } else {
+        const error = await response.json();
+        alert(`Error: ${error.message || 'Failed to perform bulk action'}`);
       }
     } catch (error) {
       console.error('Error performing bulk action:', error);
+      alert('Failed to perform bulk action');
+    }
+  };
+
+  const handleDeleteItem = async (itemId: string) => {
+    if (!confirm('Are you sure you want to delete this listing? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/dashboard/listings/${itemId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        onRefresh();
+      } else {
+        const error = await response.json();
+        alert(`Error: ${error.message || 'Failed to delete item'}`);
+      }
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      alert('Failed to delete item');
+    }
+  };
+
+  const handleToggleActive = async (itemId: string, currentActive: boolean) => {
+    try {
+      const response = await fetch(`/api/dashboard/listings/${itemId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'toggle_active',
+          data: { currentActive }
+        }),
+      });
+
+      if (response.ok) {
+        onRefresh();
+      } else {
+        const error = await response.json();
+        alert(`Error: ${error.message || 'Failed to update item'}`);
+      }
+    } catch (error) {
+      console.error('Error updating item:', error);
+      alert('Failed to update item');
     }
   };
 
@@ -277,11 +326,7 @@ export default function MyListings({ listings, onRefresh }: MyListingsProps) {
                         <Edit className="w-4 h-4" />
                       </Link>
                       <button
-                        onClick={() => {
-                          if (confirm('Are you sure you want to delete this listing?')) {
-                            // Handle delete
-                          }
-                        }}
+                        onClick={() => handleDeleteItem(listing.id)}
                         className="p-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors duration-sap"
                       >
                         <Trash2 className="w-4 h-4" />

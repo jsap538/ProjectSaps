@@ -100,6 +100,38 @@ export default function MySales({ sales, onRefresh }: MySalesProps) {
     }
   };
 
+  const handleMarkAsShipped = async (orderId: string) => {
+    const trackingNumber = prompt('Enter tracking number:');
+    const carrier = prompt('Enter carrier (e.g., UPS, FedEx, USPS):');
+    
+    if (!trackingNumber || !carrier) {
+      alert('Tracking number and carrier are required');
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/dashboard/orders/${orderId}/ship`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          trackingNumber,
+          carrier
+        }),
+      });
+
+      if (response.ok) {
+        onRefresh();
+        alert('Order marked as shipped successfully');
+      } else {
+        const error = await response.json();
+        alert(`Error: ${error.message || 'Failed to mark as shipped'}`);
+      }
+    } catch (error) {
+      console.error('Error marking as shipped:', error);
+      alert('Failed to mark as shipped');
+    }
+  };
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'confirmed': return <CheckCircle className="w-4 h-4" />;
@@ -281,9 +313,7 @@ export default function MySales({ sales, onRefresh }: MySalesProps) {
                       </Link>
                       {sale.status === 'confirmed' && (
                         <button
-                          onClick={() => {
-                            // Handle mark as shipped
-                          }}
+                          onClick={() => handleMarkAsShipped(sale.id)}
                           className="px-3 py-1 rounded-lg bg-green-500/20 text-green-400 text-sm hover:bg-green-500/30 transition-colors duration-sap"
                         >
                           Ship
