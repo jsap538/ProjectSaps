@@ -258,10 +258,14 @@ export const POST = withRateLimit(rateLimiters.general, withErrorHandling(async 
   // Send email notifications
   try {
     if (populatedOrder) {
+      // Type assertion for populated fields
+      const buyer = populatedOrder.buyerId as any;
+      const seller = populatedOrder.sellerId as any;
+      
       // Order confirmation email to buyer
-      const buyerEmail = populatedOrder.buyerId.email;
-      const buyerName = `${populatedOrder.buyerId.firstName} ${populatedOrder.buyerId.lastName}`;
-      const sellerName = `${populatedOrder.sellerId.firstName} ${populatedOrder.sellerId.lastName}`;
+      const buyerEmail = buyer.email;
+      const buyerName = `${buyer.firstName} ${buyer.lastName}`;
+      const sellerName = `${seller.firstName} ${seller.lastName}`;
       
       const orderData = {
         orderNumber: populatedOrder.orderNumber,
@@ -284,7 +288,7 @@ export const POST = withRateLimit(rateLimiters.general, withErrorHandling(async 
       );
 
       // Send new order notification to seller
-      const sellerEmail = populatedOrder.sellerId.email;
+      const sellerEmail = seller.email;
       await sendEmail(
         sellerEmail,
         newOrderNotificationTemplate(orderData).subject,
