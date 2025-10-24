@@ -10,7 +10,15 @@ export async function register() {
         method: request.method,
         headers: Object.fromEntries(request.headers.entries()),
       };
-      Sentry.captureRequestError(error, requestInfo, {});
+      
+      // Create ErrorContext with required properties
+      const errorContext = {
+        routerKind: 'App Router',
+        routePath: request.url,
+        routeType: 'page',
+      };
+      
+      Sentry.captureRequestError(error, requestInfo, errorContext);
     };
   }
   if (process.env.NEXT_RUNTIME === 'nodejs') {
