@@ -3,7 +3,7 @@ import * as Sentry from '@sentry/nextjs';
 export async function register() {
   // Add onRequestError hook for React Server Components
   if (typeof globalThis !== 'undefined') {
-    globalThis.onRequestError = (error: Error, request: Request) => {
+    (globalThis as any).onRequestError = (error: Error, request: Request) => {
       Sentry.captureRequestError(error, request);
     };
   }
