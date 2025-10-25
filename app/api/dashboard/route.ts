@@ -36,10 +36,10 @@ export const GET = withErrorHandling(async (request: NextRequest) => {
     ]).then(result => result[0]?.total || 0),
 
     // Active listings count
-    Item.countDocuments({ sellerId: user._id, status: 'active' }),
+    Item.countDocuments({ sellerId: user._id, isActive: true, isApproved: true, isSold: false }),
 
     // Pending approvals count
-    Item.countDocuments({ sellerId: user._id, status: 'pending' }),
+    Item.countDocuments({ sellerId: user._id, isApproved: false }),
 
     // Total views across all items
     Item.aggregate([
@@ -62,8 +62,7 @@ export const GET = withErrorHandling(async (request: NextRequest) => {
     // Orders requiring shipping
     Order.countDocuments({
       sellerId: user._id,
-      status: { $in: ['confirmed', 'shipped'] },
-      shippingStatus: { $ne: 'delivered' }
+      status: { $in: ['confirmed', 'shipped'] }
     }),
 
     // Recent listings (last 10)
@@ -111,7 +110,8 @@ export const GET = withErrorHandling(async (request: NextRequest) => {
       buyerEmail: (order.buyerId as any).email,
       total: order.total_cents / 100,
       status: order.status,
-      shippingStatus: order.shippingStatus || 'pending',
+      shippingStatus: order.status === 'delivered' ? 'delivered' : 
+                     order.status === 'shipped' ? 'shipped' : 'pending',
       items: order.items.map((item: any) => ({
         title: item.title,
         price: item.price_cents / 100,
