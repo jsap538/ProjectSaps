@@ -23,6 +23,8 @@ interface AnalyticsData {
     price: number;
     views: number;
     favorites: number;
+    sold: number;
+    revenue: number;
   }>;
   conversionRates: {
     viewToFavorite: number;

@@ -32,12 +32,42 @@ interface SellerStats {
 
 interface DashboardData {
   stats: SellerStats;
-  recentListings: any[];
-  recentOrders: any[];
+  recentListings: Array<{
+    id: string;
+    title: string;
+    price: number;
+    status: string;
+    views: number;
+    favorites: number;
+    createdAt: string;
+  }>;
+  recentOrders: Array<{
+    id: string;
+    orderNumber: string;
+    buyerName: string;
+    total: number;
+    status: string;
+    createdAt: string;
+  }>;
   analytics: {
-    viewsOverTime: any[];
-    topPerformingItems: any[];
-    conversionRates: any[];
+    viewsOverTime: Array<{
+      date: string;
+      views: number;
+    }>;
+    topPerformingItems: Array<{
+      id: string;
+      title: string;
+      price: number;
+      views: number;
+      favorites: number;
+      sold: number;
+      revenue: number;
+    }>;
+    conversionRates: {
+      viewToFavorite: number;
+      favoriteToSale: number;
+      viewToSale: number;
+    };
   };
 }
 

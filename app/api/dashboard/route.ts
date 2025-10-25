@@ -81,11 +81,7 @@ export const GET = withErrorHandling(async (request: NextRequest) => {
       .lean(),
 
     // Get analytics data using the service
-    AnalyticsService.getSellerAnalytics(user._id.toString(), '30d'),
-
-    // These are now handled by AnalyticsService
-    Promise.resolve([]),
-    Promise.resolve({ viewToFavorite: 0, favoriteToSale: 0, viewToSale: 0 })
+    AnalyticsService.getSellerAnalytics(user._id.toString(), '30d')
   ]);
 
   const dashboardData = {
