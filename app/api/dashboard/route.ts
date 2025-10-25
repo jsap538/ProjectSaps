@@ -108,9 +108,23 @@ export const GET = withErrorHandling(async (request: NextRequest) => {
       id: order._id,
       orderNumber: order.orderNumber,
       buyerName: `${(order.buyerId as any).firstName} ${(order.buyerId as any).lastName}`,
+      buyerEmail: (order.buyerId as any).email,
       total: order.total_cents / 100,
       status: order.status,
-      createdAt: order.createdAt
+      shippingStatus: order.shippingStatus || 'pending',
+      items: order.items.map((item: any) => ({
+        title: item.title,
+        price: item.price_cents / 100,
+        quantity: item.quantity
+      })),
+      createdAt: order.createdAt,
+      shippingAddress: {
+        fullName: order.shippingAddress.fullName,
+        street1: order.shippingAddress.street1,
+        city: order.shippingAddress.city,
+        state: order.shippingAddress.state,
+        postalCode: order.shippingAddress.postalCode
+      }
     })),
     analytics: analyticsData
   };

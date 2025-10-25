@@ -46,9 +46,23 @@ interface DashboardData {
     id: string;
     orderNumber: string;
     buyerName: string;
+    buyerEmail: string;
     total: number;
-    status: string;
+    status: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
+    shippingStatus: 'pending' | 'shipped' | 'delivered' | 'returned';
+    items: Array<{
+      title: string;
+      price: number;
+      quantity: number;
+    }>;
     createdAt: string;
+    shippingAddress: {
+      fullName: string;
+      street1: string;
+      city: string;
+      state: string;
+      postalCode: string;
+    };
   }>;
   analytics: {
     viewsOverTime: Array<{
