@@ -36,10 +36,11 @@ interface DashboardData {
     id: string;
     title: string;
     price: number;
-    status: string;
+    status: 'active' | 'pending' | 'sold' | 'draft';
     views: number;
     favorites: number;
     createdAt: string;
+    imageUrl?: string;
   }>;
   recentOrders: Array<{
     id: string;
