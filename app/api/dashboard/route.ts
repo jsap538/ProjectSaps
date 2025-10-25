@@ -110,7 +110,7 @@ export const GET = withErrorHandling(async (request: NextRequest) => {
     recentOrders: recentOrdersList.map(order => ({
       id: order._id,
       orderNumber: order.orderNumber,
-      buyerName: `${order.buyerId.firstName} ${order.buyerId.lastName}`,
+      buyerName: `${(order.buyerId as any).firstName} ${(order.buyerId as any).lastName}`,
       total: order.total_cents / 100,
       status: order.status,
       createdAt: order.createdAt
